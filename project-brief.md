@@ -120,6 +120,29 @@ Sau bước 2, khởi động lại `npm run dev` để Next.js đọc `.env.loc
    gửi lại sau khi đặt hàng" — chưa có số tài khoản/tên ngân hàng thật để hiển thị ngay. Cho tôi
    biết ngân hàng, số tài khoản, tên người nhận nếu muốn hiện trực tiếp trên trang.
 
+## PHẦN D — Quản lý khách hàng & Upload ảnh/video cho bài viết (đã code xong)
+
+- **`/admin`**: mỗi khách hàng có thêm 2 nút — **"Sửa thông tin"** (sửa họ tên/SĐT/email khi khách
+  đăng ký sai) và **"Đặt lại mật khẩu"** (đặt về mật khẩu mặc định `123456789`, khách phải đổi lại ở
+  lần đăng nhập kế tiếp — dùng khi khách quên mật khẩu).
+- **`/admin/posts`**: khi viết/sửa bài (Thông báo & Tin tức), có thêm khối "Ảnh / video đính kèm" —
+  chọn nhiều file từ máy tính hoặc điện thoại (ảnh hoặc video, tối đa 50MB/file), upload trực tiếp
+  lên Supabase Storage (bucket `post-media`, đã tạo sẵn, public để hiển thị trên web). Ảnh đầu tiên
+  của bài viết tự làm ảnh đại diện ở trang danh sách; toàn bộ ảnh/video hiện trong trang chi tiết
+  bài viết.
+
+### Cần làm để chạy thật được (bắt buộc)
+
+1. **Chạy lại `supabase/schema.sql`** — file này giờ có thêm cột `media` (jsonb) cho bảng `posts`.
+2. **Thêm 2 biến môi trường mới vào Vercel** (Project Settings → Environment Variables), lấy giá trị
+   từ [`.env.local`](cat-thien-nguyen-website/.env.local) (tôi đã điền sẵn ở máy bạn):
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+   Đây là 2 giá trị public (an toàn hiện ở trình duyệt, khác với `SUPABASE_SERVICE_ROLE_KEY` bí mật
+   đã có) — dùng để trình duyệt của admin upload file trực tiếp lên Supabase Storage mà không phải
+   đi qua giới hạn dung lượng request của Vercel. Thêm xong, Vercel sẽ tự deploy lại.
+
 ## Cách xem thử
 
 ```bash

@@ -6,11 +6,21 @@ export function formatDate(iso: string) {
 }
 
 export default function PostCard({ post }: { post: PostRecord }) {
+  const cover = post.media.find((m) => m.type === "image");
+
   return (
     <a
       href={`/${post.category}/${post.slug}`}
       className="flex h-full flex-col rounded-2xl border border-gold-500/25 border-t-2 border-t-gold-500 bg-white p-5 shadow-sm transition hover:shadow-md"
     >
+      {cover && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={cover.url}
+          alt=""
+          className="mb-3 aspect-[16/9] w-full rounded-xl object-cover"
+        />
+      )}
       <span className="text-xs font-semibold uppercase tracking-wide text-red-600">
         {formatDate(post.publishedAt)}
       </span>

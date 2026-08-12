@@ -14,6 +14,15 @@ const postSchema = z.object({
   title: z.string().trim().min(1).max(300),
   excerpt: z.string().trim().max(500).default(""),
   content: z.string().trim().max(20000).default(""),
+  media: z
+    .array(
+      z.object({
+        type: z.enum(["image", "video"]),
+        url: z.string().url(),
+      }),
+    )
+    .max(20)
+    .default([]),
   published: z.boolean().default(true),
   publishedAt: z
     .string()

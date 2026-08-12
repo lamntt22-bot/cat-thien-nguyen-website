@@ -55,6 +55,10 @@ create table if not exists public.posts (
 
 create index if not exists posts_category_idx on public.posts (category, published_at desc);
 
+-- Ảnh/video đính kèm bài viết, upload từ máy admin lên Supabase Storage (bucket "post-media").
+-- Mảng các object dạng {"type": "image"|"video", "url": "https://..."}.
+alter table public.posts add column if not exists media jsonb not null default '[]'::jsonb;
+
 -- ============ ORDERS (yêu cầu mua lẻ của thành viên — admin theo dõi & xác nhận tay) ============
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),

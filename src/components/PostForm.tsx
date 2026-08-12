@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import type { PostCategory, PostRecord } from "@/lib/post-store";
+import type { PostCategory, PostMedia, PostRecord } from "@/lib/post-store";
+import MediaUploader from "@/components/MediaUploader";
 
 interface PostFormProps {
   post?: PostRecord;
@@ -16,6 +17,7 @@ export default function PostForm({ post }: PostFormProps) {
   const [title, setTitle] = useState(post?.title ?? "");
   const [excerpt, setExcerpt] = useState(post?.excerpt ?? "");
   const [content, setContent] = useState(post?.content ?? "");
+  const [media, setMedia] = useState<PostMedia[]>(post?.media ?? []);
   const [publishedAt, setPublishedAt] = useState(
     post?.publishedAt ?? new Date().toISOString().slice(0, 10),
   );
@@ -38,6 +40,7 @@ export default function PostForm({ post }: PostFormProps) {
           title: title.trim(),
           excerpt: excerpt.trim(),
           content: content.trim(),
+          media,
           published,
           publishedAt,
         }),
@@ -127,6 +130,8 @@ export default function PostForm({ post }: PostFormProps) {
           className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
         />
       </div>
+
+      <MediaUploader media={media} onChange={setMedia} />
 
       <label className="flex items-center gap-2 text-sm text-maroon-900">
         <input

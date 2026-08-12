@@ -34,6 +34,29 @@ export default async function PostDetail({
           {post.title}
         </h1>
 
+        {post.media.length > 0 && (
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {post.media.map((item) =>
+              item.type === "image" ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={item.url}
+                  src={item.url}
+                  alt=""
+                  className="w-full rounded-xl border border-gold-500/20 object-cover"
+                />
+              ) : (
+                <video
+                  key={item.url}
+                  src={item.url}
+                  controls
+                  className="w-full rounded-xl border border-gold-500/20"
+                />
+              ),
+            )}
+          </div>
+        )}
+
         <div className="mt-6 space-y-4 text-ink-700">
           {paragraphs.map((paragraph, i) => (
             <p key={i}>{paragraph}</p>

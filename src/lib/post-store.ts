@@ -2,6 +2,12 @@ import "server-only";
 import { getSupabase } from "@/lib/supabase";
 
 export type PostCategory = "thong-bao" | "tin-tuc";
+export type PostMediaType = "image" | "video";
+
+export interface PostMedia {
+  type: PostMediaType;
+  url: string;
+}
 
 export interface PostRecord {
   id: string;
@@ -10,6 +16,7 @@ export interface PostRecord {
   title: string;
   excerpt: string;
   content: string;
+  media: PostMedia[];
   published: boolean;
   publishedAt: string;
   createdAt: string;
@@ -22,6 +29,7 @@ export interface PostInput {
   title: string;
   excerpt: string;
   content: string;
+  media?: PostMedia[];
   published?: boolean;
   publishedAt?: string;
 }
@@ -33,6 +41,7 @@ interface PostRow {
   title: string;
   excerpt: string;
   content: string;
+  media: PostMedia[] | null;
   published: boolean;
   published_at: string;
   created_at: string;
@@ -47,6 +56,7 @@ function toRecord(row: PostRow): PostRecord {
     title: row.title,
     excerpt: row.excerpt,
     content: row.content,
+    media: row.media ?? [],
     published: row.published,
     publishedAt: row.published_at,
     createdAt: row.created_at,
@@ -106,6 +116,7 @@ export async function createPost(input: PostInput): Promise<PostRecord> {
       title: input.title,
       excerpt: input.excerpt,
       content: input.content,
+      media: input.media ?? [],
       published: input.published ?? true,
       published_at: input.publishedAt ?? new Date().toISOString().slice(0, 10),
       updated_at: new Date().toISOString(),
@@ -126,6 +137,7 @@ export async function updatePost(id: string, input: PostInput): Promise<PostReco
       title: input.title,
       excerpt: input.excerpt,
       content: input.content,
+      media: input.media ?? [],
       published: input.published ?? true,
       published_at: input.publishedAt ?? new Date().toISOString().slice(0, 10),
       updated_at: new Date().toISOString(),
