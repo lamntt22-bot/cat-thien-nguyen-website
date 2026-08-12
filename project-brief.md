@@ -95,6 +95,31 @@ Sau bước 2, khởi động lại `npm run dev` để Next.js đọc `.env.loc
    khác nhau — hiện tại mọi khách mua lẻ đều ngang hàng.
 4. Domain đã có chưa, hay dùng domain tạm của Vercel khi deploy?
 
+## PHẦN C — Giỏ hàng & thanh toán (đã code xong, cần chạy lại schema.sql)
+
+Đã thêm nút "Đăng nhập" cạnh nút "Đăng ký" trên header, và luồng mua hàng trực tiếp trên web:
+
+- **Giỏ hàng** (`/cart`): lưu trong localStorage của trình duyệt, có icon 🛒 kèm số lượng ở header.
+  Chỉ sản phẩm nào admin đã điền "Giá bán thực" ở `/admin/products` mới có nút "Thêm vào giỏ" —
+  sản phẩm chưa có giá vẫn giữ nút "Quan tâm mua" như cũ.
+- **Thanh toán** (`/checkout`, bắt buộc đăng nhập): nhập họ tên/SĐT/địa chỉ, chọn **chuyển khoản**
+  hoặc **thanh toán khi nhận hàng (COD)**. Giá được server tính lại từ DB (không tin giá trình
+  duyệt gửi lên) trước khi lưu đơn.
+- **`/dashboard`**: khách xem lại các đơn đã đặt mua kèm trạng thái.
+- **`/admin/orders`**: admin xem toàn bộ đơn, đổi trạng thái (đang chờ / đã xác nhận / đang giao /
+  hoàn tất / đã hủy).
+- Đã sửa 1 lỗi có sẵn: đổi mật khẩu lần đầu xong bị kẹt lại ở `/change-password` mãi (do cookie
+  đăng nhập không được cấp lại sau khi đổi mật khẩu) — nay đổi xong vào thẳng `/dashboard`.
+
+### Cần làm để chạy thật được (bắt buộc)
+
+1. **Chạy lại `supabase/schema.sql`** trong Supabase SQL Editor (an toàn chạy lại nhiều lần) — file
+   này giờ có thêm cột `price_amount` cho sản phẩm và 2 bảng `checkouts`/`checkout_items`. Chưa chạy
+   thì nút "Thêm vào giỏ" sẽ không hiện (site tự ẩn, không lỗi) vì chưa có giá để bán.
+2. **Thông tin chuyển khoản thật**: hiện trang thanh toán chỉ ghi "thông tin chuyển khoản sẽ được
+   gửi lại sau khi đặt hàng" — chưa có số tài khoản/tên ngân hàng thật để hiển thị ngay. Cho tôi
+   biết ngân hàng, số tài khoản, tên người nhận nếu muốn hiện trực tiếp trên trang.
+
 ## Cách xem thử
 
 ```bash
