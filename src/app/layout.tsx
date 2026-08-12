@@ -20,6 +20,12 @@ const lora = Lora({
   weight: ["500", "600", "700"],
 });
 
+// Trang public (/, /thong-bao, /tin-tuc...) không dùng cookies() nên Next sẽ tự
+// prerender tĩnh lúc build — nghĩa là admin sửa sản phẩm/bài viết/giá sau khi đã
+// deploy sẽ KHÔNG hiện trên trang cho tới lần deploy kế tiếp. Ép render động mỗi
+// request để thay đổi từ /admin hiện ngay, đúng như đã ghi trong project-brief.
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Cát Thiên Nguyên — Dược Trời Ban, Đất Khai Phúc, Sống Lành Tâm",
   description:
