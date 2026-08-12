@@ -22,6 +22,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [name, setName] = useState(product?.name ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
   const [price, setPrice] = useState(product?.price ?? "Đang cập nhật");
+  const [priceAmount, setPriceAmount] = useState(product?.priceAmount ?? 0);
   const [badge, setBadge] = useState(product?.badge ?? "");
   const [cbmp, setCbmp] = useState(product?.cbmp ?? "");
   const [image, setImage] = useState(product?.image ?? "");
@@ -44,6 +45,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           name: name.trim(),
           description: description.trim(),
           price: price.trim(),
+          priceAmount: Number(priceAmount) > 0 ? Number(priceAmount) : undefined,
           badge: badge.trim() || undefined,
           cbmp: cbmp.trim() || undefined,
           image: image.trim() || undefined,
@@ -138,6 +140,23 @@ export default function ProductForm({ product }: ProductFormProps) {
             placeholder="Sản phẩm chủ lực / Sắp ra mắt"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-maroon-900">
+          Giá bán thực (VNĐ, để 0 nếu chưa mở bán online)
+        </label>
+        <input
+          type="number"
+          min={0}
+          value={priceAmount}
+          onChange={(e) => setPriceAmount(Number(e.target.value))}
+          className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+          placeholder="440000"
+        />
+        <p className="mt-1 text-xs text-ink-700/60">
+          Chỉ sản phẩm có giá này mới hiện nút &ldquo;Thêm vào giỏ&rdquo; để khách mua trực tiếp trên web.
+        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

@@ -14,6 +14,7 @@ const productSchema = z.object({
   name: z.string().trim().min(1).max(200),
   description: z.string().trim().max(2000).default(""),
   price: z.string().trim().min(1).max(100),
+  priceAmount: z.number().nonnegative().optional(),
   badge: z.string().trim().max(60).optional(),
   cbmp: z.string().trim().max(60).optional(),
   image: z.string().trim().max(300).optional(),

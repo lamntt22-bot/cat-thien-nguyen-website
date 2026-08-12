@@ -5,6 +5,7 @@ import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
+import AddToCartButton from "@/components/AddToCartButton";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const productCategories: { id: ProductCategory; label: string }[] = [
@@ -83,17 +84,26 @@ export default function ProductsSection({ products }: { products: ProductRecord[
                 {product.cbmp && (
                   <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
                 )}
-                <div className="mt-4 flex items-center justify-between">
+                <div className="mt-4 flex items-center justify-between gap-2">
                   <span className="font-display text-base font-semibold text-red-600">
                     {product.price}
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => open({ product: product.id })}
-                    className="rounded-full bg-maroon-900 px-4 py-2 text-xs font-bold text-cream-50 transition hover:bg-maroon-800"
-                  >
-                    Quan tâm sản phẩm này
-                  </button>
+                  {product.priceAmount ? (
+                    <AddToCartButton
+                      productId={product.id}
+                      name={product.name}
+                      price={product.priceAmount}
+                      image={product.image}
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => open({ product: product.id })}
+                      className="rounded-full bg-maroon-900 px-4 py-2 text-xs font-bold text-cream-50 transition hover:bg-maroon-800"
+                    >
+                      Quan tâm sản phẩm này
+                    </button>
+                  )}
                 </div>
               </div>
             </Reveal>

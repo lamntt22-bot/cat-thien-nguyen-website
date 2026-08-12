@@ -10,6 +10,7 @@ export interface ProductRecord {
   name: string;
   description: string;
   price: string;
+  priceAmount?: number;
   badge?: string;
   cbmp?: string;
   image?: string;
@@ -24,6 +25,7 @@ export interface ProductInput {
   name: string;
   description: string;
   price: string;
+  priceAmount?: number;
   badge?: string;
   cbmp?: string;
   image?: string;
@@ -37,6 +39,7 @@ interface ProductRow {
   name: string;
   description: string;
   price: string;
+  price_amount: number | null;
   badge: string | null;
   cbmp: string | null;
   image: string | null;
@@ -53,6 +56,7 @@ function toRecord(row: ProductRow): ProductRecord {
     name: row.name,
     description: row.description,
     price: row.price,
+    priceAmount: row.price_amount ?? undefined,
     badge: row.badge ?? undefined,
     cbmp: row.cbmp ?? undefined,
     image: row.image ?? undefined,
@@ -85,6 +89,18 @@ export async function getProductById(id: string): Promise<ProductRecord | null> 
   return data ? toRecord(data) : null;
 }
 
+export async function getProductsByIds(ids: string[]): Promise<ProductRecord[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await getSupabase()
+    .from("products")
+    .select("*")
+    .in("id", ids)
+    .returns<ProductRow[]>();
+
+  if (error) throw error;
+  return (data ?? []).map(toRecord);
+}
+
 export async function createProduct(input: ProductInput): Promise<ProductRecord> {
   const { data, error } = await getSupabase()
     .from("products")
@@ -94,6 +110,7 @@ export async function createProduct(input: ProductInput): Promise<ProductRecord>
       name: input.name,
       description: input.description,
       price: input.price,
+      price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
       cbmp: input.cbmp ?? null,
       image: input.image ?? null,
@@ -119,6 +136,7 @@ export async function updateProduct(
       name: input.name,
       description: input.description,
       price: input.price,
+      price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
       cbmp: input.cbmp ?? null,
       image: input.image ?? null,

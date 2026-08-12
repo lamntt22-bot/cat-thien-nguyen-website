@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 
-const MEMBER_PATHS = ["/dashboard", "/change-password"];
+const MEMBER_PATHS = ["/dashboard", "/change-password", "/checkout"];
 const ADMIN_PREFIX = "/admin";
 
 export default async function proxy(request: NextRequest) {
@@ -40,5 +40,5 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/change-password", "/admin/:path*"],
+  matcher: ["/dashboard/:path*", "/change-password", "/admin/:path*", "/checkout/:path*"],
 };

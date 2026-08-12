@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Lora } from "next/font/google";
 import "./globals.css";
 import { LeadCaptureProvider } from "@/components/LeadCaptureContext";
+import { CartProvider } from "@/components/CartContext";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -38,12 +39,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${lora.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream-100 text-ink-900 font-sans">
-        <LeadCaptureProvider products={products}>
-          <TopBar />
-          <Header />
-          {children}
-          <Footer />
-        </LeadCaptureProvider>
+        <CartProvider>
+          <LeadCaptureProvider products={products}>
+            <TopBar />
+            <Header />
+            {children}
+            <Footer />
+          </LeadCaptureProvider>
+        </CartProvider>
       </body>
     </html>
   );

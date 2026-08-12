@@ -35,6 +35,10 @@ create table if not exists public.products (
 
 create index if not exists products_category_idx on public.products (category, sort_order);
 
+-- Giá dạng số, dùng để tính tiền giỏ hàng — chỉ set cho sản phẩm đã có giá bán thật.
+-- Sản phẩm còn "Đang cập nhật"/"Sắp ra mắt" giữ NULL, không cho thêm vào giỏ hàng (chỉ "Quan tâm mua").
+alter table public.products add column if not exists price_amount numeric;
+
 -- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
@@ -66,6 +70,35 @@ create table if not exists public.orders (
 create index if not exists orders_member_idx on public.orders (member_id);
 create index if not exists orders_status_idx on public.orders (status);
 
+-- ============ CHECKOUTS (mua hàng thật qua giỏ hàng — chuyển khoản / COD) ============
+create table if not exists public.checkouts (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references public.members(id) on delete cascade,
+  full_name text not null,
+  phone text not null,
+  address text not null,
+  payment_method text not null check (payment_method in ('bank_transfer', 'cod')),
+  status text not null default 'pending' check (
+    status in ('pending', 'confirmed', 'shipping', 'completed', 'cancelled')
+  ),
+  total_amount numeric not null default 0,
+  note text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.checkout_items (
+  id uuid primary key default gen_random_uuid(),
+  checkout_id uuid not null references public.checkouts(id) on delete cascade,
+  product_id uuid references public.products(id) on delete set null,
+  product_name_snapshot text not null,
+  unit_price numeric not null,
+  quantity int not null check (quantity > 0)
+);
+
+create index if not exists checkouts_member_idx on public.checkouts (member_id);
+create index if not exists checkouts_status_idx on public.checkouts (status);
+create index if not exists checkout_items_checkout_idx on public.checkout_items (checkout_id);
+
 -- ============ RLS — bật, KHÔNG có policy cho anon/authenticated (default-deny) ============
 -- Mọi truy cập đọc/viết đều đi qua API route của chính app, dùng
 -- SUPABASE_SERVICE_ROLE_KEY (bỏ qua RLS) sau khi server đã tự verify quyền —
@@ -74,6 +107,8 @@ alter table public.members enable row level security;
 alter table public.products enable row level security;
 alter table public.posts enable row level security;
 alter table public.orders enable row level security;
+alter table public.checkouts enable row level security;
+alter table public.checkout_items enable row level security;
 
 -- ============ SEED DATA — nội dung hiện có trên site, để trang không trống sau khi chạy schema ============
 -- An toàn để chạy lại: on conflict (slug) do nothing.
@@ -95,6 +130,13 @@ insert into public.products (slug, category, name, description, price, badge, cb
 ('sua-rua-mat-bach-linh', 'bach', 'Sữa rửa mặt Bạch Linh', 'Làm sạch da hằng ngày, giữ ẩm nhẹ. Nấm linh chi (Ganoderma Lucidum), Nhân sâm (Panax Ginseng), Panthenol.', '330.000₫', null, '366/25/CBMP-PT', '/assets/products/sữa rửa mặt bạch linh.png', 1),
 ('dung-dich-ve-sinh-bach-trau', 'bach', 'Dung dịch vệ sinh Bạch Trầu', 'Vệ sinh phụ nữ dịu nhẹ, giữ thông thoáng. Lá trầu không, Cam thảo, chiết xuất Hoa hồng, Neem.', '290.000₫', null, '368/25/CBMP-PT', '/assets/products/dung dịch vệ sinh bạch trầu.png', 2)
 on conflict (slug) do nothing;
+
+-- Backfill giá dạng số cho các sản phẩm đã có giá bán thật (để tính giỏ hàng) —
+-- an toàn để chạy lại, chỉ set theo đúng giá hiển thị đã có ở trên.
+update public.products set price_amount = 440000 where slug in ('ngoc-am-kim', 'ngoc-am-moc', 'ngoc-am-thuy', 'ngoc-am-hoa', 'ngoc-am-tho') and price_amount is null;
+update public.products set price_amount = 499000 where slug = 'kem-bach-nhat' and price_amount is null;
+update public.products set price_amount = 330000 where slug = 'sua-rua-mat-bach-linh' and price_amount is null;
+update public.products set price_amount = 290000 where slug = 'dung-dich-ve-sinh-bach-trau' and price_amount is null;
 
 insert into public.posts (slug, category, title, excerpt, content, published_at) values
 ('ra-mat-chuong-trinh-dai-ly-doi-tac', 'thong-bao', 'Ra mắt Chương trình Đại lý & Đối tác Cát Thiên Nguyên',

@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { SESSION_COOKIE, verifySessionToken, hashPassword } from "@/lib/auth";
+import {
+  SESSION_COOKIE,
+  SESSION_COOKIE_OPTIONS,
+  verifySessionToken,
+  hashPassword,
+  createSessionToken,
+} from "@/lib/auth";
 import { updateMemberPassword } from "@/lib/member-store";
 
 const schema = z.object({
@@ -26,7 +32,15 @@ export async function POST(request: NextRequest) {
   try {
     const passwordHash = await hashPassword(parsed.data.newPassword);
     await updateMemberPassword(session.memberId, passwordHash);
-    return NextResponse.json({ ok: true });
+
+    const newToken = await createSessionToken({
+      memberId: session.memberId,
+      role: session.role,
+      mustChangePassword: false,
+    });
+    const response = NextResponse.json({ ok: true });
+    response.cookies.set(SESSION_COOKIE, newToken, SESSION_COOKIE_OPTIONS);
+    return response;
   } catch (err) {
     console.error("[change-password] failed", err);
     return NextResponse.json({ error: "Đã xảy ra lỗi, vui lòng thử lại." }, { status: 500 });
