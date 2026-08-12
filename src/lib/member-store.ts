@@ -123,6 +123,37 @@ export async function updateMemberPassword(id: string, passwordHash: string): Pr
   if (error) throw error;
 }
 
+export interface UpdateMemberInput {
+  name: string;
+  phone: string;
+  email: string;
+}
+
+export async function updateMember(
+  id: string,
+  input: UpdateMemberInput,
+): Promise<MemberRecord> {
+  const { data, error } = await getSupabase()
+    .from("members")
+    .update({ name: input.name, phone: input.phone, email: input.email })
+    .eq("id", id)
+    .select("*")
+    .single<MemberRow>();
+
+  if (error) throw error;
+  return toMemberRecord(data);
+}
+
+/** Admin đặt lại mật khẩu về giá trị mặc định — bắt khách đổi lại ở lần đăng nhập kế tiếp. */
+export async function resetMemberPassword(id: string, passwordHash: string): Promise<void> {
+  const { error } = await getSupabase()
+    .from("members")
+    .update({ password_hash: passwordHash, must_change_password: true })
+    .eq("id", id);
+
+  if (error) throw error;
+}
+
 export async function listMembers(): Promise<MemberRecord[]> {
   const { data, error } = await getSupabase()
     .from("members")

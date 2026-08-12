@@ -3,6 +3,7 @@ import { getCurrentMember } from "@/lib/session";
 import { listMembers } from "@/lib/member-store";
 import { listAllOrders } from "@/lib/order-store";
 import AdminNav from "@/components/AdminNav";
+import ResetPasswordButton from "@/components/ResetPasswordButton";
 
 const ORDER_STATUS_LABEL: Record<string, string> = {
   pending: "Đang chờ xác nhận",
@@ -39,7 +40,7 @@ export default async function AdminPage() {
         </p>
 
         <div className="mt-5 overflow-x-auto rounded-2xl border border-gold-500/20 bg-white">
-          <table className="w-full min-w-[900px] text-sm">
+          <table className="w-full min-w-[1050px] text-sm">
             <thead>
               <tr className="border-b border-gold-500/20 text-left text-xs uppercase tracking-wide text-ink-700/60">
                 <th className="px-4 py-3">Tên</th>
@@ -47,6 +48,7 @@ export default async function AdminPage() {
                 <th className="px-4 py-3">Sản phẩm quan tâm lúc đăng ký</th>
                 <th className="px-4 py-3">Ngày đăng ký</th>
                 <th className="px-4 py-3">Yêu cầu mua hàng</th>
+                <th className="px-4 py-3">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -84,6 +86,17 @@ export default async function AdminPage() {
                           ))}
                         </ul>
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col items-start gap-2">
+                        <a
+                          href={`/admin/members/${m.id}/edit`}
+                          className="rounded-full border border-maroon-900/20 px-3 py-1.5 text-xs font-semibold text-maroon-900 transition hover:bg-maroon-900/5"
+                        >
+                          Sửa thông tin
+                        </a>
+                        <ResetPasswordButton memberId={m.id} memberName={m.name} />
+                      </div>
                     </td>
                   </tr>
                 );
