@@ -1,0 +1,139 @@
+import "server-only";
+import { getSupabase } from "@/lib/supabase";
+
+export type ProductCategory = "tra-dong-y" | "ngoc-am" | "bach";
+
+export interface ProductRecord {
+  id: string;
+  slug: string;
+  category: ProductCategory;
+  name: string;
+  description: string;
+  price: string;
+  badge?: string;
+  cbmp?: string;
+  image?: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductInput {
+  slug: string;
+  category: ProductCategory;
+  name: string;
+  description: string;
+  price: string;
+  badge?: string;
+  cbmp?: string;
+  image?: string;
+  sortOrder?: number;
+}
+
+interface ProductRow {
+  id: string;
+  slug: string;
+  category: string;
+  name: string;
+  description: string;
+  price: string;
+  badge: string | null;
+  cbmp: string | null;
+  image: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+function toRecord(row: ProductRow): ProductRecord {
+  return {
+    id: row.id,
+    slug: row.slug,
+    category: row.category as ProductCategory,
+    name: row.name,
+    description: row.description,
+    price: row.price,
+    badge: row.badge ?? undefined,
+    cbmp: row.cbmp ?? undefined,
+    image: row.image ?? undefined,
+    sortOrder: row.sort_order,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listProducts(): Promise<ProductRecord[]> {
+  const { data, error } = await getSupabase()
+    .from("products")
+    .select("*")
+    .order("category", { ascending: true })
+    .order("sort_order", { ascending: true })
+    .returns<ProductRow[]>();
+
+  if (error) throw error;
+  return (data ?? []).map(toRecord);
+}
+
+export async function getProductById(id: string): Promise<ProductRecord | null> {
+  const { data, error } = await getSupabase()
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle<ProductRow>();
+
+  if (error) throw error;
+  return data ? toRecord(data) : null;
+}
+
+export async function createProduct(input: ProductInput): Promise<ProductRecord> {
+  const { data, error } = await getSupabase()
+    .from("products")
+    .insert({
+      slug: input.slug,
+      category: input.category,
+      name: input.name,
+      description: input.description,
+      price: input.price,
+      badge: input.badge ?? null,
+      cbmp: input.cbmp ?? null,
+      image: input.image ?? null,
+      sort_order: input.sortOrder ?? 0,
+      updated_at: new Date().toISOString(),
+    })
+    .select("*")
+    .single<ProductRow>();
+
+  if (error) throw error;
+  return toRecord(data);
+}
+
+export async function updateProduct(
+  id: string,
+  input: ProductInput,
+): Promise<ProductRecord> {
+  const { data, error } = await getSupabase()
+    .from("products")
+    .update({
+      slug: input.slug,
+      category: input.category,
+      name: input.name,
+      description: input.description,
+      price: input.price,
+      badge: input.badge ?? null,
+      cbmp: input.cbmp ?? null,
+      image: input.image ?? null,
+      sort_order: input.sortOrder ?? 0,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .select("*")
+    .single<ProductRow>();
+
+  if (error) throw error;
+  return toRecord(data);
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  const { error } = await getSupabase().from("products").delete().eq("id", id);
+  if (error) throw error;
+}

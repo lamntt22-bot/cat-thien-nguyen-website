@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fbf6ec;
+  --foreground: #2a1512;
+
+  /* Deep imperial crimson — chim hạc vân mây, cung đình Việt Nam */
+  --color-maroon-950: #3a060a;
+  --color-maroon-900: #6e0e13;
+  --color-maroon-800: #8c1420;
+  --color-maroon-700: #a71f28;
+
+  /* Logo red / primary CTA red */
+  --color-red-600: #c31f2b;
+  --color-red-500: #d6373d;
+  --color-red-400: #e46066;
+
+  /* Gold line-art accent */
+  --color-gold-600: #a9803b;
+  --color-gold-500: #c9a24b;
+  --color-gold-400: #ddbb72;
+  --color-gold-300: #ecd9a8;
+
+  /* Warm ivory-rose — card tint, corner ornament backing */
+  --color-blush-50: #f7e7dd;
+  --color-blush-100: #f0d3c4;
+  --color-blush-200: #e4b49c;
+
+  --color-cream-50: #fdfaf3;
+  --color-cream-100: #fbf6ec;
+  --color-cream-200: #f3e9d6;
+
+  --color-ink-900: #2a1512;
+  --color-ink-700: #4a2e28;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-be-vietnam-pro);
+  --font-display: var(--font-lora);
+
+  --color-maroon-950: var(--color-maroon-950);
+  --color-maroon-900: var(--color-maroon-900);
+  --color-maroon-800: var(--color-maroon-800);
+  --color-maroon-700: var(--color-maroon-700);
+
+  --color-red-600: var(--color-red-600);
+  --color-red-500: var(--color-red-500);
+  --color-red-400: var(--color-red-400);
+
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-300: var(--color-gold-300);
+
+  --color-blush-50: var(--color-blush-50);
+  --color-blush-100: var(--color-blush-100);
+  --color-blush-200: var(--color-blush-200);
+
+  --color-cream-50: var(--color-cream-50);
+  --color-cream-100: var(--color-cream-100);
+  --color-cream-200: var(--color-cream-200);
+
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-700: var(--color-ink-700);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll-reveal, used site-wide via the <Reveal> component */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init,
+  .reveal-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@keyframes cloud-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(3%, -2%) scale(1.05);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-cloud-drift {
+  animation: cloud-drift 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cloud-drift {
+    animation: none;
+  }
+}
+
+/* ---------- Hiệu ứng nền động: mây trôi + xoáy sáng + sao lấp lánh ---------- */
+
+@keyframes mist-drift-a {
+  0% {
+    transform: translate(-6%, 0) scale(1);
+  }
+  50% {
+    transform: translate(6%, -4%) scale(1.12);
+  }
+  100% {
+    transform: translate(-6%, 0) scale(1);
+  }
+}
+
+@keyframes mist-drift-b {
+  0% {
+    transform: translate(8%, 2%) scale(1.05);
+  }
+  50% {
+    transform: translate(-8%, -3%) scale(1);
+  }
+  100% {
+    transform: translate(8%, 2%) scale(1.05);
+  }
+}
+
+@keyframes swirl-rotate {
+  from {
+    transform: rotate(0deg) scale(1.2);
+  }
+  to {
+    transform: rotate(360deg) scale(1.2);
+  }
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.ambient-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-mist {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  will-change: transform;
+}
+
+.ambient-mist-a {
+  animation: mist-drift-a 17s ease-in-out infinite;
+}
+
+.ambient-mist-b {
+  animation: mist-drift-b 21s ease-in-out infinite;
+}
+
+.ambient-swirl {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  animation: swirl-rotate 35s linear infinite;
+}
+
+.ambient-star {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--color-gold-300);
+  box-shadow: 0 0 6px 1px rgba(236, 217, 168, 0.8);
+  animation: star-twinkle 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-mist-a,
+  .ambient-mist-b,
+  .ambient-swirl,
+  .ambient-star {
+    animation: none;
+  }
+}
+
+/* Repeating gold wave-cloud border strip — dùng làm divider giữa các section */
+.imperial-wave-divider {
+  height: 14px;
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-gold-500) 0,
+    var(--color-gold-500) 2px,
+    transparent 2px,
+    transparent 14px
+  );
+  opacity: 0.5;
+}
