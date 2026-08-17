@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
+// Ảnh/video bài viết upload lên Supabase Storage được hiển thị/tải thẳng từ
+// domain Supabase (không qua server của mình) — CSP phải cho phép domain này.
+const supabaseOrigin =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://asjnvumrzqkjjhxnshvq.supabase.co";
+
 // Static (non-nonce) CSP — fine for a static marketing page with no
 // dangerouslySetInnerHTML / third-party scripts. Revisit if that changes.
 const securityHeaders = [
@@ -11,9 +16,10 @@ const securityHeaders = [
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' blob: data:",
+      `img-src 'self' blob: data: ${supabaseOrigin}`,
+      `media-src 'self' blob: ${supabaseOrigin}`,
       "font-src 'self'",
-      "connect-src 'self'",
+      `connect-src 'self' ${supabaseOrigin}`,
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
