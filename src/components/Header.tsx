@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import { useCart } from "@/components/CartContext";
+import LogoutButton from "@/components/LogoutButton";
 
 const NAV_LINKS = [
   { href: "/#ve-chung-toi", label: "Về chúng tôi" },
@@ -32,7 +33,7 @@ function CartLink({ className = "" }: { className?: string }) {
   );
 }
 
-export default function Header() {
+export default function Header({ member }: { member: { name: string } | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { open } = useLeadCapture();
 
@@ -52,9 +53,18 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2.5 lg:flex">
-          <Link href="/login" className="whitespace-nowrap text-sm font-semibold text-cream-100/85 transition hover:text-gold-400">
-            Đăng nhập
-          </Link>
+          {member ? (
+            <div className="flex items-center gap-2 text-sm text-cream-100/85">
+              <span className="max-w-[140px] truncate whitespace-nowrap font-semibold text-cream-50">
+                Xin chào, {member.name}
+              </span>
+              <LogoutButton className="whitespace-nowrap font-semibold text-cream-100/85 transition hover:text-gold-400" />
+            </div>
+          ) : (
+            <Link href="/login" className="whitespace-nowrap text-sm font-semibold text-cream-100/85 transition hover:text-gold-400">
+              Đăng nhập
+            </Link>
+          )}
           <CartLink className="text-cream-50 hover:text-gold-400" />
           <button
             type="button"
@@ -93,9 +103,18 @@ export default function Header() {
                 {link.label}
               </a>
             ))}
-            <Link href="/login" onClick={() => setMenuOpen(false)} className="transition hover:text-gold-400">
-              Đăng nhập
-            </Link>
+            {member ? (
+              <div className="flex items-center justify-between">
+                <span className="truncate font-semibold text-cream-50">
+                  Xin chào, {member.name}
+                </span>
+                <LogoutButton className="font-semibold text-cream-100/85 transition hover:text-gold-400" />
+              </div>
+            ) : (
+              <Link href="/login" onClick={() => setMenuOpen(false)} className="transition hover:text-gold-400">
+                Đăng nhập
+              </Link>
+            )}
           </nav>
           <button
             type="button"

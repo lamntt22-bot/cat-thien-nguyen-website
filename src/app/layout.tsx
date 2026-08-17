@@ -7,6 +7,7 @@ import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { listProducts, type ProductRecord } from "@/lib/product-store";
+import { getCurrentMember } from "@/lib/session";
 
 const beVietnamPro = Be_Vietnam_Pro({
   variable: "--font-be-vietnam-pro",
@@ -42,13 +43,15 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     console.error("[layout] failed to load products", err);
   }
 
+  const member = await getCurrentMember().catch(() => null);
+
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${lora.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream-100 text-ink-900 font-sans">
         <CartProvider>
           <LeadCaptureProvider products={products}>
             <TopBar />
-            <Header />
+            <Header member={member ? { name: member.name } : null} />
             {children}
             <Footer />
           </LeadCaptureProvider>
