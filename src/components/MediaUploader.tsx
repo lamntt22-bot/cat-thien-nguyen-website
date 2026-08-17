@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabase-browser";
+import { getSupabaseBrowser } from "@/lib/supabase-browser";
 import type { PostMedia } from "@/lib/post-store";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // khớp giới hạn bucket "post-media"
@@ -44,8 +44,8 @@ export default function MediaUploader({
           continue;
         }
 
-        const { error: uploadError } = await supabaseBrowser.storage
-          .from("post-media")
+        const { error: uploadError } = await getSupabaseBrowser()
+          .storage.from("post-media")
           .uploadToSignedUrl(data.path, data.token, file);
         if (uploadError) {
           setError(`Không tải lên được "${file.name}".`);
