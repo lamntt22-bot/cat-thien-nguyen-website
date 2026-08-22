@@ -11,6 +11,14 @@ export default function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden bg-maroon-900">
+      <Image
+        src="/assets/products/cửa hàng web.png"
+        alt="Cửa hàng Cát Thiên Nguyên — Nam dược trị gốc, Dưỡng tâm an nhiên"
+        width={1536}
+        height={1024}
+        className="relative z-10 h-auto w-full"
+        priority
+      />
       <AmbientBackground variant="full" />
       <CraneCorner position="top-right" className="-right-8 -top-10 h-48 w-48 opacity-90 sm:h-64 sm:w-64" />
       <CraneCorner position="bottom-left" className="-bottom-10 -left-8 h-48 w-48 opacity-90 sm:h-64 sm:w-64" />
