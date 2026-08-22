@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 
@@ -11,8 +12,17 @@ const MARKET_FACTS = [
 export default function AboutSection() {
   return (
     <section id="ve-chung-toi" className="relative overflow-hidden bg-cream-50 py-16 sm:py-20">
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src="/assets/products/ảnh dược liệu.jpg"
+          alt=""
+          fill
+          className="scale-110 object-cover opacity-30 blur-md"
+        />
+        <div className="absolute inset-0 bg-cream-50/78" />
+      </div>
       <CloudMotif className="pointer-events-none absolute -right-10 top-0 h-32 w-52 opacity-15" />
-      <div className="mx-auto max-w-4xl px-5 text-center sm:px-8">
+      <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
         <span className="text-sm font-semibold uppercase tracking-wide text-red-600">
           Câu chuyện thương hiệu
         </span>
@@ -33,14 +43,14 @@ export default function AboutSection() {
         {MARKET_FACTS.map((fact) => (
           <div
             key={fact.label}
-            className="rounded-2xl border border-gold-500/30 bg-blush-50 p-4 text-center"
+            className="rounded-2xl border border-gold-500/30 bg-blush-50/90 p-4 text-center backdrop-blur-sm"
           >
             <p className="font-display text-2xl font-semibold text-maroon-900">{fact.value}</p>
             <p className="mt-1 text-xs text-ink-700/70">{fact.label}</p>
           </div>
         ))}
       </Reveal>
-      <p className="mx-auto mt-3 max-w-4xl px-5 text-center text-xs text-ink-700/50 sm:px-8">
+      <p className="relative mx-auto mt-3 max-w-4xl px-5 text-center text-xs text-ink-700/50 sm:px-8">
         Số liệu thị trường tổng hợp, dùng để minh họa nhu cầu chung — không phải cam kết điều trị
         cho sản phẩm cụ thể.
       </p>
