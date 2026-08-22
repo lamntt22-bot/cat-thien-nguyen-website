@@ -1,5 +1,13 @@
 import Reveal from "@/components/Reveal";
 
+// Nháp — chờ Cát Thiên Nguyên cung cấp bằng cấp/chứng nhận thật để thay thế.
+const TRUST_BADGES = [
+  { icon: "🎖️", label: "Giấy công bố sản phẩm" },
+  { icon: "🛡️", label: "Kiểm định an toàn CBMP" },
+  { icon: "📜", label: "Chứng nhận nguồn gốc dược liệu" },
+  { icon: "⭐", label: "Đánh giá khách hàng" },
+];
+
 const LAYERS = [
   {
     step: "1",
@@ -27,7 +35,26 @@ export default function WhyChooseUs() {
   return (
     <section id="chuoi-kiem-soat" className="bg-cream-50 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3">
+          {TRUST_BADGES.map((badge) => (
+            <div
+              key={badge.label}
+              className="flex items-center gap-2 rounded-full border border-gold-500/40 bg-white px-4 py-2 shadow-sm"
+            >
+              <span className="text-lg" aria-hidden="true">
+                {badge.icon}
+              </span>
+              <span className="text-xs font-semibold text-maroon-900 sm:text-sm">
+                {badge.label}
+              </span>
+            </div>
+          ))}
+        </Reveal>
+        <p className="mx-auto mt-2 max-w-2xl text-center text-[11px] text-ink-700/45">
+          * Hình minh hoạ — chứng nhận chính thức sẽ được Cát Thiên Nguyên cập nhật.
+        </p>
+
+        <Reveal className="mx-auto mt-6 max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wide text-red-600">
             Vì sao chọn Cát Thiên Nguyên
           </span>
