@@ -167,6 +167,22 @@ html {
   }
 }
 
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--pulse-color, rgba(220, 38, 38, 0.55));
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .ambient-bg {
   position: absolute;
   inset: 0;
