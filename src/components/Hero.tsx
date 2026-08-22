@@ -21,8 +21,8 @@ export default function Hero() {
       />
       <div className="relative">
         <AmbientBackground variant="full" />
-        <CraneCorner position="top-right" className="-right-8 -top-10 h-48 w-48 opacity-90 sm:h-64 sm:w-64" />
-        <CraneCorner position="bottom-left" className="-bottom-10 -left-8 h-48 w-48 opacity-90 sm:h-64 sm:w-64" />
+        <CraneCorner position="top-right" className="hidden h-40 w-40 opacity-70 lg:-right-16 lg:-top-16 lg:block" />
+        <CraneCorner position="bottom-left" className="hidden h-40 w-40 opacity-70 lg:-bottom-16 lg:-left-16 lg:block" />
         <CloudWisp className="left-[30%] top-[18%] h-40 w-52 opacity-45 sm:h-52 sm:w-64" />
         <CloudWisp className="right-[8%] top-[6%] h-28 w-36 opacity-30" rotate={6} />
         <CloudWisp className="right-[14%] bottom-[8%] h-24 w-32 opacity-25" rotate={-8} />
