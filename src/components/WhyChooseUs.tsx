@@ -25,7 +25,7 @@ const LAYERS = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="bg-cream-50 py-16 sm:py-20">
+    <section id="chuoi-kiem-soat" className="bg-cream-50 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wide text-red-600">
