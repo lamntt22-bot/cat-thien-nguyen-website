@@ -17,9 +17,9 @@ export default function AboutSection() {
           src="/assets/products/ảnh dược liệu.jpg"
           alt=""
           fill
-          className="scale-110 object-cover opacity-60 blur-lg"
+          className="scale-105 object-cover opacity-90 blur-[3px]"
         />
-        <div className="absolute inset-0 bg-cream-50/45" />
+        <div className="absolute inset-0 bg-cream-50/25" />
       </div>
       <CloudMotif className="pointer-events-none absolute -right-10 top-0 h-32 w-52 opacity-15" />
       <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
