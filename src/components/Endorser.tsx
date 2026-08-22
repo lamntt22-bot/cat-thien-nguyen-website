@@ -16,8 +16,8 @@ export default function Endorser() {
   return (
     <section id="nguoi-bao-chung" className="relative overflow-hidden bg-maroon-950 py-16 text-cream-50 sm:py-20">
       <AmbientBackground variant="light" />
-      <CraneCorner position="top-right" className="hidden h-44 w-44 opacity-70 lg:-right-16 lg:-top-16 lg:block" />
-      <CraneCorner position="bottom-left" className="hidden h-40 w-40 opacity-60 lg:-bottom-16 lg:-left-16 lg:block" />
+      <CraneCorner position="top-right" className="hidden h-56 w-56 opacity-65 lg:-right-8 lg:-top-8 lg:block" />
+      <CraneCorner position="bottom-left" className="hidden h-40 w-40 opacity-55 lg:-bottom-14 lg:-left-14 lg:block" />
       <CloudWisp className="right-[20%] top-[10%] h-32 w-40 opacity-30" rotate={6} />
 
       <div className="relative mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-center">

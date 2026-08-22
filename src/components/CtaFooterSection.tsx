@@ -11,8 +11,8 @@ export default function CtaFooterSection() {
     <section className="relative overflow-hidden bg-maroon-950 py-16 text-center text-cream-50 sm:py-20">
       <div className="imperial-wave-divider absolute inset-x-0 top-0" />
       <AmbientBackground variant="light" />
-      <CraneCorner position="top-right" className="hidden h-40 w-40 opacity-65 lg:-right-16 lg:-top-16 lg:block" />
-      <CraneCorner position="bottom-left" className="hidden h-40 w-40 opacity-65 lg:-bottom-16 lg:-left-16 lg:block" />
+      <CraneCorner position="top-right" className="hidden h-56 w-56 opacity-65 lg:-right-8 lg:-top-8 lg:block" />
+      <CraneCorner position="bottom-left" className="hidden h-56 w-56 opacity-65 lg:-bottom-8 lg:-left-8 lg:block" />
       <CloudWisp className="left-[8%] top-[10%] h-28 w-36 opacity-25" rotate={6} />
       <CloudWisp className="right-[10%] bottom-[10%] h-24 w-32 opacity-20" rotate={-6} />
       <div className="relative mx-auto max-w-2xl px-5 sm:px-8">

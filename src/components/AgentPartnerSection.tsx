@@ -90,8 +90,8 @@ export default function AgentPartnerSection() {
           <Reveal delayMs={100}>
             <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-gold-500/30 bg-maroon-950 p-7 text-cream-50 shadow-sm sm:p-8">
               <AmbientBackground variant="light" />
-              <CraneCorner position="top-right" className="-right-14 -top-14 h-32 w-32 opacity-55" />
-              <CraneCorner position="bottom-left" className="-bottom-14 -left-14 h-28 w-28 opacity-45" />
+              <CraneCorner position="top-right" className="-right-8 -top-8 h-44 w-44 opacity-70" />
+              <CraneCorner position="bottom-left" className="-bottom-8 -left-8 h-40 w-40 opacity-55" />
               <CloudWisp className="left-[30%] top-[8%] h-24 w-32 opacity-25" rotate={5} />
               <span className="relative w-fit rounded-full bg-gold-500/15 px-3 py-1 text-xs font-semibold uppercase text-gold-400">
                 Độc quyền khu vực
