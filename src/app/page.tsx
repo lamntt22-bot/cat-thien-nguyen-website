@@ -6,6 +6,7 @@ import ProductsSection from "@/components/ProductsSection";
 import AgentPartnerSection from "@/components/AgentPartnerSection";
 import FaqSection from "@/components/FaqSection";
 import CtaFooterSection from "@/components/CtaFooterSection";
+import RoofDivider from "@/components/RoofDivider";
 import { listProducts, type ProductRecord } from "@/lib/product-store";
 
 export default async function Home() {
@@ -18,13 +19,19 @@ export default async function Home() {
 
   return (
     <main>
+      <RoofDivider />
       <Hero />
+      <RoofDivider />
       <AboutSection />
+      <RoofDivider />
       <Endorser />
+      <RoofDivider />
       <WhyChooseUs />
       <ProductsSection products={products} />
+      <RoofDivider />
       <AgentPartnerSection />
       <FaqSection />
+      <RoofDivider />
       <CtaFooterSection />
     </main>
   );
