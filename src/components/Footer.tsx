@@ -42,26 +42,48 @@ export default function Footer() {
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gold-400">
             Liên hệ
           </h3>
-          <ul className="mt-4 space-y-2 text-sm">
+          <ul className="mt-4 space-y-3 text-sm">
             <li>
-              Hotline:{" "}
-              <a href="tel:0911556893" className="hover:text-cream-50">
-                0911 556 893
+              <a href="tel:0911556893" className="flex items-center gap-2.5 hover:text-cream-50">
+                <span
+                  aria-hidden="true"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-600 text-xs"
+                >
+                  📞
+                </span>
+                Hotline: 0911 556 893
               </a>
             </li>
             <li>
-              Zalo:{" "}
-              <a href="https://zalo.me/0911556893" className="hover:text-cream-50">
-                0911 556 893
-              </a>
-            </li>
-            <li>
-              Facebook:{" "}
               <a
-                href="https://facebook.com/profile.php?id=61566924726003"
-                className="hover:text-cream-50"
+                href="https://zalo.me/0911556893"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 hover:text-cream-50"
               >
-                Cát Thiên Nguyên
+                <span
+                  aria-hidden="true"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0068FF] text-[9px] font-black tracking-tight text-white"
+                >
+                  Zalo
+                </span>
+                Zalo: 0911 556 893
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://web.facebook.com/profile.php?id=61579367331528"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 hover:text-cream-50"
+              >
+                <span
+                  aria-hidden="true"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1877F2] font-display text-sm font-bold text-white"
+                >
+                  f
+                </span>
+                Facebook: Cát Thiên Nguyên
               </a>
             </li>
           </ul>
