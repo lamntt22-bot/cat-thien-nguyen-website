@@ -2,6 +2,7 @@ import Hero from "@/components/Hero";
 import AboutSection from "@/components/AboutSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Endorser from "@/components/Endorser";
+import JourneySection from "@/components/JourneySection";
 import ProductsSection from "@/components/ProductsSection";
 import AgentPartnerSection from "@/components/AgentPartnerSection";
 import FaqSection from "@/components/FaqSection";
@@ -21,6 +22,7 @@ export default async function Home() {
       <Hero />
       <AboutSection />
       <Endorser />
+      <JourneySection />
       <WhyChooseUs />
       <ProductsSection products={products} />
       <AgentPartnerSection />
