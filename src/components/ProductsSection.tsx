@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
@@ -36,13 +37,13 @@ export default function ProductsSection({
             3 dòng sản phẩm của Cát Thiên Nguyên
           </h2>
           {showMoreLink && (
-            <a
+            <Link
               href="/san-pham"
               className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"
             >
               Xem thêm
               <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           )}
         </Reveal>
 
@@ -120,6 +121,12 @@ export default function ProductsSection({
                     </button>
                   )}
                 </div>
+                <Link
+                  href={`/san-pham/${product.slug}`}
+                  className="mt-3 block rounded-full border border-maroon-900/20 px-4 py-2 text-center text-xs font-semibold text-maroon-900 transition hover:bg-maroon-900/5"
+                >
+                  Xem chi tiết sản phẩm
+                </Link>
               </div>
             </Reveal>
           ))}

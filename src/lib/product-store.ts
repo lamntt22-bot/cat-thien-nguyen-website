@@ -89,6 +89,17 @@ export async function getProductById(id: string): Promise<ProductRecord | null> 
   return data ? toRecord(data) : null;
 }
 
+export async function getProductBySlug(slug: string): Promise<ProductRecord | null> {
+  const { data, error } = await getSupabase()
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle<ProductRow>();
+
+  if (error) throw error;
+  return data ? toRecord(data) : null;
+}
+
 export async function getProductsByIds(ids: string[]): Promise<ProductRecord[]> {
   if (ids.length === 0) return [];
   const { data, error } = await getSupabase()

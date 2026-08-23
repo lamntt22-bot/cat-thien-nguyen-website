@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
@@ -60,13 +61,13 @@ export default function Endorser({ showMoreLink = true }: { showMoreLink?: boole
             bán một hệ thống tri thức Đông y có người thật, danh tiếng thật đứng sau.
           </p>
           {showMoreLink && (
-            <a
+            <Link
               href="/nguoi-bao-chung"
               className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-gold-500 px-5 py-2.5 text-sm font-bold text-maroon-950 shadow-md transition hover:bg-gold-400"
             >
               Xem thêm
               <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           )}
         </Reveal>
       </div>

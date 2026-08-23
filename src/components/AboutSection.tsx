@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 
 const MARKET_FACTS = [
@@ -47,13 +48,13 @@ export default function AboutSection({ moreHref = "/ve-chung-toi" }: { moreHref?
           trở lại đời sống hiện đại, xây dựng thói quen chăm sóc sức khỏe chủ động, cải thiện từ
           gốc rễ một cách nhẹ nhàng nhất — không thay thế y học hiện đại.
         </p>
-        <a
+        <Link
           href={moreHref}
           className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"
         >
           Xem thêm
           <span aria-hidden="true">→</span>
-        </a>
+        </Link>
       </div>
 
       <Reveal className="relative mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 px-5 sm:grid-cols-4 sm:px-8">

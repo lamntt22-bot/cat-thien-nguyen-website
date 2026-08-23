@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Logo from "@/components/Logo";
 
 const NAV_LINKS = [
@@ -30,9 +31,9 @@ export default function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="transition hover:text-cream-50">
+                <Link href={link.href} className="transition hover:text-cream-50">
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

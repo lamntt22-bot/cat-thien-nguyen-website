@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
 import OrnamentCorner from "@/components/OrnamentCorner";
@@ -53,12 +54,12 @@ export default function Hero() {
               >
                 Đăng ký nhận ưu đãi
               </button>
-              <a
+              <Link
                 href="/san-pham"
                 className="rounded-full border border-cream-100/30 px-7 py-3.5 text-center text-base font-semibold text-cream-50 transition hover:bg-cream-50/10"
               >
                 Xem sản phẩm
-              </a>
+              </Link>
             </div>
           </div>
 

@@ -46,9 +46,9 @@ export default function Header({ member }: { member: { name: string } | null }) 
 
         <nav className="hidden items-center gap-2.5 text-sm font-medium text-maroon-900/85 lg:flex">
           {NAV_LINKS.map((link) => (
-            <a key={link.href} href={link.href} className="whitespace-nowrap transition hover:text-red-600">
+            <Link key={link.href} href={link.href} className="whitespace-nowrap transition hover:text-red-600">
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -94,14 +94,14 @@ export default function Header({ member }: { member: { name: string } | null }) 
         <div className="border-t border-maroon-900/15 bg-gold-300 px-5 py-4 lg:hidden">
           <nav className="flex flex-col gap-4 text-sm font-medium text-maroon-900/85">
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="transition hover:text-red-600"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
             {member ? (
               <div className="flex items-center justify-between">

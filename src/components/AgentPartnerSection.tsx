@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
@@ -31,13 +32,13 @@ export default function AgentPartnerSection({ showMoreLink = true }: { showMoreL
             Chương trình Đại lý & Đối tác
           </h2>
           {showMoreLink && (
-            <a
+            <Link
               href="/dai-ly-doi-tac"
               className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"
             >
               Xem thêm
               <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           )}
         </Reveal>
 
