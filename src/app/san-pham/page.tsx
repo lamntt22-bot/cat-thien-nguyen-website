@@ -18,7 +18,7 @@ export default async function SanPhamPage() {
 
   return (
     <main>
-      <ProductsSection products={products} />
+      <ProductsSection products={products} showMoreLink={false} />
     </main>
   );
 }

@@ -17,7 +17,7 @@ const DISCOUNT_TIERS = [
   { level: "Từ 1.000.000.000₫", discount: "40%" },
 ];
 
-export default function AgentPartnerSection() {
+export default function AgentPartnerSection({ showMoreLink = true }: { showMoreLink?: boolean }) {
   const { open } = useLeadCapture();
 
   return (
@@ -30,6 +30,15 @@ export default function AgentPartnerSection() {
           <h2 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
             Chương trình Đại lý & Đối tác
           </h2>
+          {showMoreLink && (
+            <a
+              href="/dai-ly-doi-tac"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"
+            >
+              Xem thêm
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
         </Reveal>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">

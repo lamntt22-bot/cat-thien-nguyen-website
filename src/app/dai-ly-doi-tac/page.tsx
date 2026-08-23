@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function DaiLyDoiTacPage() {
   return (
     <main>
-      <AgentPartnerSection />
+      <AgentPartnerSection showMoreLink={false} />
     </main>
   );
 }

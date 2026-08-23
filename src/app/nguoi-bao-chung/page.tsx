@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function NguoiBaoChungPage() {
   return (
     <main>
-      <Endorser />
+      <Endorser showMoreLink={false} />
     </main>
   );
 }

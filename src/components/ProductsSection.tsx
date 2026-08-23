@@ -14,7 +14,13 @@ const productCategories: { id: ProductCategory; label: string }[] = [
   { id: "bach", label: "Chăm sóc thiên nhiên — dòng Bạch" },
 ];
 
-export default function ProductsSection({ products }: { products: ProductRecord[] }) {
+export default function ProductsSection({
+  products,
+  showMoreLink = true,
+}: {
+  products: ProductRecord[];
+  showMoreLink?: boolean;
+}) {
   const [active, setActive] = useState<ProductCategory>("tra-dong-y");
   const { open } = useLeadCapture();
   const visible = products.filter((p) => p.category === active);
@@ -29,6 +35,15 @@ export default function ProductsSection({ products }: { products: ProductRecord[
           <h2 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
             3 dòng sản phẩm của Cát Thiên Nguyên
           </h2>
+          {showMoreLink && (
+            <a
+              href="/san-pham"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"
+            >
+              Xem thêm
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
         </Reveal>
 
         <div className="mt-8 flex flex-wrap justify-center gap-2">
