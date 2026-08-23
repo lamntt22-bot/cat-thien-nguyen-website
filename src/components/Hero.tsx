@@ -54,7 +54,7 @@ export default function Hero() {
                 Đăng ký nhận ưu đãi
               </button>
               <a
-                href="#san-pham"
+                href="/san-pham"
                 className="rounded-full border border-cream-100/30 px-7 py-3.5 text-center text-base font-semibold text-cream-50 transition hover:bg-cream-50/10"
               >
                 Xem sản phẩm

@@ -1,17 +1,17 @@
 import Logo from "@/components/Logo";
 
 const NAV_LINKS = [
-  { href: "/#ve-chung-toi", label: "Về chúng tôi" },
-  { href: "/#nguoi-bao-chung", label: "Người bảo chứng" },
-  { href: "/#san-pham", label: "Sản phẩm" },
-  { href: "/#dai-ly-doi-tac", label: "Đại lý & Đối tác" },
+  { href: "/ve-chung-toi", label: "Về chúng tôi" },
+  { href: "/nguoi-bao-chung", label: "Người bảo chứng" },
+  { href: "/san-pham", label: "Sản phẩm" },
+  { href: "/dai-ly-doi-tac", label: "Đại lý & Đối tác" },
   { href: "/thong-bao", label: "Thông báo" },
   { href: "/tin-tuc", label: "Tin tức" },
 ];
 
 export default function Footer() {
   return (
-    <footer id="lien-he" className="relative bg-maroon-950 pt-14 text-cream-100/80">
+    <footer className="relative bg-maroon-950 pt-14 text-cream-100/80">
       <div className="imperial-wave-divider absolute inset-x-0 top-0" />
       <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div>

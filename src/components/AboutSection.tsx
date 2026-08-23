@@ -8,7 +8,7 @@ const MARKET_FACTS = [
   { value: "42%", label: "người đi làm thường xuyên căng thẳng, mất ngủ" },
 ];
 
-export default function AboutSection() {
+export default function AboutSection({ moreHref = "/ve-chung-toi" }: { moreHref?: string }) {
   return (
     <section id="ve-chung-toi" className="relative overflow-hidden bg-cream-50 py-16 sm:py-20">
       <Image
@@ -48,7 +48,7 @@ export default function AboutSection() {
           gốc rễ một cách nhẹ nhàng nhất — không thay thế y học hiện đại.
         </p>
         <a
-          href="#chuoi-kiem-soat"
+          href={moreHref}
           className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"
         >
           Xem thêm

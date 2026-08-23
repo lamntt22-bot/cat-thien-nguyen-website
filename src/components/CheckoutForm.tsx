@@ -28,7 +28,7 @@ export default function CheckoutForm({
       <div className="mt-6 rounded-2xl border border-gold-500/20 bg-white p-8 text-center">
         <p className="text-sm text-ink-700">Giỏ hàng của bạn đang trống.</p>
         <Link
-          href="/#san-pham"
+          href="/san-pham"
           className="mt-4 inline-block rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-semibold text-cream-50 transition hover:bg-maroon-800"
         >
           Xem sản phẩm

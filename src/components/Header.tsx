@@ -8,13 +8,13 @@ import { useCart } from "@/components/CartContext";
 import LogoutButton from "@/components/LogoutButton";
 
 const NAV_LINKS = [
-  { href: "/#ve-chung-toi", label: "Về chúng tôi" },
-  { href: "/#nguoi-bao-chung", label: "Người bảo chứng" },
-  { href: "/#san-pham", label: "Sản phẩm" },
-  { href: "/#dai-ly-doi-tac", label: "Đại lý & Đối tác" },
+  { href: "/ve-chung-toi", label: "Về chúng tôi" },
+  { href: "/nguoi-bao-chung", label: "Người bảo chứng" },
+  { href: "/san-pham", label: "Sản phẩm" },
+  { href: "/dai-ly-doi-tac", label: "Đại lý & Đối tác" },
   { href: "/thong-bao", label: "Thông báo" },
   { href: "/tin-tuc", label: "Tin tức" },
-  { href: "/#lien-he", label: "Liên hệ" },
+  { href: "/lien-he", label: "Liên hệ" },
 ];
 
 function CartLink({ className = "" }: { className?: string }) {
