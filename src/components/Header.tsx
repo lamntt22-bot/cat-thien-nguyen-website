@@ -40,8 +40,10 @@ export default function Header({ member }: { member: { name: string } | null }) 
   return (
     <header className="relative z-30 border-b border-maroon-900/15 bg-gold-300/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-2.5 sm:px-8">
-        <Link href="/" className="shrink-0">
-          <Logo imgClassName="h-28 w-auto sm:h-32" />
+        <Link href="/" className="relative h-11 w-24 shrink-0 sm:h-12 sm:w-28">
+          <span className="absolute left-0 top-1/2 -translate-y-1/2">
+            <Logo imgClassName="h-20 w-auto sm:h-24" />
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-2.5 text-sm font-medium text-maroon-900/85 lg:flex">
