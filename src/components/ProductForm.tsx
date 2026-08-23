@@ -6,8 +6,8 @@ import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const CATEGORIES: { id: ProductCategory; label: string }[] = [
   { id: "tra-dong-y", label: "Trà Đông Y" },
-  { id: "ngoc-am", label: "Tinh dầu Phong Thủy Ngọc Am" },
-  { id: "bach", label: "Chăm sóc thiên nhiên — dòng Bạch" },
+  { id: "ngoc-am", label: "Tinh dầu phong thủy" },
+  { id: "bach", label: "Mỹ phẩm thiên nhiên" },
 ];
 
 interface ProductFormProps {

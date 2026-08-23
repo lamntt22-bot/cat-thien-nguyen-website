@@ -5,7 +5,7 @@ import { listProducts, type ProductRecord } from "@/lib/product-store";
 export const metadata: Metadata = {
   title: "Sản phẩm — Cát Thiên Nguyên",
   description:
-    "3 dòng sản phẩm của Cát Thiên Nguyên: Trà Đông Y, Tinh dầu Phong Thủy Ngọc Am, và dòng chăm sóc thiên nhiên Bạch.",
+    "3 dòng sản phẩm của Cát Thiên Nguyên: Trà Đông Y, Tinh dầu phong thủy, và Mỹ phẩm thiên nhiên.",
 };
 
 export default async function SanPhamPage() {

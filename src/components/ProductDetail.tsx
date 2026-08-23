@@ -9,8 +9,8 @@ import type { ProductRecord } from "@/lib/product-store";
 
 const CATEGORY_LABEL: Record<string, string> = {
   "tra-dong-y": "Trà Đông Y",
-  "ngoc-am": "Tinh dầu Phong Thủy Ngọc Am",
-  bach: "Chăm sóc thiên nhiên — dòng Bạch",
+  "ngoc-am": "Tinh dầu phong thủy",
+  bach: "Mỹ phẩm thiên nhiên",
 };
 
 const FEEDBACK_SLOTS = [1, 2];
