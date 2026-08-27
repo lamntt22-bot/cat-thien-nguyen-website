@@ -9,7 +9,7 @@ export default function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden bg-cream-100">
-      <div className="relative">
+      <div className="relative mx-auto lg:max-w-6xl">
         <Image
           src="/assets/products/cửa hàng web có thầy Huỳnh.png"
           alt="Cửa hàng Cát Thiên Nguyên cùng Giáo sư Viện sĩ Lương Ngọc Huỳnh"
@@ -20,7 +20,7 @@ export default function Hero() {
         />
 
         {/* Desktop: hook chính của trang được đặt vào khoảng trống bên phải, cạnh ảnh thầy Huỳnh */}
-        <div className="absolute left-[48%] right-[17%] top-[32%] bottom-[7%] hidden flex-col justify-center text-left lg:flex">
+        <div className="absolute left-[48%] right-[17%] top-[32%] bottom-[7%] hidden flex-col justify-center rounded-2xl bg-cream-50/80 p-6 text-left shadow-sm backdrop-blur-[2px] lg:flex xl:p-7">
           <span className="inline-flex w-fit items-center rounded-full border border-maroon-800/25 bg-maroon-900/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-maroon-800 xl:text-xs">
             Dược liệu quý cấp 1 của Việt Nam
           </span>
