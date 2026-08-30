@@ -42,8 +42,6 @@ export default function WhyChooseUs() {
         sizes="100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-cream-50/70 via-cream-50/35 to-cream-50/75" />
-
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3">
           {TRUST_BADGES.map((badge) => (
@@ -60,27 +58,18 @@ export default function WhyChooseUs() {
             </div>
           ))}
         </Reveal>
-        <p
-          className="mx-auto mt-2 max-w-2xl text-center text-[11px] text-ink-700/60"
-          style={{ textShadow: "0 1px 12px rgba(253,250,243,0.9)" }}
-        >
-          * Hình minh hoạ — chứng nhận chính thức sẽ được Cát Thiên Nguyên cập nhật.
-        </p>
 
-        <Reveal className="mx-auto mt-6 max-w-2xl text-center">
-          <span
-            className="text-sm font-semibold uppercase tracking-wide text-red-600"
-            style={{ textShadow: "0 1px 16px rgba(253,250,243,0.9)" }}
-          >
+        <Reveal className="mx-auto mt-6 max-w-2xl rounded-2xl border border-gold-500/25 bg-white/95 px-6 py-6 text-center shadow-sm sm:px-8 sm:py-7">
+          <p className="text-[11px] text-ink-700/60">
+            * Hình minh hoạ — chứng nhận chính thức sẽ được Cát Thiên Nguyên cập nhật.
+          </p>
+          <span className="mt-3 inline-block text-sm font-semibold uppercase tracking-wide text-red-600">
             Vì sao chọn Cát Thiên Nguyên
           </span>
-          <h2
-            className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl"
-            style={{ textShadow: "0 2px 20px rgba(253,250,243,0.95)" }}
-          >
+          <h2 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
             Chuỗi Kiểm Soát Nguồn Gốc 4 Lớp
           </h2>
-          <p className="mt-3 text-ink-700" style={{ textShadow: "0 1px 16px rgba(253,250,243,0.95)" }}>
+          <p className="mt-3 text-ink-700">
             Thị trường trà/dược liệu Đông y hiện chưa có đơn vị nào làm chuẩn hóa bài bản. Mua
             dược liệu rời ngoài chợ dễ gặp hàng bã dược liệu, hàng nấm mốc, không giấy tờ truy vết.
           </p>
