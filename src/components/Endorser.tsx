@@ -4,16 +4,33 @@ import Reveal from "@/components/Reveal";
 import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
 import OrnamentCorner from "@/components/OrnamentCorner";
+import { getPageSection } from "@/lib/page-content-store";
 
-const CREDENTIALS = [
-  "Người đứng sau công thức của mọi dòng trà Đông y Cát Thiên Nguyên",
-  "Người sáng lập võ phái Lâm Sơn Động — nắm giữ 2/3 số kỷ lục võ thuật tại Việt Nam",
-  "Bậc thầy khí công và kỳ kinh bát mạch, xuất thân từ gia đình nhiều đời làm Đông y",
-  "Từng khám chữa bệnh Đông y cho nhiều chính khách, doanh nhân hàng đầu Việt Nam và thế giới",
-  "Bậc thầy phong thủy hàng đầu Việt Nam",
-];
+const DEFAULTS = {
+  eyebrow: "Người bảo chứng chuyên môn",
+  heading: "Giáo sư Viện sĩ Lương Ngọc Huỳnh",
+  body: "Các dòng trà Đông y của Cát Thiên Nguyên được phát triển độc quyền dựa trên bài thuốc và công thức của Giáo sư Viện sĩ Lương Ngọc Huỳnh — thương hiệu không chỉ bán trà, mà bán một hệ thống tri thức Đông y có người thật, danh tiếng thật đứng sau.",
+  image: "/assets/products/ảnh thầy Huỳnh.jpg",
+  items: [
+    { title: "Người đứng sau công thức của mọi dòng trà Đông y Cát Thiên Nguyên" },
+    { title: "Người sáng lập võ phái Lâm Sơn Động — nắm giữ 2/3 số kỷ lục võ thuật tại Việt Nam" },
+    { title: "Bậc thầy khí công và kỳ kinh bát mạch, xuất thân từ gia đình nhiều đời làm Đông y" },
+    {
+      title:
+        "Từng khám chữa bệnh Đông y cho nhiều chính khách, doanh nhân hàng đầu Việt Nam và thế giới",
+    },
+    { title: "Bậc thầy phong thủy hàng đầu Việt Nam" },
+  ],
+};
 
-export default function Endorser({ showMoreLink = true }: { showMoreLink?: boolean }) {
+export default async function Endorser({ showMoreLink = true }: { showMoreLink?: boolean }) {
+  const section = await getPageSection("nguoi-bao-chung").catch(() => null);
+  const eyebrow = section?.eyebrow || DEFAULTS.eyebrow;
+  const heading = section?.heading || DEFAULTS.heading;
+  const body = section?.body || DEFAULTS.body;
+  const image = section?.image || DEFAULTS.image;
+  const credentials = section?.items?.length ? section.items : DEFAULTS.items;
+
   return (
     <section id="nguoi-bao-chung" className="relative overflow-hidden bg-maroon-950 py-16 text-cream-50 sm:py-20">
       <AmbientBackground variant="light" />
@@ -25,8 +42,8 @@ export default function Endorser({ showMoreLink = true }: { showMoreLink?: boole
         <Reveal>
           <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold-500/30">
             <Image
-              src="/assets/products/ảnh thầy Huỳnh.jpg"
-              alt="Giáo sư Viện sĩ Lương Ngọc Huỳnh"
+              src={image}
+              alt={heading}
               fill
               className="object-cover"
             />
@@ -40,26 +57,20 @@ export default function Endorser({ showMoreLink = true }: { showMoreLink?: boole
 
         <Reveal delayMs={100}>
           <span className="text-sm font-semibold uppercase tracking-wide text-gold-400">
-            Người bảo chứng chuyên môn
+            {eyebrow}
           </span>
-          <h2 className="mt-2 font-display text-2xl font-semibold sm:text-3xl">
-            Giáo sư Viện sĩ Lương Ngọc Huỳnh
-          </h2>
+          <h2 className="mt-2 font-display text-2xl font-semibold sm:text-3xl">{heading}</h2>
           <ul className="mt-5 space-y-3">
-            {CREDENTIALS.map((c) => (
-              <li key={c} className="flex gap-3 text-sm text-cream-100/85 sm:text-base">
+            {credentials.map((c) => (
+              <li key={c.title} className="flex gap-3 text-sm text-cream-100/85 sm:text-base">
                 <span className="mt-1 text-gold-400" aria-hidden="true">
                   ✺
                 </span>
-                <span>{c}</span>
+                <span>{c.title}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-cream-100/70">
-            Các dòng trà Đông y của Cát Thiên Nguyên được phát triển độc quyền dựa trên bài thuốc
-            và công thức của Giáo sư Viện sĩ Lương Ngọc Huỳnh — thương hiệu không chỉ bán trà, mà
-            bán một hệ thống tri thức Đông y có người thật, danh tiếng thật đứng sau.
-          </p>
+          <p className="mt-6 text-sm text-cream-100/70">{body}</p>
           {showMoreLink && (
             <Link
               href="/nguoi-bao-chung"

@@ -5,6 +5,7 @@ const LINKS = [
   { href: "/admin/orders", label: "Đơn hàng" },
   { href: "/admin/products", label: "Sản phẩm" },
   { href: "/admin/posts", label: "Thông báo & Tin tức" },
+  { href: "/admin/content", label: "Nội dung trang" },
 ];
 
 export default function AdminNav({ email }: { email: string }) {

@@ -6,30 +6,83 @@ import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
 import OrnamentCorner from "@/components/OrnamentCorner";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
+import type { PageSectionRecord } from "@/lib/page-content-store";
 
-const DISCOUNT_TIERS = [
-  { level: "Đơn từ 3 sản phẩm bất kỳ", discount: "10%" },
-  { level: "Từ 5.000.000₫", discount: "15%" },
-  { level: "Từ 15.000.000₫", discount: "20%" },
-  { level: "Từ 30.000.000₫", discount: "25%" },
-  { level: "Từ 100.000.000₫", discount: "30%" },
-  { level: "Từ 300.000.000₫", discount: "34%" },
-  { level: "Từ 500.000.000₫", discount: "37%" },
-  { level: "Từ 1.000.000.000₫", discount: "40%" },
-];
+const DEFAULTS = {
+  intro: {
+    eyebrow: "Kênh kinh doanh cùng Cát Thiên Nguyên",
+    heading: "Chương trình Đại lý & Đối tác",
+  },
+  daily: {
+    eyebrow: "Rào cản thấp",
+    heading: "Đại lý Cát Thiên Nguyên",
+    body: "Dành cho ai muốn có thêm nguồn thu từ kinh doanh sức khỏe — không cần vốn lớn, không cần mặt bằng. Chỉ cần một đơn hàng từ 3 sản phẩm để bắt đầu.",
+    note: "Sản phẩm đã đóng gói sẵn, có đầy đủ hình ảnh, nội dung, giấy tờ để đăng bán ngay.",
+    items: [
+      { title: "Đơn từ 3 sản phẩm bất kỳ", value: "10%" },
+      { title: "Từ 5.000.000₫", value: "15%" },
+      { title: "Từ 15.000.000₫", value: "20%" },
+      { title: "Từ 30.000.000₫", value: "25%" },
+      { title: "Từ 100.000.000₫", value: "30%" },
+      { title: "Từ 300.000.000₫", value: "34%" },
+      { title: "Từ 500.000.000₫", value: "37%" },
+      { title: "Từ 1.000.000.000₫", value: "40%" },
+    ],
+  },
+  partner: {
+    eyebrow: "Độc quyền khu vực",
+    heading: "Đối tác độc quyền Cát Thiên Nguyên",
+    body: "Dành cho nhà đầu tư/chủ kinh doanh muốn sở hữu một điểm bán trà Đông y độc quyền tại khu vực của mình — dòng sản phẩm chủ lực chỉ có tại điểm bán của bạn.",
+    note: "Mỗi khu vực/thành phố chỉ có một Đối tác độc quyền.",
+    items: [
+      { title: "Điều kiện gia nhập", value: "Đơn đầu tiên ≥ 50.000.000₫ + mở điểm bán vật lý" },
+      { title: "Chiết khấu", value: "Ưu đãi riêng, cao hơn Đại lý thường" },
+      { title: "Hỗ trợ triển khai", value: "Bộ hồ sơ concept, bảng hiệu chuẩn" },
+    ],
+  },
+};
 
-export default function AgentPartnerSection({ showMoreLink = true }: { showMoreLink?: boolean }) {
+export interface AgentPartnerContent {
+  intro?: PageSectionRecord | null;
+  daily?: PageSectionRecord | null;
+  partner?: PageSectionRecord | null;
+}
+
+export default function AgentPartnerSection({
+  showMoreLink = true,
+  content,
+}: {
+  showMoreLink?: boolean;
+  content?: AgentPartnerContent;
+}) {
   const { open } = useLeadCapture();
+
+  const introEyebrow = content?.intro?.eyebrow || DEFAULTS.intro.eyebrow;
+  const introHeading = content?.intro?.heading || DEFAULTS.intro.heading;
+
+  const dailyHeading = content?.daily?.heading || DEFAULTS.daily.heading;
+  const dailyEyebrow = content?.daily?.eyebrow || DEFAULTS.daily.eyebrow;
+  const dailyBody = content?.daily?.body || DEFAULTS.daily.body;
+  const dailyNote = content?.daily?.note || DEFAULTS.daily.note;
+  const dailyTiers = content?.daily?.items?.length ? content.daily.items : DEFAULTS.daily.items;
+
+  const partnerHeading = content?.partner?.heading || DEFAULTS.partner.heading;
+  const partnerEyebrow = content?.partner?.eyebrow || DEFAULTS.partner.eyebrow;
+  const partnerBody = content?.partner?.body || DEFAULTS.partner.body;
+  const partnerNote = content?.partner?.note || DEFAULTS.partner.note;
+  const partnerConditions = content?.partner?.items?.length
+    ? content.partner.items
+    : DEFAULTS.partner.items;
 
   return (
     <section id="dai-ly-doi-tac" className="bg-cream-50 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wide text-red-600">
-            Kênh kinh doanh cùng Cát Thiên Nguyên
+            {introEyebrow}
           </span>
           <h2 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
-            Chương trình Đại lý & Đối tác
+            {introHeading}
           </h2>
           {showMoreLink && (
             <Link
@@ -51,15 +104,12 @@ export default function AgentPartnerSection({ showMoreLink = true }: { showMoreL
                 className="pointer-events-none absolute right-4 top-4 h-8 w-8 text-gold-500/40"
               />
               <span className="w-fit rounded-full bg-maroon-900/8 px-3 py-1 text-xs font-semibold uppercase text-maroon-800">
-                Rào cản thấp
+                {dailyEyebrow}
               </span>
               <h3 className="mt-3 font-display text-xl font-semibold text-maroon-900">
-                Đại lý Cát Thiên Nguyên
+                {dailyHeading}
               </h3>
-              <p className="mt-2 text-sm text-ink-700">
-                Dành cho ai muốn có thêm nguồn thu từ kinh doanh sức khỏe — không cần vốn lớn,
-                không cần mặt bằng. Chỉ cần một đơn hàng từ 3 sản phẩm để bắt đầu.
-              </p>
+              <p className="mt-2 text-sm text-ink-700">{dailyBody}</p>
 
               <div className="mt-5 overflow-hidden rounded-xl border border-maroon-900/10">
                 <table className="w-full text-sm">
@@ -70,11 +120,11 @@ export default function AgentPartnerSection({ showMoreLink = true }: { showMoreL
                     </tr>
                   </thead>
                   <tbody>
-                    {DISCOUNT_TIERS.map((tier) => (
-                      <tr key={tier.level} className="border-t border-maroon-900/5">
-                        <td className="px-3 py-2 text-ink-700">{tier.level}</td>
+                    {dailyTiers.map((tier) => (
+                      <tr key={tier.title} className="border-t border-maroon-900/5">
+                        <td className="px-3 py-2 text-ink-700">{tier.title}</td>
                         <td className="px-3 py-2 text-right font-semibold text-red-600">
-                          {tier.discount}
+                          {tier.value}
                         </td>
                       </tr>
                     ))}
@@ -82,9 +132,7 @@ export default function AgentPartnerSection({ showMoreLink = true }: { showMoreL
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-ink-700/60">
-                * Sản phẩm đã đóng gói sẵn, có đầy đủ hình ảnh, nội dung, giấy tờ để đăng bán ngay.
-              </p>
+              <p className="mt-4 text-xs text-ink-700/60">* {dailyNote}</p>
 
               <button
                 type="button"
@@ -104,40 +152,21 @@ export default function AgentPartnerSection({ showMoreLink = true }: { showMoreL
               <CraneCorner position="bottom-left" className="-bottom-8 -left-8 h-40 w-40 opacity-55" />
               <CloudWisp className="left-[30%] top-[8%] h-24 w-32 opacity-25" rotate={5} />
               <span className="relative w-fit rounded-full bg-gold-500/15 px-3 py-1 text-xs font-semibold uppercase text-gold-400">
-                Độc quyền khu vực
+                {partnerEyebrow}
               </span>
-              <h3 className="mt-3 font-display text-xl font-semibold">
-                Đối tác độc quyền Cát Thiên Nguyên
-              </h3>
-              <p className="mt-2 text-sm text-cream-100/80">
-                Dành cho nhà đầu tư/chủ kinh doanh muốn sở hữu một điểm bán trà Đông y độc quyền
-                tại khu vực của mình — dòng sản phẩm chủ lực chỉ có tại điểm bán của bạn.
-              </p>
+              <h3 className="mt-3 font-display text-xl font-semibold">{partnerHeading}</h3>
+              <p className="mt-2 text-sm text-cream-100/80">{partnerBody}</p>
 
               <div className="mt-5 space-y-3 rounded-xl border border-gold-500/20 bg-maroon-900/60 p-4 text-sm">
-                <div className="flex justify-between gap-4">
-                  <span className="text-cream-100/70">Điều kiện gia nhập</span>
-                  <span className="text-right font-semibold text-gold-400">
-                    Đơn đầu tiên ≥ 50.000.000₫ + mở điểm bán vật lý
-                  </span>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <span className="text-cream-100/70">Chiết khấu</span>
-                  <span className="text-right font-semibold text-gold-400">
-                    Ưu đãi riêng, cao hơn Đại lý thường
-                  </span>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <span className="text-cream-100/70">Hỗ trợ triển khai</span>
-                  <span className="text-right font-semibold text-gold-400">
-                    Bộ hồ sơ concept, bảng hiệu chuẩn
-                  </span>
-                </div>
+                {partnerConditions.map((c) => (
+                  <div key={c.title} className="flex justify-between gap-4">
+                    <span className="text-cream-100/70">{c.title}</span>
+                    <span className="text-right font-semibold text-gold-400">{c.value}</span>
+                  </div>
+                ))}
               </div>
 
-              <p className="mt-4 text-xs text-cream-100/60">
-                * Mỗi khu vực/thành phố chỉ có một Đối tác độc quyền.
-              </p>
+              <p className="mt-4 text-xs text-cream-100/60">* {partnerNote}</p>
 
               <button
                 type="button"

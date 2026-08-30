@@ -59,6 +59,21 @@ create index if not exists posts_category_idx on public.posts (category, publish
 -- Mảng các object dạng {"type": "image"|"video", "url": "https://..."}.
 alter table public.posts add column if not exists media jsonb not null default '[]'::jsonb;
 
+-- ============ PAGE_SECTIONS (nội dung các trang tĩnh — admin sửa, không cần code lại) ============
+-- Mỗi slug ứng với 1 khối nội dung có thể chỉnh (Về chúng tôi, Người bảo chứng, Đại lý & Đối tác...).
+-- items: mảng {"title": "...", "value": "..."} dùng cho gạch đầu dòng / số liệu / bảng chiết khấu tuỳ ngữ cảnh.
+create table if not exists public.page_sections (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  eyebrow text,
+  heading text,
+  body text,
+  note text,
+  image text,
+  items jsonb not null default '[]'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
 -- ============ ORDERS (yêu cầu mua lẻ của thành viên — admin theo dõi & xác nhận tay) ============
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
@@ -113,6 +128,7 @@ alter table public.posts enable row level security;
 alter table public.orders enable row level security;
 alter table public.checkouts enable row level security;
 alter table public.checkout_items enable row level security;
+alter table public.page_sections enable row level security;
 
 -- ============ SEED DATA — nội dung hiện có trên site, để trang không trống sau khi chạy schema ============
 -- An toàn để chạy lại: on conflict (slug) do nothing.
@@ -177,4 +193,73 @@ Thay vì chọn một ngách để dồn lực, chiến lược của công ty l
 
 Hai ngách được chọn triển khai thí điểm đầu tiên là Dưỡng sinh người cao tuổi và Giải độc văn phòng, trước khi mở rộng sang các ngách còn lại theo lộ trình 90 ngày.',
  '2026-08-11')
+on conflict (slug) do nothing;
+
+insert into public.page_sections (slug, eyebrow, heading, body, note, image, items) values
+(
+  've-chung-toi',
+  'Câu chuyện thương hiệu',
+  'Sức khỏe người Việt đang bị bào mòn mỗi ngày — không phải vì thiếu thuốc, mà vì thừa thuốc',
+  'Việt Nam sở hữu nguồn dược liệu quý bậc nhất thế giới — nhưng đang dần mai một trước làn sóng lạm dụng thuốc Tây. Cát Thiên Nguyên ra đời để đưa dược liệu quý cấp 1 của Việt Nam trở lại đời sống hiện đại, xây dựng thói quen chăm sóc sức khỏe chủ động, cải thiện từ gốc rễ một cách nhẹ nhàng nhất — không thay thế y học hiện đại.',
+  'Số liệu thị trường tổng hợp, dùng để minh họa nhu cầu chung — không phải cam kết điều trị cho sản phẩm cụ thể.',
+  '/assets/products/dược liệu pro.png',
+  '[
+    {"value": "7 triệu+", "title": "người Việt mắc tiểu đường (60% chưa được chẩn đoán)"},
+    {"value": "12 triệu+", "title": "người mắc tăng huyết áp"},
+    {"value": "13 triệu", "title": "phụ nữ đang ở giai đoạn tiền mãn kinh"},
+    {"value": "42%", "title": "người đi làm thường xuyên căng thẳng, mất ngủ"}
+  ]'::jsonb
+),
+(
+  'nguoi-bao-chung',
+  'Người bảo chứng chuyên môn',
+  'Giáo sư Viện sĩ Lương Ngọc Huỳnh',
+  'Các dòng trà Đông y của Cát Thiên Nguyên được phát triển độc quyền dựa trên bài thuốc và công thức của Giáo sư Viện sĩ Lương Ngọc Huỳnh — thương hiệu không chỉ bán trà, mà bán một hệ thống tri thức Đông y có người thật, danh tiếng thật đứng sau.',
+  null,
+  '/assets/products/ảnh thầy Huỳnh.jpg',
+  '[
+    {"title": "Người đứng sau công thức của mọi dòng trà Đông y Cát Thiên Nguyên"},
+    {"title": "Người sáng lập võ phái Lâm Sơn Động — nắm giữ 2/3 số kỷ lục võ thuật tại Việt Nam"},
+    {"title": "Bậc thầy khí công và kỳ kinh bát mạch, xuất thân từ gia đình nhiều đời làm Đông y"},
+    {"title": "Từng khám chữa bệnh Đông y cho nhiều chính khách, doanh nhân hàng đầu Việt Nam và thế giới"},
+    {"title": "Bậc thầy phong thủy hàng đầu Việt Nam"}
+  ]'::jsonb
+),
+(
+  'dai-ly-doi-tac',
+  'Kênh kinh doanh cùng Cát Thiên Nguyên',
+  'Chương trình Đại lý & Đối tác',
+  null, null, null, '[]'::jsonb
+),
+(
+  'dai-ly-doi-tac-dai-ly',
+  'Rào cản thấp',
+  'Đại lý Cát Thiên Nguyên',
+  'Dành cho ai muốn có thêm nguồn thu từ kinh doanh sức khỏe — không cần vốn lớn, không cần mặt bằng. Chỉ cần một đơn hàng từ 3 sản phẩm để bắt đầu.',
+  'Sản phẩm đã đóng gói sẵn, có đầy đủ hình ảnh, nội dung, giấy tờ để đăng bán ngay.',
+  null,
+  '[
+    {"title": "Đơn từ 3 sản phẩm bất kỳ", "value": "10%"},
+    {"title": "Từ 5.000.000₫", "value": "15%"},
+    {"title": "Từ 15.000.000₫", "value": "20%"},
+    {"title": "Từ 30.000.000₫", "value": "25%"},
+    {"title": "Từ 100.000.000₫", "value": "30%"},
+    {"title": "Từ 300.000.000₫", "value": "34%"},
+    {"title": "Từ 500.000.000₫", "value": "37%"},
+    {"title": "Từ 1.000.000.000₫", "value": "40%"}
+  ]'::jsonb
+),
+(
+  'dai-ly-doi-tac-doi-tac',
+  'Độc quyền khu vực',
+  'Đối tác độc quyền Cát Thiên Nguyên',
+  'Dành cho nhà đầu tư/chủ kinh doanh muốn sở hữu một điểm bán trà Đông y độc quyền tại khu vực của mình — dòng sản phẩm chủ lực chỉ có tại điểm bán của bạn.',
+  'Mỗi khu vực/thành phố chỉ có một Đối tác độc quyền.',
+  null,
+  '[
+    {"title": "Điều kiện gia nhập", "value": "Đơn đầu tiên ≥ 50.000.000₫ + mở điểm bán vật lý"},
+    {"title": "Chiết khấu", "value": "Ưu đãi riêng, cao hơn Đại lý thường"},
+    {"title": "Hỗ trợ triển khai", "value": "Bộ hồ sơ concept, bảng hiệu chuẩn"}
+  ]'::jsonb
+)
 on conflict (slug) do nothing;

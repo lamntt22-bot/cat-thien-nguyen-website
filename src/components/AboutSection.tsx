@@ -1,19 +1,36 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getPageSection } from "@/lib/page-content-store";
 
-const MARKET_FACTS = [
-  { value: "7 triệu+", label: "người Việt mắc tiểu đường (60% chưa được chẩn đoán)" },
-  { value: "12 triệu+", label: "người mắc tăng huyết áp" },
-  { value: "13 triệu", label: "phụ nữ đang ở giai đoạn tiền mãn kinh" },
-  { value: "42%", label: "người đi làm thường xuyên căng thẳng, mất ngủ" },
-];
+const DEFAULTS = {
+  eyebrow: "Câu chuyện thương hiệu",
+  heading:
+    "Sức khỏe người Việt đang bị bào mòn mỗi ngày — không phải vì thiếu thuốc, mà vì thừa thuốc",
+  body: "Việt Nam sở hữu nguồn dược liệu quý bậc nhất thế giới — nhưng đang dần mai một trước làn sóng lạm dụng thuốc Tây. Cát Thiên Nguyên ra đời để đưa dược liệu quý cấp 1 của Việt Nam trở lại đời sống hiện đại, xây dựng thói quen chăm sóc sức khỏe chủ động, cải thiện từ gốc rễ một cách nhẹ nhàng nhất — không thay thế y học hiện đại.",
+  note: "Số liệu thị trường tổng hợp, dùng để minh họa nhu cầu chung — không phải cam kết điều trị cho sản phẩm cụ thể.",
+  image: "/assets/products/dược liệu pro.png",
+  items: [
+    { value: "7 triệu+", title: "người Việt mắc tiểu đường (60% chưa được chẩn đoán)" },
+    { value: "12 triệu+", title: "người mắc tăng huyết áp" },
+    { value: "13 triệu", title: "phụ nữ đang ở giai đoạn tiền mãn kinh" },
+    { value: "42%", title: "người đi làm thường xuyên căng thẳng, mất ngủ" },
+  ],
+};
 
-export default function AboutSection({ moreHref = "/ve-chung-toi" }: { moreHref?: string }) {
+export default async function AboutSection({ moreHref = "/ve-chung-toi" }: { moreHref?: string }) {
+  const section = await getPageSection("ve-chung-toi").catch(() => null);
+  const eyebrow = section?.eyebrow || DEFAULTS.eyebrow;
+  const heading = section?.heading || DEFAULTS.heading;
+  const body = section?.body || DEFAULTS.body;
+  const note = section?.note || DEFAULTS.note;
+  const image = section?.image || DEFAULTS.image;
+  const facts = section?.items?.length ? section.items : DEFAULTS.items;
+
   return (
     <section id="ve-chung-toi" className="relative overflow-hidden bg-cream-50 py-16 sm:py-20">
       <Image
-        src="/assets/products/dược liệu pro.png"
+        src={image}
         alt=""
         fill
         className="object-cover object-center"
@@ -29,24 +46,20 @@ export default function AboutSection({ moreHref = "/ve-chung-toi" }: { moreHref?
           className="text-sm font-semibold uppercase tracking-wide text-red-600"
           style={{ textShadow: "0 1px 16px rgba(253,250,243,0.9)" }}
         >
-          Câu chuyện thương hiệu
+          {eyebrow}
         </span>
         <h2
           className="mt-2 max-w-xl font-display text-2xl font-semibold text-maroon-950 sm:text-3xl"
           style={{ textShadow: "0 2px 20px rgba(253,250,243,0.95)" }}
         >
-          Sức khỏe người Việt đang bị bào mòn mỗi ngày — không phải vì thiếu thuốc, mà vì thừa
-          thuốc
+          {heading}
         </h2>
         <div className="mt-4 h-px w-16 bg-gold-500/60" />
         <p
           className="mt-4 max-w-xl text-ink-700"
           style={{ textShadow: "0 1px 16px rgba(253,250,243,0.95)" }}
         >
-          Việt Nam sở hữu nguồn dược liệu quý bậc nhất thế giới — nhưng đang dần mai một trước làn
-          sóng lạm dụng thuốc Tây. Cát Thiên Nguyên ra đời để đưa dược liệu quý cấp 1 của Việt Nam
-          trở lại đời sống hiện đại, xây dựng thói quen chăm sóc sức khỏe chủ động, cải thiện từ
-          gốc rễ một cách nhẹ nhàng nhất — không thay thế y học hiện đại.
+          {body}
         </p>
         <Link
           href={moreHref}
@@ -58,19 +71,18 @@ export default function AboutSection({ moreHref = "/ve-chung-toi" }: { moreHref?
       </div>
 
       <Reveal className="relative mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 px-5 sm:grid-cols-4 sm:px-8">
-        {MARKET_FACTS.map((fact) => (
+        {facts.map((fact) => (
           <div
-            key={fact.label}
+            key={fact.title}
             className="rounded-2xl border border-gold-500/30 bg-blush-50/92 p-4 text-center shadow-sm backdrop-blur-sm"
           >
             <p className="font-display text-2xl font-semibold text-maroon-900">{fact.value}</p>
-            <p className="mt-1 text-xs text-ink-700/70">{fact.label}</p>
+            <p className="mt-1 text-xs text-ink-700/70">{fact.title}</p>
           </div>
         ))}
       </Reveal>
       <p className="relative mx-auto mt-3 max-w-4xl px-5 text-center text-xs text-ink-700/60 sm:px-8">
-        Số liệu thị trường tổng hợp, dùng để minh họa nhu cầu chung — không phải cam kết điều trị
-        cho sản phẩm cụ thể.
+        {note}
       </p>
     </section>
   );
