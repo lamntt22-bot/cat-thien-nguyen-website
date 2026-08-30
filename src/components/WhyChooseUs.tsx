@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "@/components/Reveal";
 
 // Nháp — chờ Cát Thiên Nguyên cung cấp bằng cấp/chứng nhận thật để thay thế.
@@ -33,8 +34,17 @@ const LAYERS = [
 
 export default function WhyChooseUs() {
   return (
-    <section id="chuoi-kiem-soat" className="bg-cream-50 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+    <section id="chuoi-kiem-soat" className="relative overflow-hidden py-16 sm:py-20">
+      <Image
+        src="/assets/products/ảnh phơi thảo dược.jpg"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-cream-50/70 via-cream-50/35 to-cream-50/75" />
+
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3">
           {TRUST_BADGES.map((badge) => (
             <div
@@ -50,18 +60,27 @@ export default function WhyChooseUs() {
             </div>
           ))}
         </Reveal>
-        <p className="mx-auto mt-2 max-w-2xl text-center text-[11px] text-ink-700/45">
+        <p
+          className="mx-auto mt-2 max-w-2xl text-center text-[11px] text-ink-700/60"
+          style={{ textShadow: "0 1px 12px rgba(253,250,243,0.9)" }}
+        >
           * Hình minh hoạ — chứng nhận chính thức sẽ được Cát Thiên Nguyên cập nhật.
         </p>
 
         <Reveal className="mx-auto mt-6 max-w-2xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wide text-red-600">
+          <span
+            className="text-sm font-semibold uppercase tracking-wide text-red-600"
+            style={{ textShadow: "0 1px 16px rgba(253,250,243,0.9)" }}
+          >
             Vì sao chọn Cát Thiên Nguyên
           </span>
-          <h2 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
+          <h2
+            className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl"
+            style={{ textShadow: "0 2px 20px rgba(253,250,243,0.95)" }}
+          >
             Chuỗi Kiểm Soát Nguồn Gốc 4 Lớp
           </h2>
-          <p className="mt-3 text-ink-700">
+          <p className="mt-3 text-ink-700" style={{ textShadow: "0 1px 16px rgba(253,250,243,0.95)" }}>
             Thị trường trà/dược liệu Đông y hiện chưa có đơn vị nào làm chuẩn hóa bài bản. Mua
             dược liệu rời ngoài chợ dễ gặp hàng bã dược liệu, hàng nấm mốc, không giấy tờ truy vết.
           </p>
