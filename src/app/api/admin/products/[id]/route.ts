@@ -13,6 +13,7 @@ const productSchema = z.object({
   category: z.enum(["tra-dong-y", "ngoc-am", "bach"]),
   name: z.string().trim().min(1).max(200),
   description: z.string().trim().max(2000).default(""),
+  contentDetail: z.string().trim().max(8000).optional(),
   price: z.string().trim().min(1).max(100),
   priceAmount: z.number().nonnegative().optional(),
   badge: z.string().trim().max(60).optional(),

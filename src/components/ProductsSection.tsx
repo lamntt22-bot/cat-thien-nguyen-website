@@ -7,6 +7,7 @@ import Reveal from "@/components/Reveal";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
+import { formatVnd } from "@/lib/format";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const productCategories: { id: ProductCategory; label: string }[] = [
@@ -102,7 +103,7 @@ export default function ProductsSection({
                 )}
                 <div className="mt-4 flex items-center justify-between gap-2">
                   <span className="font-display text-base font-semibold text-red-600">
-                    {product.price}
+                    {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
                   </span>
                   {product.priceAmount ? (
                     <AddToCartButton

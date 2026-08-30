@@ -2,6 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import MediaUploader from "@/components/MediaUploader";
+import { formatVndInput, parseVndInput } from "@/lib/format";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const CATEGORIES: { id: ProductCategory; label: string }[] = [
@@ -21,6 +23,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [category, setCategory] = useState<ProductCategory>(product?.category ?? "tra-dong-y");
   const [name, setName] = useState(product?.name ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
+  const [contentDetail, setContentDetail] = useState(product?.contentDetail ?? "");
   const [price, setPrice] = useState(product?.price ?? "Đang cập nhật");
   const [priceAmount, setPriceAmount] = useState(product?.priceAmount ?? 0);
   const [badge, setBadge] = useState(product?.badge ?? "");
@@ -44,6 +47,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           category,
           name: name.trim(),
           description: description.trim(),
+          contentDetail: contentDetail.trim() || undefined,
           price: price.trim(),
           priceAmount: Number(priceAmount) > 0 ? Number(priceAmount) : undefined,
           badge: badge.trim() || undefined,
@@ -108,12 +112,27 @@ export default function ProductForm({ product }: ProductFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-maroon-900">Mô tả</label>
+        <label className="mb-1 block text-sm font-medium text-maroon-900">
+          Mô tả ngắn (hiển thị ở thẻ sản phẩm ngoài danh sách)
+        </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
           className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-maroon-900">
+          Nội dung chi tiết (thành phần, công dụng, hướng dẫn sử dụng... hiển thị ở trang chi tiết sản phẩm)
+        </label>
+        <textarea
+          value={contentDetail}
+          onChange={(e) => setContentDetail(e.target.value)}
+          rows={6}
+          className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+          placeholder="Để trống sẽ hiển thị tạm mô tả ngắn ở trên."
         />
       </div>
 
@@ -144,18 +163,24 @@ export default function ProductForm({ product }: ProductFormProps) {
 
       <div>
         <label className="mb-1 block text-sm font-medium text-maroon-900">
-          Giá bán thực (VNĐ, để 0 nếu chưa mở bán online)
+          Giá bán thực (VNĐ, để trống nếu chưa mở bán online)
         </label>
-        <input
-          type="number"
-          min={0}
-          value={priceAmount}
-          onChange={(e) => setPriceAmount(Number(e.target.value))}
-          className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
-          placeholder="440000"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={formatVndInput(priceAmount)}
+            onChange={(e) => setPriceAmount(parseVndInput(e.target.value))}
+            className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 pr-8 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+            placeholder="440.000"
+          />
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-700/50">
+            ₫
+          </span>
+        </div>
         <p className="mt-1 text-xs text-ink-700/60">
-          Chỉ sản phẩm có giá này mới hiện nút &ldquo;Thêm vào giỏ&rdquo; để khách mua trực tiếp trên web.
+          Chỉ sản phẩm có giá này mới hiện nút &ldquo;Thêm vào giỏ&rdquo; để khách mua trực tiếp
+          trên web. Giá hiển thị trên trang sẽ tự động có dấu chấm ngăn cách hàng nghìn.
         </p>
       </div>
 
@@ -181,17 +206,11 @@ export default function ProductForm({ product }: ProductFormProps) {
         </div>
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-maroon-900">
-          Đường dẫn ảnh (trong /public, tuỳ chọn)
-        </label>
-        <input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
-          placeholder="/assets/products/ten-anh.jpg"
-        />
-      </div>
+      <MediaUploader
+        media={image ? [{ type: "image", url: image }] : []}
+        onChange={(next) => setImage(next[0]?.url ?? "")}
+        imageOnly
+      />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

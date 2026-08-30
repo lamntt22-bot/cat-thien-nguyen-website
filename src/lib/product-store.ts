@@ -9,6 +9,7 @@ export interface ProductRecord {
   category: ProductCategory;
   name: string;
   description: string;
+  contentDetail?: string;
   price: string;
   priceAmount?: number;
   badge?: string;
@@ -24,6 +25,7 @@ export interface ProductInput {
   category: ProductCategory;
   name: string;
   description: string;
+  contentDetail?: string;
   price: string;
   priceAmount?: number;
   badge?: string;
@@ -38,6 +40,7 @@ interface ProductRow {
   category: string;
   name: string;
   description: string;
+  content_detail: string | null;
   price: string;
   price_amount: number | null;
   badge: string | null;
@@ -55,6 +58,7 @@ function toRecord(row: ProductRow): ProductRecord {
     category: row.category as ProductCategory,
     name: row.name,
     description: row.description,
+    contentDetail: row.content_detail ?? undefined,
     price: row.price,
     priceAmount: row.price_amount ?? undefined,
     badge: row.badge ?? undefined,
@@ -120,6 +124,7 @@ export async function createProduct(input: ProductInput): Promise<ProductRecord>
       category: input.category,
       name: input.name,
       description: input.description,
+      content_detail: input.contentDetail ?? null,
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
@@ -146,6 +151,7 @@ export async function updateProduct(
       category: input.category,
       name: input.name,
       description: input.description,
+      content_detail: input.contentDetail ?? null,
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,

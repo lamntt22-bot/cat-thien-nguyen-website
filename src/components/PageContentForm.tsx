@@ -130,6 +130,7 @@ export default function PageContentForm({
         <MediaUploader
           media={media}
           onChange={(next) => setImage(next[0]?.url ?? "")}
+          imageOnly
         />
       )}
 

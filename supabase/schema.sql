@@ -39,6 +39,10 @@ create index if not exists products_category_idx on public.products (category, s
 -- Sản phẩm còn "Đang cập nhật"/"Sắp ra mắt" giữ NULL, không cho thêm vào giỏ hàng (chỉ "Quan tâm mua").
 alter table public.products add column if not exists price_amount numeric;
 
+-- Nội dung chi tiết (thành phần, công dụng, hướng dẫn sử dụng...) hiển thị ở trang chi tiết sản phẩm —
+-- tách riêng khỏi "description" (mô tả ngắn hiển thị ở thẻ sản phẩm ngoài danh sách).
+alter table public.products add column if not exists content_detail text;
+
 -- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),

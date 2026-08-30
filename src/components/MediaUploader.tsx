@@ -9,9 +9,11 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024; // khớp giới hạn bucket "post-medi
 export default function MediaUploader({
   media,
   onChange,
+  imageOnly = false,
 }: {
   media: PostMedia[];
   onChange: (media: PostMedia[]) => void;
+  imageOnly?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState<string[]>([]);
@@ -22,6 +24,10 @@ export default function MediaUploader({
     setError("");
 
     for (const file of Array.from(files)) {
+      if (imageOnly && !file.type.startsWith("image/")) {
+        setError(`"${file.name}" không phải ảnh, đã bỏ qua.`);
+        continue;
+      }
       if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
         setError(`"${file.name}" không phải ảnh hoặc video, đã bỏ qua.`);
         continue;
@@ -68,7 +74,7 @@ export default function MediaUploader({
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-maroon-900">
-        Ảnh / video đính kèm (tuỳ chọn)
+        {imageOnly ? "Ảnh (tuỳ chọn)" : "Ảnh / video đính kèm (tuỳ chọn)"}
       </label>
 
       {media.length > 0 && (
@@ -106,8 +112,8 @@ export default function MediaUploader({
       <input
         ref={inputRef}
         type="file"
-        multiple
-        accept="image/*,video/*"
+        multiple={!imageOnly}
+        accept={imageOnly ? "image/*" : "image/*,video/*"}
         onChange={(e) => {
           handleFiles(e.target.files);
           e.target.value = "";

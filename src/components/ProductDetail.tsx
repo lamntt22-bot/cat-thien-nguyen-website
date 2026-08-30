@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
+import { formatVnd } from "@/lib/format";
 import type { ProductRecord } from "@/lib/product-store";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -23,6 +24,8 @@ export default function ProductDetail({
   related: ProductRecord[];
 }) {
   const { open } = useLeadCapture();
+  const detailText = product.contentDetail || product.description;
+  const detailParagraphs = detailText.split(/\n\s*\n/).filter(Boolean);
 
   return (
     <main className="bg-cream-100 py-10 sm:py-14">
@@ -70,7 +73,7 @@ export default function ProductDetail({
               <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
             )}
             <p className="mt-4 font-display text-2xl font-semibold text-red-600">
-              {product.price}
+              {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
             </p>
 
             <div className="mt-6">
@@ -96,7 +99,11 @@ export default function ProductDetail({
               <h2 className="font-display text-lg font-semibold text-maroon-900">
                 Thành phần & Công dụng
               </h2>
-              <p className="mt-2 text-sm text-ink-700">{product.description}</p>
+              <div className="mt-2 space-y-3 text-sm text-ink-700">
+                {detailParagraphs.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
