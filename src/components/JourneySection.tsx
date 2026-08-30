@@ -14,10 +14,6 @@ export default function JourneySection() {
           <h2 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
             Những thước phim từ Cát Thiên Nguyên
           </h2>
-          <p className="mt-3 text-ink-700">
-            Video hậu trường sản xuất, chia sẻ từ Giáo sư Viện sĩ Lương Ngọc Huỳnh và hành trình
-            xây dựng thương hiệu — cập nhật thường xuyên.
-          </p>
         </Reveal>
       </div>
 
