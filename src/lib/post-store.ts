@@ -17,6 +17,10 @@ export interface PostRecord {
   excerpt: string;
   content: string;
   media: PostMedia[];
+  image?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   published: boolean;
   publishedAt: string;
   createdAt: string;
@@ -30,6 +34,10 @@ export interface PostInput {
   excerpt: string;
   content: string;
   media?: PostMedia[];
+  image?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   published?: boolean;
   publishedAt?: string;
 }
@@ -42,6 +50,10 @@ interface PostRow {
   excerpt: string;
   content: string;
   media: PostMedia[] | null;
+  image: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string | null;
   published: boolean;
   published_at: string;
   created_at: string;
@@ -57,6 +69,10 @@ function toRecord(row: PostRow): PostRecord {
     excerpt: row.excerpt,
     content: row.content,
     media: row.media ?? [],
+    image: row.image ?? undefined,
+    seoTitle: row.seo_title ?? undefined,
+    seoDescription: row.seo_description ?? undefined,
+    seoKeywords: row.seo_keywords ?? undefined,
     published: row.published,
     publishedAt: row.published_at,
     createdAt: row.created_at,
@@ -117,6 +133,10 @@ export async function createPost(input: PostInput): Promise<PostRecord> {
       excerpt: input.excerpt,
       content: input.content,
       media: input.media ?? [],
+      image: input.image ?? null,
+      seo_title: input.seoTitle ?? null,
+      seo_description: input.seoDescription ?? null,
+      seo_keywords: input.seoKeywords ?? null,
       published: input.published ?? true,
       published_at: input.publishedAt ?? new Date().toISOString().slice(0, 10),
       updated_at: new Date().toISOString(),
@@ -138,6 +158,10 @@ export async function updatePost(id: string, input: PostInput): Promise<PostReco
       excerpt: input.excerpt,
       content: input.content,
       media: input.media ?? [],
+      image: input.image ?? null,
+      seo_title: input.seoTitle ?? null,
+      seo_description: input.seoDescription ?? null,
+      seo_keywords: input.seoKeywords ?? null,
       published: input.published ?? true,
       published_at: input.publishedAt ?? new Date().toISOString().slice(0, 10),
       updated_at: new Date().toISOString(),

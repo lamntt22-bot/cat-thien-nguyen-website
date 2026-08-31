@@ -13,7 +13,7 @@ const postSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "slug chỉ gồm chữ thường, số và gạch ngang"),
   category: z.enum(["thong-bao", "tin-tuc"]),
   title: z.string().trim().min(1).max(300),
-  excerpt: z.string().trim().max(500).default(""),
+  excerpt: z.string().trim().min(1, "Sapo là bắt buộc").max(500),
   content: z.string().trim().max(20000).default(""),
   media: z
     .array(
@@ -24,6 +24,10 @@ const postSchema = z.object({
     )
     .max(20)
     .default([]),
+  image: z.string().trim().max(500).optional(),
+  seoTitle: z.string().trim().max(300).optional(),
+  seoDescription: z.string().trim().max(500).optional(),
+  seoKeywords: z.string().trim().max(300).optional(),
   published: z.boolean().default(true),
   publishedAt: z
     .string()

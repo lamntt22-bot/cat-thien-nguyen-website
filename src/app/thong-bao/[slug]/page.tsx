@@ -9,7 +9,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug("thong-bao", slug).catch(() => null);
-  return { title: post ? `${post.title} — Cát Thiên Nguyên` : "Thông báo — Cát Thiên Nguyên" };
+  if (!post) return { title: "Thông báo — Cát Thiên Nguyên" };
+
+  const title = `${post.seoTitle || post.title} — Cát Thiên Nguyên`;
+  const description = post.seoDescription || post.excerpt || undefined;
+  return {
+    title,
+    description,
+    keywords: post.seoKeywords || undefined,
+    openGraph: {
+      title,
+      description,
+      images: post.image ? [post.image] : undefined,
+    },
+  };
 }
 
 export default async function ThongBaoDetailPage({

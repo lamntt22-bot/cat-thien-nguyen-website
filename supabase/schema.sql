@@ -63,6 +63,13 @@ create index if not exists posts_category_idx on public.posts (category, publish
 -- Mảng các object dạng {"type": "image"|"video", "url": "https://..."}.
 alter table public.posts add column if not exists media jsonb not null default '[]'::jsonb;
 
+-- Ảnh đại diện bài viết (khung 3:4) + các trường SEO — tuỳ chọn, để trống thì dùng mặc định
+-- (tiêu đề/sapo bài viết) khi tạo thẻ meta.
+alter table public.posts add column if not exists image text;
+alter table public.posts add column if not exists seo_title text;
+alter table public.posts add column if not exists seo_description text;
+alter table public.posts add column if not exists seo_keywords text;
+
 -- ============ PAGE_SECTIONS (nội dung các trang tĩnh — admin sửa, không cần code lại) ============
 -- Mỗi slug ứng với 1 khối nội dung có thể chỉnh (Về chúng tôi, Người bảo chứng, Đại lý & Đối tác...).
 -- items: mảng {"title": "...", "value": "..."} dùng cho gạch đầu dòng / số liệu / bảng chiết khấu tuỳ ngữ cảnh.
