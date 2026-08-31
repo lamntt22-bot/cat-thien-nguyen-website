@@ -5,6 +5,17 @@ import { getSupabase } from "@/lib/supabase";
 
 const BUCKET = "post-media";
 
+// Phải khớp allowed_mime_types của bucket "post-media" trên Supabase Storage.
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+];
+
 const schema = z.object({
   filename: z.string().trim().min(1).max(200),
   contentType: z.string().trim().min(1).max(100),
@@ -25,9 +36,11 @@ export async function POST(request: NextRequest) {
   }
 
   const { contentType } = parsed.data;
-  if (!contentType.startsWith("image/") && !contentType.startsWith("video/")) {
+  if (!ALLOWED_TYPES.includes(contentType)) {
     return NextResponse.json(
-      { error: "Chỉ hỗ trợ upload ảnh hoặc video." },
+      {
+        error: `Định dạng "${contentType || "không xác định"}" chưa hỗ trợ — dùng ảnh JPG, PNG, WEBP, GIF hoặc video MP4, WEBM, MOV.`,
+      },
       { status: 400 },
     );
   }

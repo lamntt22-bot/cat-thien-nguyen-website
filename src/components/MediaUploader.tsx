@@ -6,6 +6,11 @@ import type { PostMedia } from "@/lib/post-store";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // khớp giới hạn bucket "post-media"
 
+// Phải khớp allowed_mime_types của bucket "post-media" trên Supabase Storage —
+// upload bị Supabase từ chối nếu file không nằm trong danh sách này (VD: ảnh HEIC từ iPhone).
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+
 export default function MediaUploader({
   media,
   onChange,
@@ -24,12 +29,15 @@ export default function MediaUploader({
     setError("");
 
     for (const file of Array.from(files)) {
-      if (imageOnly && !file.type.startsWith("image/")) {
-        setError(`"${file.name}" không phải ảnh, đã bỏ qua.`);
-        continue;
-      }
-      if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-        setError(`"${file.name}" không phải ảnh hoặc video, đã bỏ qua.`);
+      const allowedTypes = imageOnly
+        ? ALLOWED_IMAGE_TYPES
+        : [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES];
+      if (!allowedTypes.includes(file.type)) {
+        setError(
+          `"${file.name}" định dạng ${file.type || "không xác định"} chưa hỗ trợ — dùng ảnh JPG, PNG, WEBP hoặc GIF${
+            imageOnly ? "" : " (video: MP4, WEBM, MOV)"
+          }. Ảnh HEIC từ iPhone cần đổi sang JPG trước khi tải lên.`,
+        );
         continue;
       }
       if (file.size > MAX_FILE_SIZE) {
@@ -54,7 +62,7 @@ export default function MediaUploader({
           .storage.from("post-media")
           .uploadToSignedUrl(data.path, data.token, file);
         if (uploadError) {
-          setError(`Không tải lên được "${file.name}".`);
+          setError(`Không tải lên được "${file.name}": ${uploadError.message}`);
           continue;
         }
 
@@ -113,7 +121,11 @@ export default function MediaUploader({
         ref={inputRef}
         type="file"
         multiple={!imageOnly}
-        accept={imageOnly ? "image/*" : "image/*,video/*"}
+        accept={
+          imageOnly
+            ? ALLOWED_IMAGE_TYPES.join(",")
+            : [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES].join(",")
+        }
         onChange={(e) => {
           handleFiles(e.target.files);
           e.target.value = "";
@@ -121,7 +133,9 @@ export default function MediaUploader({
         className="block w-full text-sm text-ink-700 file:mr-3 file:rounded-full file:border-0 file:bg-maroon-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-cream-50 hover:file:bg-maroon-800"
       />
       <p className="mt-1 text-xs text-ink-700/60">
-        Chọn từ máy tính hoặc điện thoại — hỗ trợ nhiều file, tối đa 50MB/file.
+        Chọn từ máy tính hoặc điện thoại — tối đa 50MB/file. Hỗ trợ ảnh JPG, PNG, WEBP, GIF
+        {imageOnly ? "" : " và video MP4, WEBM, MOV"}. Ảnh HEIC (mặc định trên iPhone) cần đổi
+        sang JPG trước.
       </p>
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
