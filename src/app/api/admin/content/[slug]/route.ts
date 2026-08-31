@@ -47,7 +47,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   const body = await request.json().catch(() => null);
   const parsed = sectionSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Dữ liệu chưa hợp lệ." }, { status: 400 });
+    return NextResponse.json(
+      { error: parsed.error.issues.map((i) => i.message).join("; ") || "Dữ liệu chưa hợp lệ." },
+      { status: 400 },
+    );
   }
 
   try {

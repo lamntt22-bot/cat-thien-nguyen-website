@@ -16,21 +16,27 @@ interface Pos {
 export default function ImageCropUploader({
   value,
   onChange,
-  aspectRatio = 1,
+  aspectRatio,
   outputSize = 1000,
 }: {
   value: string;
   onChange: (url: string) => void;
-  /** width / height của khung hiển thị, VD 1 = vuông, 4/5 = chân dung. */
+  /**
+   * width / height của khung hiển thị, VD 1 = vuông, 4/5 = chân dung. Để trống thì khung tự
+   * lấy đúng theo tỉ lệ ảnh gốc admin tải lên (ảnh ngang → khung ngang, ảnh dọc → khung dọc) —
+   * dùng cách này khi vị trí hiển thị không cố định một tỉ lệ (VD ảnh đại diện bài viết).
+   */
   aspectRatio?: number;
   outputSize?: number;
 }) {
-  const frameHeight = FRAME_WIDTH / aspectRatio;
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
+
+  const effectiveAspectRatio = aspectRatio ?? (natural ? natural.w / natural.h : 1);
+  const frameHeight = FRAME_WIDTH / effectiveAspectRatio;
+
   const [coverScale, setCoverScale] = useState(1);
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState<Pos>({ x: 0, y: 0 });
@@ -85,7 +91,10 @@ export default function ImageCropUploader({
     if (!img) return;
     const w = img.naturalWidth;
     const h = img.naturalHeight;
-    const cover = Math.max(FRAME_WIDTH / w, frameHeight / h);
+    // Tính lại frameHeight ngay tại đây theo w/h vừa đọc được — không dùng biến `frameHeight`
+    // ở scope ngoài vì nó vẫn còn giá trị cũ (từ trước khi setNatural) cho tới lần render sau.
+    const freshFrameHeight = FRAME_WIDTH / (aspectRatio ?? w / h);
+    const cover = Math.max(FRAME_WIDTH / w, freshFrameHeight / h);
     setNatural({ w, h });
     setCoverScale(cover);
     setScale(cover);
@@ -134,7 +143,7 @@ export default function ImageCropUploader({
     setError("");
     try {
       const outW = outputSize;
-      const outH = Math.round(outputSize / aspectRatio);
+      const outH = Math.round(outputSize / effectiveAspectRatio);
       const dispW = natural.w * scale;
       const dispH = natural.h * scale;
       const sx = ((dispW - FRAME_WIDTH) / 2 - pos.x) / scale;
@@ -273,15 +282,23 @@ export default function ImageCropUploader({
         </div>
       ) : (
         <div>
-          {value && (
-            <div
-              className="relative mb-3 overflow-hidden rounded-xl border border-maroon-900/15 bg-maroon-900/5"
-              style={{ width: FRAME_WIDTH, height: frameHeight }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={value} alt="" className="h-full w-full object-cover" />
-            </div>
-          )}
+          {value &&
+            (aspectRatio ? (
+              <div
+                className="relative mb-3 overflow-hidden rounded-xl border border-maroon-900/15 bg-maroon-900/5"
+                style={{ width: FRAME_WIDTH, height: frameHeight }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={value} alt="" className="h-full w-full object-cover" />
+              </div>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={value}
+                alt=""
+                className="mb-3 max-w-[280px] rounded-xl border border-maroon-900/15"
+              />
+            ))}
           <div className="flex gap-2">
             <button
               type="button"

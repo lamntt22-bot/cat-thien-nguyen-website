@@ -31,7 +31,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   const body = await request.json().catch(() => null);
   const parsed = productSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Dữ liệu sản phẩm chưa hợp lệ." }, { status: 400 });
+    return NextResponse.json(
+      { error: parsed.error.issues.map((i) => i.message).join("; ") || "Dữ liệu sản phẩm chưa hợp lệ." },
+      { status: 400 },
+    );
   }
 
   try {

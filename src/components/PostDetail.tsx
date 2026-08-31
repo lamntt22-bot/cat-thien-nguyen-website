@@ -39,7 +39,7 @@ export default async function PostDetail({
           <img
             src={post.image}
             alt=""
-            className="mx-auto mt-6 aspect-[3/4] w-full max-w-xs rounded-2xl border border-gold-500/20 object-cover"
+            className="mt-6 w-full rounded-2xl border border-gold-500/20"
           />
         )}
 

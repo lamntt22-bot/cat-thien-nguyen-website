@@ -121,9 +121,9 @@ export default function PostForm({ post }: PostFormProps) {
 
       <div>
         <label className="mb-1 block text-sm font-medium text-maroon-900">
-          Ảnh đại diện bài viết (khung dọc 3:4, tuỳ chọn)
+          Ảnh đại diện bài viết (tuỳ chọn — khung tự lấy theo tỉ lệ ảnh gốc)
         </label>
-        <ImageCropUploader value={image} onChange={setImage} aspectRatio={3 / 4} />
+        <ImageCropUploader value={image} onChange={setImage} />
       </div>
 
       <div>

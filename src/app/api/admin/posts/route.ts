@@ -50,7 +50,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const parsed = postSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Dữ liệu bài viết chưa hợp lệ." }, { status: 400 });
+    return NextResponse.json(
+      { error: parsed.error.issues.map((i) => i.message).join("; ") || "Dữ liệu bài viết chưa hợp lệ." },
+      { status: 400 },
+    );
   }
 
   try {

@@ -15,7 +15,7 @@ export default function PostCard({ post }: { post: PostRecord }) {
     >
       {cover && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={cover} alt="" className="mb-3 aspect-[3/4] w-full rounded-xl object-cover" />
+        <img src={cover} alt="" className="mb-3 w-full rounded-xl" />
       )}
       <span className="text-xs font-semibold uppercase tracking-wide text-red-600">
         {formatDate(post.publishedAt)}
