@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import MediaUploader from "@/components/MediaUploader";
+import ImageCropUploader from "@/components/ImageCropUploader";
 import { formatVndInput, parseVndInput } from "@/lib/format";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
@@ -206,11 +206,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         </div>
       </div>
 
-      <MediaUploader
-        media={image ? [{ type: "image", url: image }] : []}
-        onChange={(next) => setImage(next[0]?.url ?? "")}
-        imageOnly
-      />
+      <ImageCropUploader value={image} onChange={setImage} aspectRatio={1} />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

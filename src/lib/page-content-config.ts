@@ -6,6 +6,8 @@ export interface PageSectionConfig {
   fields: PageSectionField[];
   itemsLabel?: string;
   itemsHint?: string;
+  /** width/height của khung hiển thị ảnh — có giá trị thì cho phép kéo/phóng để cắt ảnh vừa khung. */
+  imageAspectRatio?: number;
 }
 
 export const PAGE_SECTIONS: PageSectionConfig[] = [
@@ -22,6 +24,7 @@ export const PAGE_SECTIONS: PageSectionConfig[] = [
     fields: ["eyebrow", "heading", "body", "image", "items"],
     itemsLabel: "Gạch đầu dòng năng lực / uy tín",
     itemsHint: "Chỉ cần nhập Tiêu đề cho mỗi dòng, để trống Giá trị.",
+    imageAspectRatio: 4 / 5,
   },
   {
     slug: "dai-ly-doi-tac",

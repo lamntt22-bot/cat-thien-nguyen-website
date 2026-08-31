@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import MediaUploader from "@/components/MediaUploader";
+import ImageCropUploader from "@/components/ImageCropUploader";
 import type { PageSectionConfig, PageSectionField } from "@/lib/page-content-config";
 import type { PageSectionItem, PageSectionRecord } from "@/lib/page-content-store";
 
@@ -126,13 +127,20 @@ export default function PageContentForm({
         </div>
       )}
 
-      {has("image") && (
-        <MediaUploader
-          media={media}
-          onChange={(next) => setImage(next[0]?.url ?? "")}
-          imageOnly
-        />
-      )}
+      {has("image") &&
+        (config.imageAspectRatio ? (
+          <ImageCropUploader
+            value={image}
+            onChange={setImage}
+            aspectRatio={config.imageAspectRatio}
+          />
+        ) : (
+          <MediaUploader
+            media={media}
+            onChange={(next) => setImage(next[0]?.url ?? "")}
+            imageOnly
+          />
+        ))}
 
       {has("items") && (
         <div>
