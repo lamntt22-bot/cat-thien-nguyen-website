@@ -28,6 +28,11 @@ export default function MediaUploader({
     if (!files || files.length === 0) return;
     setError("");
 
+    // Theo dõi cục bộ — `media` (prop) giữ nguyên giá trị lúc render trong suốt lần gọi này,
+    // nên nếu tải nhiều file cùng lúc mà cứ onChange([...media, x]) thì file sau sẽ ghi đè mất
+    // các file trước đó. Dùng biến này để cộng dồn đúng trước khi báo lên component cha.
+    let currentMedia = media;
+
     for (const file of Array.from(files)) {
       const allowedTypes = imageOnly
         ? ALLOWED_IMAGE_TYPES
@@ -66,7 +71,10 @@ export default function MediaUploader({
           continue;
         }
 
-        onChange([...media, { type: data.type, url: data.publicUrl }]);
+        currentMedia = imageOnly
+          ? [{ type: data.type, url: data.publicUrl }]
+          : [...currentMedia, { type: data.type, url: data.publicUrl }];
+        onChange(currentMedia);
       } catch {
         setError(`Không tải lên được "${file.name}", vui lòng thử lại.`);
       } finally {
