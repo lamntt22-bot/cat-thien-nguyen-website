@@ -4,6 +4,8 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import MediaUploader from "@/components/MediaUploader";
 import ImageCropUploader from "@/components/ImageCropUploader";
+import RichTextEditor from "@/components/RichTextEditor";
+import { isEmptyRichText } from "@/lib/format";
 import type { PageSectionConfig, PageSectionField } from "@/lib/page-content-config";
 import type { PageSectionItem, PageSectionRecord } from "@/lib/page-content-store";
 
@@ -51,7 +53,7 @@ export default function PageContentForm({
         body: JSON.stringify({
           eyebrow: has("eyebrow") ? eyebrow.trim() : undefined,
           heading: has("heading") ? heading.trim() : undefined,
-          body: has("body") ? body.trim() : undefined,
+          body: has("body") ? (isEmptyRichText(body) ? "" : body) : undefined,
           note: has("note") ? note.trim() : undefined,
           image: has("image") ? image.trim() : undefined,
           items: has("items")
@@ -105,12 +107,7 @@ export default function PageContentForm({
       {has("body") && (
         <div>
           <label className="mb-1 block text-sm font-medium text-maroon-900">Nội dung / mô tả</label>
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            rows={5}
-            className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
-          />
+          <RichTextEditor value={body} onChange={setBody} />
         </div>
       )}
 

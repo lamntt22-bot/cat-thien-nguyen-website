@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminFromRequest } from "@/lib/session";
 import { deleteProduct, updateProduct } from "@/lib/product-store";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 const productSchema = z.object({
   slug: z
@@ -13,7 +14,7 @@ const productSchema = z.object({
   category: z.enum(["tra-dong-y", "ngoc-am", "bach"]),
   name: z.string().trim().min(1).max(200),
   description: z.string().trim().max(2000).default(""),
-  contentDetail: z.string().trim().max(8000).optional(),
+  contentDetail: z.string().trim().max(20000).optional(),
   price: z.string().trim().min(1).max(100),
   priceAmount: z.number().nonnegative().optional(),
   badge: z.string().trim().max(60).optional(),
@@ -34,7 +35,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
-    const product = await updateProduct(id, parsed.data);
+    const product = await updateProduct(id, {
+      ...parsed.data,
+      contentDetail: parsed.data.contentDetail
+        ? sanitizeContentHtml(parsed.data.contentDetail)
+        : undefined,
+    });
     return NextResponse.json({ product });
   } catch (err) {
     console.error("[admin/products] update failed", err);

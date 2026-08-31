@@ -230,6 +230,58 @@ html {
   }
 }
 
+/* Chữ mờ gợi ý khi ô soạn thảo (RichTextEditor) còn trống. */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--color-ink-700);
+  opacity: 0.4;
+}
+
+/* Nội dung soạn từ RichTextEditor (bài viết, mô tả sản phẩm, nội dung trang) — Tailwind preflight
+   xoá hết style mặc định của heading/list nên cần khai báo lại ở đây. */
+.rich-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.rich-content h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-maroon-950);
+}
+.rich-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-maroon-900);
+}
+.rich-content ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.rich-content ol {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+.rich-content a {
+  color: var(--color-red-600);
+  text-decoration: underline;
+}
+.rich-content blockquote {
+  border-left: 2px solid var(--color-gold-500);
+  padding-left: 0.75rem;
+  font-style: italic;
+  color: var(--color-ink-700);
+}
+.rich-content img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+}
+
 /* Repeating gold wave-cloud border strip — dùng làm divider giữa các section */
 .imperial-wave-divider {
   height: 14px;

@@ -3,11 +3,12 @@ import { z } from "zod";
 import { requireAdminFromRequest } from "@/lib/session";
 import { getPageSection, upsertPageSection } from "@/lib/page-content-store";
 import { getPageSectionConfig } from "@/lib/page-content-config";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 const sectionSchema = z.object({
   eyebrow: z.string().trim().max(120).optional(),
   heading: z.string().trim().max(300).optional(),
-  body: z.string().trim().max(4000).optional(),
+  body: z.string().trim().max(20000).optional(),
   note: z.string().trim().max(500).optional(),
   image: z.string().trim().max(300).optional(),
   items: z
@@ -50,7 +51,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
-    const section = await upsertPageSection(slug, parsed.data);
+    const section = await upsertPageSection(slug, {
+      ...parsed.data,
+      body: parsed.data.body ? sanitizeContentHtml(parsed.data.body) : parsed.data.body,
+    });
     return NextResponse.json({ section });
   } catch (err) {
     console.error("[admin/content] update failed", err);

@@ -6,6 +6,7 @@ import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
 import OrnamentCorner from "@/components/OrnamentCorner";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
+import RichContent from "@/components/RichContent";
 import type { PageSectionRecord } from "@/lib/page-content-store";
 
 const DEFAULTS = {
@@ -109,7 +110,7 @@ export default function AgentPartnerSection({
               <h3 className="mt-3 font-display text-xl font-semibold text-maroon-900">
                 {dailyHeading}
               </h3>
-              <p className="mt-2 text-sm text-ink-700">{dailyBody}</p>
+              <RichContent html={dailyBody} className="mt-2 text-sm text-ink-700" />
 
               <div className="mt-5 overflow-hidden rounded-xl border border-maroon-900/10">
                 <table className="w-full text-sm">
@@ -155,7 +156,7 @@ export default function AgentPartnerSection({
                 {partnerEyebrow}
               </span>
               <h3 className="mt-3 font-display text-xl font-semibold">{partnerHeading}</h3>
-              <p className="mt-2 text-sm text-cream-100/80">{partnerBody}</p>
+              <RichContent html={partnerBody} className="mt-2 text-sm text-cream-100/80" />
 
               <div className="mt-5 space-y-3 rounded-xl border border-gold-500/20 bg-maroon-900/60 p-4 text-sm">
                 {partnerConditions.map((c) => (

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPostBySlug, type PostCategory } from "@/lib/post-store";
 import { formatDate } from "@/components/PostCard";
+import RichContent from "@/components/RichContent";
 
 const CATEGORY_LABEL: Record<PostCategory, string> = {
   "thong-bao": "thông báo",
@@ -18,7 +19,6 @@ export default async function PostDetail({
   if (!post) notFound();
 
   const backHref = `/${category}`;
-  const paragraphs = post.content.split(/\n\s*\n/).filter(Boolean);
 
   return (
     <main className="bg-cream-50 py-14 sm:py-20">
@@ -57,11 +57,7 @@ export default async function PostDetail({
           </div>
         )}
 
-        <div className="mt-6 space-y-4 text-ink-700">
-          {paragraphs.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
+        <RichContent html={post.content} className="mt-6 text-ink-700" />
       </article>
     </main>
   );

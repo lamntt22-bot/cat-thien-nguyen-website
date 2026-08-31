@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminFromRequest } from "@/lib/session";
 import { deletePost, updatePost } from "@/lib/post-store";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 const postSchema = z.object({
   slug: z
@@ -42,7 +43,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
-    const post = await updatePost(id, parsed.data);
+    const post = await updatePost(id, {
+      ...parsed.data,
+      content: sanitizeContentHtml(parsed.data.content),
+    });
     return NextResponse.json({ post });
   } catch (err) {
     console.error("[admin/posts] update failed", err);

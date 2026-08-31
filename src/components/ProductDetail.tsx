@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
+import RichContent from "@/components/RichContent";
 import { formatVnd } from "@/lib/format";
 import type { ProductRecord } from "@/lib/product-store";
 
@@ -25,7 +26,6 @@ export default function ProductDetail({
 }) {
   const { open } = useLeadCapture();
   const detailText = product.contentDetail || product.description;
-  const detailParagraphs = detailText.split(/\n\s*\n/).filter(Boolean);
 
   return (
     <main className="bg-cream-100 py-10 sm:py-14">
@@ -99,11 +99,7 @@ export default function ProductDetail({
               <h2 className="font-display text-lg font-semibold text-maroon-900">
                 Thành phần & Công dụng
               </h2>
-              <div className="mt-2 space-y-3 text-sm text-ink-700">
-                {detailParagraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
+              <RichContent html={detailText} className="mt-2 text-sm text-ink-700" />
             </div>
           </div>
         </div>

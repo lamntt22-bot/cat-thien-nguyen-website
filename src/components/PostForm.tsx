@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { PostCategory, PostMedia, PostRecord } from "@/lib/post-store";
 import MediaUploader from "@/components/MediaUploader";
+import RichTextEditor from "@/components/RichTextEditor";
 
 interface PostFormProps {
   post?: PostRecord;
@@ -120,15 +121,8 @@ export default function PostForm({ post }: PostFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-maroon-900">
-          Nội dung đầy đủ (mỗi đoạn cách nhau 1 dòng trống)
-        </label>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={10}
-          className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
-        />
+        <label className="mb-1 block text-sm font-medium text-maroon-900">Nội dung đầy đủ</label>
+        <RichTextEditor value={content} onChange={setContent} placeholder="Nhập nội dung bài viết..." />
       </div>
 
       <MediaUploader media={media} onChange={setMedia} />

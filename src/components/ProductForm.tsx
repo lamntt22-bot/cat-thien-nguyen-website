@@ -3,7 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import ImageCropUploader from "@/components/ImageCropUploader";
-import { formatVndInput, parseVndInput } from "@/lib/format";
+import RichTextEditor from "@/components/RichTextEditor";
+import { formatVndInput, isEmptyRichText, parseVndInput } from "@/lib/format";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const CATEGORIES: { id: ProductCategory; label: string }[] = [
@@ -47,7 +48,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           category,
           name: name.trim(),
           description: description.trim(),
-          contentDetail: contentDetail.trim() || undefined,
+          contentDetail: isEmptyRichText(contentDetail) ? undefined : contentDetail,
           price: price.trim(),
           priceAmount: Number(priceAmount) > 0 ? Number(priceAmount) : undefined,
           badge: badge.trim() || undefined,
@@ -127,11 +128,9 @@ export default function ProductForm({ product }: ProductFormProps) {
         <label className="mb-1 block text-sm font-medium text-maroon-900">
           Nội dung chi tiết (thành phần, công dụng, hướng dẫn sử dụng... hiển thị ở trang chi tiết sản phẩm)
         </label>
-        <textarea
+        <RichTextEditor
           value={contentDetail}
-          onChange={(e) => setContentDetail(e.target.value)}
-          rows={6}
-          className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+          onChange={setContentDetail}
           placeholder="Để trống sẽ hiển thị tạm mô tả ngắn ở trên."
         />
       </div>

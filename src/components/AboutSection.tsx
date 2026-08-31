@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import RichContent from "@/components/RichContent";
 import { getPageSection } from "@/lib/page-content-store";
 
 const DEFAULTS = {
@@ -55,12 +56,10 @@ export default async function AboutSection({ moreHref = "/ve-chung-toi" }: { mor
           {heading}
         </h2>
         <div className="mt-4 h-px w-16 bg-gold-500/60" />
-        <p
-          className="mt-4 max-w-xl text-ink-700"
-          style={{ textShadow: "0 1px 16px rgba(253,250,243,0.95)" }}
-        >
-          {body}
-        </p>
+        <RichContent
+          html={body}
+          className="mt-4 max-w-xl text-ink-700 [text-shadow:0_1px_16px_rgba(253,250,243,0.95)]"
+        />
         <Link
           href={moreHref}
           className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-maroon-900 px-5 py-2.5 text-sm font-bold text-cream-50 shadow-md transition hover:bg-maroon-800"

@@ -4,6 +4,7 @@ import Reveal from "@/components/Reveal";
 import AmbientBackground from "@/components/AmbientBackground";
 import { CraneCorner, CloudWisp } from "@/components/MotifAccents";
 import OrnamentCorner from "@/components/OrnamentCorner";
+import RichContent from "@/components/RichContent";
 import { getPageSection } from "@/lib/page-content-store";
 
 const DEFAULTS = {
@@ -70,7 +71,7 @@ export default async function Endorser({ showMoreLink = true }: { showMoreLink?:
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-cream-100/70">{body}</p>
+          <RichContent html={body} className="mt-6 text-sm text-cream-100/70" />
           {showMoreLink && (
             <Link
               href="/nguoi-bao-chung"

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminFromRequest } from "@/lib/session";
 import { createPost, listPosts } from "@/lib/post-store";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 const postSchema = z.object({
   slug: z
@@ -49,7 +50,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const post = await createPost(parsed.data);
+    const post = await createPost({
+      ...parsed.data,
+      content: sanitizeContentHtml(parsed.data.content),
+    });
     return NextResponse.json({ post });
   } catch (err) {
     console.error("[admin/posts] create failed", err);
