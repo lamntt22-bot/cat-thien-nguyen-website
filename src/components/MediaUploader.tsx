@@ -60,7 +60,7 @@ export default function MediaUploader({
 
         const { error: uploadError } = await getSupabaseBrowser()
           .storage.from("post-media")
-          .uploadToSignedUrl(data.path, data.token, file);
+          .uploadToSignedUrl(data.path, data.token, file, { contentType: file.type });
         if (uploadError) {
           setError(`Không tải lên được "${file.name}": ${uploadError.message}`);
           continue;
