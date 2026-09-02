@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function SanPhamPage() {
   let products: ProductRecord[] = [];
   try {
-    products = await listProducts();
+    products = await listProducts({ onlyPublished: true });
   } catch (err) {
     console.error("[san-pham] failed to load products", err);
   }

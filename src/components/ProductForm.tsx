@@ -31,6 +31,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [cbmp, setCbmp] = useState(product?.cbmp ?? "");
   const [image, setImage] = useState(product?.image ?? "");
   const [feedbackVideos, setFeedbackVideos] = useState<string[]>(product?.feedbackVideos ?? []);
+  const [published, setPublished] = useState(product?.published ?? true);
   const [sortOrder, setSortOrder] = useState(product?.sortOrder ?? 0);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -56,6 +57,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           cbmp: cbmp.trim() || undefined,
           image: image.trim() || undefined,
           feedbackVideos: feedbackVideos.map((v) => v.trim()).filter(Boolean),
+          published,
           sortOrder: Number(sortOrder) || 0,
         }),
       });
@@ -244,6 +246,16 @@ export default function ProductForm({ product }: ProductFormProps) {
           + Thêm video
         </button>
       </div>
+
+      <label className="flex items-center gap-2 text-sm text-maroon-900">
+        <input
+          type="checkbox"
+          checked={published}
+          onChange={(e) => setPublished(e.target.checked)}
+          className="h-4 w-4 accent-red-600"
+        />
+        Hiển thị công khai (bỏ chọn để ẩn tạm — dùng cho sản phẩm sắp ra mắt, chưa có hàng)
+      </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

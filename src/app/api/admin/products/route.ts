@@ -24,6 +24,7 @@ const productSchema = z.object({
     .array(z.string().trim().url("Link video không hợp lệ").max(500))
     .max(10)
     .optional(),
+  published: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
 });
 

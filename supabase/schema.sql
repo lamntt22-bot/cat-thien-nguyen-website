@@ -47,6 +47,9 @@ alter table public.products add column if not exists content_detail text;
 -- không cần code lại. Mảng chuỗi URL, VD ["https://www.youtube.com/watch?v=..."].
 alter table public.products add column if not exists feedback_videos jsonb not null default '[]'::jsonb;
 
+-- Ẩn sản phẩm "sắp ra mắt" khỏi trang công khai mà không cần xoá — admin bật lại khi có hàng thật.
+alter table public.products add column if not exists published boolean not null default true;
+
 -- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),

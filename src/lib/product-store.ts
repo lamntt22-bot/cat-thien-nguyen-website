@@ -16,6 +16,7 @@ export interface ProductRecord {
   cbmp?: string;
   image?: string;
   feedbackVideos: string[];
+  published: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -33,6 +34,7 @@ export interface ProductInput {
   cbmp?: string;
   image?: string;
   feedbackVideos?: string[];
+  published?: boolean;
   sortOrder?: number;
 }
 
@@ -49,6 +51,7 @@ interface ProductRow {
   cbmp: string | null;
   image: string | null;
   feedback_videos: string[] | null;
+  published: boolean;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -68,16 +71,18 @@ function toRecord(row: ProductRow): ProductRecord {
     cbmp: row.cbmp ?? undefined,
     image: row.image ?? undefined,
     feedbackVideos: row.feedback_videos ?? [],
+    published: row.published,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
 }
 
-export async function listProducts(): Promise<ProductRecord[]> {
-  const { data, error } = await getSupabase()
-    .from("products")
-    .select("*")
+export async function listProducts(options?: { onlyPublished?: boolean }): Promise<ProductRecord[]> {
+  let query = getSupabase().from("products").select("*");
+  if (options?.onlyPublished) query = query.eq("published", true);
+
+  const { data, error } = await query
     .order("category", { ascending: true })
     .order("sort_order", { ascending: true })
     .returns<ProductRow[]>();
@@ -130,6 +135,7 @@ export async function createProduct(input: ProductInput): Promise<ProductRecord>
       description: input.description,
       content_detail: input.contentDetail ?? null,
       feedback_videos: input.feedbackVideos ?? [],
+      published: input.published ?? true,
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
@@ -158,6 +164,7 @@ export async function updateProduct(
       description: input.description,
       content_detail: input.contentDetail ?? null,
       feedback_videos: input.feedbackVideos ?? [],
+      published: input.published ?? true,
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,

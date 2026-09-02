@@ -13,7 +13,7 @@ import { getPageSections } from "@/lib/page-content-store";
 export default async function Home() {
   let products: ProductRecord[] = [];
   try {
-    products = await listProducts();
+    products = await listProducts({ onlyPublished: true });
   } catch (err) {
     console.error("[home] failed to load products", err);
   }

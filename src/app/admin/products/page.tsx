@@ -41,6 +41,7 @@ export default async function AdminProductsPage() {
                 <th className="px-4 py-3">Dòng</th>
                 <th className="px-4 py-3">Giá</th>
                 <th className="px-4 py-3">Badge</th>
+                <th className="px-4 py-3">Trạng thái</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
@@ -53,6 +54,17 @@ export default async function AdminProductsPage() {
                   </td>
                   <td className="px-4 py-3 text-ink-700">{p.price}</td>
                   <td className="px-4 py-3 text-ink-700">{p.badge ?? "—"}</td>
+                  <td className="px-4 py-3">
+                    {p.published ? (
+                      <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                        Công khai
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-ink-700/10 px-2.5 py-1 text-xs font-semibold text-ink-700/70">
+                        Đã ẩn
+                      </span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <a
