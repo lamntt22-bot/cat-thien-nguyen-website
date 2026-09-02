@@ -27,6 +27,13 @@ export const PAGE_SECTIONS: PageSectionConfig[] = [
     imageAspectRatio: 4 / 5,
   },
   {
+    slug: "hanh-trinh-cua-chung-toi",
+    label: "Hành trình của chúng tôi — Video",
+    fields: ["eyebrow", "heading", "items"],
+    itemsLabel: "Danh sách video (link YouTube)",
+    itemsHint: "Giá trị = dán nguyên link YouTube từ trình duyệt. Tiêu đề = chú thích ngắn, tuỳ chọn.",
+  },
+  {
     slug: "dai-ly-doi-tac",
     label: "Đại lý & Đối tác — Tiêu đề chung",
     fields: ["eyebrow", "heading"],

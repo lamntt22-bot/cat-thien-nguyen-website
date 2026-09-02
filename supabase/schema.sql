@@ -272,5 +272,16 @@ insert into public.page_sections (slug, eyebrow, heading, body, note, image, ite
     {"title": "Chiết khấu", "value": "Ưu đãi riêng, cao hơn Đại lý thường"},
     {"title": "Hỗ trợ triển khai", "value": "Bộ hồ sơ concept, bảng hiệu chuẩn"}
   ]'::jsonb
+),
+(
+  'hanh-trinh-cua-chung-toi',
+  'Hành trình của chúng tôi',
+  'Những thước phim từ Cát Thiên Nguyên',
+  null, null, null,
+  '[
+    {"value": "https://www.youtube.com/watch?v=FMz0bPr-Ca4&list=PL19GifvfBe2Dgg435cfsk2ozwwEezCMNA"},
+    {"value": "https://www.youtube.com/watch?v=S01mW8pmzxw&list=PL19GifvfBe2D11y5Il3DeSBhb3IDJjSJu"},
+    {"value": "https://www.youtube.com/watch?v=HkymPhqJsFk&list=PL19GifvfBe2AGD7sganqg1Py-Ug3Or4yO&index=5"}
+  ]'::jsonb
 )
 on conflict (slug) do nothing;

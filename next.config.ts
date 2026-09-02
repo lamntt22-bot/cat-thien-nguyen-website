@@ -20,6 +20,7 @@ const securityHeaders = [
       `media-src 'self' blob: ${supabaseOrigin}`,
       "font-src 'self'",
       `connect-src 'self' ${supabaseOrigin}`,
+      "frame-src https://www.youtube-nocookie.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
