@@ -15,6 +15,7 @@ export interface ProductRecord {
   badge?: string;
   cbmp?: string;
   image?: string;
+  feedbackVideos: string[];
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -31,6 +32,7 @@ export interface ProductInput {
   badge?: string;
   cbmp?: string;
   image?: string;
+  feedbackVideos?: string[];
   sortOrder?: number;
 }
 
@@ -46,6 +48,7 @@ interface ProductRow {
   badge: string | null;
   cbmp: string | null;
   image: string | null;
+  feedback_videos: string[] | null;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -64,6 +67,7 @@ function toRecord(row: ProductRow): ProductRecord {
     badge: row.badge ?? undefined,
     cbmp: row.cbmp ?? undefined,
     image: row.image ?? undefined,
+    feedbackVideos: row.feedback_videos ?? [],
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -125,6 +129,7 @@ export async function createProduct(input: ProductInput): Promise<ProductRecord>
       name: input.name,
       description: input.description,
       content_detail: input.contentDetail ?? null,
+      feedback_videos: input.feedbackVideos ?? [],
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
@@ -152,6 +157,7 @@ export async function updateProduct(
       name: input.name,
       description: input.description,
       content_detail: input.contentDetail ?? null,
+      feedback_videos: input.feedbackVideos ?? [],
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,

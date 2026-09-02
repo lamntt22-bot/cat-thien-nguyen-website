@@ -43,6 +43,10 @@ alter table public.products add column if not exists price_amount numeric;
 -- tách riêng khỏi "description" (mô tả ngắn hiển thị ở thẻ sản phẩm ngoài danh sách).
 alter table public.products add column if not exists content_detail text;
 
+-- Video phản hồi khách hàng (link YouTube) hiển thị ở trang chi tiết sản phẩm — admin nhập link,
+-- không cần code lại. Mảng chuỗi URL, VD ["https://www.youtube.com/watch?v=..."].
+alter table public.products add column if not exists feedback_videos jsonb not null default '[]'::jsonb;
+
 -- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),

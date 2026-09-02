@@ -30,6 +30,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [badge, setBadge] = useState(product?.badge ?? "");
   const [cbmp, setCbmp] = useState(product?.cbmp ?? "");
   const [image, setImage] = useState(product?.image ?? "");
+  const [feedbackVideos, setFeedbackVideos] = useState<string[]>(product?.feedbackVideos ?? []);
   const [sortOrder, setSortOrder] = useState(product?.sortOrder ?? 0);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -54,6 +55,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           badge: badge.trim() || undefined,
           cbmp: cbmp.trim() || undefined,
           image: image.trim() || undefined,
+          feedbackVideos: feedbackVideos.map((v) => v.trim()).filter(Boolean),
           sortOrder: Number(sortOrder) || 0,
         }),
       });
@@ -206,6 +208,42 @@ export default function ProductForm({ product }: ProductFormProps) {
       </div>
 
       <ImageCropUploader value={image} onChange={setImage} aspectRatio={1} />
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-maroon-900">
+          Video phản hồi khách hàng (link YouTube, hiển thị ở trang chi tiết sản phẩm)
+        </label>
+        <div className="space-y-2">
+          {feedbackVideos.map((url, i) => (
+            <div key={i} className="flex gap-2">
+              <input
+                value={url}
+                onChange={(e) =>
+                  setFeedbackVideos((prev) =>
+                    prev.map((v, idx) => (idx === i ? e.target.value : v)),
+                  )
+                }
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="flex-1 rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+              />
+              <button
+                type="button"
+                onClick={() => setFeedbackVideos((prev) => prev.filter((_, idx) => idx !== i))}
+                className="rounded-xl border border-red-200 px-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                Xoá
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setFeedbackVideos((prev) => [...prev, ""])}
+          className="mt-2 rounded-full border border-maroon-900/20 px-4 py-1.5 text-xs font-semibold text-maroon-900 transition hover:bg-maroon-900/5"
+        >
+          + Thêm video
+        </button>
+      </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

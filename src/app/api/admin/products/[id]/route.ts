@@ -20,6 +20,10 @@ const productSchema = z.object({
   badge: z.string().trim().max(60).optional(),
   cbmp: z.string().trim().max(60).optional(),
   image: z.string().trim().max(300).optional(),
+  feedbackVideos: z
+    .array(z.string().trim().url("Link video không hợp lệ").max(500))
+    .max(10)
+    .optional(),
   sortOrder: z.number().int().default(0),
 });
 

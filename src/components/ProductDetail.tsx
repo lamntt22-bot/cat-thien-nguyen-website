@@ -7,6 +7,7 @@ import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
 import RichContent from "@/components/RichContent";
 import { formatVnd } from "@/lib/format";
+import { getYoutubeEmbedUrl } from "@/lib/youtube";
 import type { ProductRecord } from "@/lib/product-store";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -15,7 +16,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   bach: "Mỹ phẩm thiên nhiên",
 };
 
-const FEEDBACK_SLOTS = [1, 2];
+const MIN_FEEDBACK_SLOTS = 2;
 
 export default function ProductDetail({
   product,
@@ -26,6 +27,7 @@ export default function ProductDetail({
 }) {
   const { open } = useLeadCapture();
   const detailText = product.contentDetail || product.description;
+  const feedbackPlaceholderCount = Math.max(0, MIN_FEEDBACK_SLOTS - product.feedbackVideos.length);
 
   return (
     <main className="bg-cream-100 py-10 sm:py-14">
@@ -109,9 +111,35 @@ export default function ProductDetail({
             Video phản hồi từ khách hàng
           </h2>
           <div className="mt-5 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4">
-            {FEEDBACK_SLOTS.map((slot) => (
+            {product.feedbackVideos.map((url, i) => {
+              const embedUrl = getYoutubeEmbedUrl(url);
+              return (
+                <div
+                  key={url}
+                  className="relative aspect-video w-[280px] shrink-0 snap-center overflow-hidden rounded-2xl border border-gold-500/30 bg-maroon-950 shadow-sm sm:w-[380px]"
+                >
+                  {embedUrl ? (
+                    <iframe
+                      src={embedUrl}
+                      title={`Video phản hồi ${i + 1}`}
+                      className="h-full w-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-cream-100/70">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600/90 text-xl text-white shadow-lg">
+                        ▶
+                      </span>
+                      <span className="text-sm font-medium">Video đang được cập nhật</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {Array.from({ length: feedbackPlaceholderCount }).map((_, i) => (
               <div
-                key={slot}
+                key={`placeholder-${i}`}
                 className="relative aspect-video w-[280px] shrink-0 snap-center overflow-hidden rounded-2xl border border-gold-500/30 bg-gradient-to-br from-maroon-900 to-maroon-950 shadow-sm sm:w-[380px]"
               >
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-cream-100/70">
@@ -123,9 +151,11 @@ export default function ProductDetail({
               </div>
             ))}
           </div>
-          <p className="mt-2 text-[11px] text-ink-700/45">
-            * Ô chờ video — Cát Thiên Nguyên sẽ cập nhật video phản hồi thật trong thời gian tới.
-          </p>
+          {feedbackPlaceholderCount > 0 && (
+            <p className="mt-2 text-[11px] text-ink-700/45">
+              * Ô chờ video — Cát Thiên Nguyên sẽ cập nhật video phản hồi thật trong thời gian tới.
+            </p>
+          )}
         </section>
 
         {related.length > 0 && (
