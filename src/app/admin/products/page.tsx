@@ -42,6 +42,7 @@ export default async function AdminProductsPage() {
                 <th className="px-4 py-3">Giá</th>
                 <th className="px-4 py-3">Badge</th>
                 <th className="px-4 py-3">Trạng thái</th>
+                <th className="px-4 py-3">Dùng thử</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
@@ -63,6 +64,15 @@ export default async function AdminProductsPage() {
                       <span className="rounded-full bg-ink-700/10 px-2.5 py-1 text-xs font-semibold text-ink-700/70">
                         Đã ẩn
                       </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {p.trialAvailable ? (
+                      <span className="rounded-full bg-gold-500/15 px-2.5 py-1 text-xs font-semibold text-maroon-800">
+                        Có mẫu
+                      </span>
+                    ) : (
+                      <span className="text-ink-700/40">—</span>
                     )}
                   </td>
                   <td className="px-4 py-3">

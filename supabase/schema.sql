@@ -50,6 +50,10 @@ alter table public.products add column if not exists feedback_videos jsonb not n
 -- Ẩn sản phẩm "sắp ra mắt" khỏi trang công khai mà không cần xoá — admin bật lại khi có hàng thật.
 alter table public.products add column if not exists published boolean not null default true;
 
+-- Đánh dấu sản phẩm đang có mẫu dùng thử — chỉ những sản phẩm này mới hiện trong form
+-- "Đăng ký dùng thử" ở trang chủ để đối tác chọn.
+alter table public.products add column if not exists trial_available boolean not null default false;
+
 -- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
@@ -136,6 +140,21 @@ create index if not exists checkouts_member_idx on public.checkouts (member_id);
 create index if not exists checkouts_status_idx on public.checkouts (status);
 create index if not exists checkout_items_checkout_idx on public.checkout_items (checkout_id);
 
+-- ============ TRIAL_REQUESTS (đối tác đăng ký sản phẩm dùng thử ở trang chủ — admin theo dõi & chăm sóc) ============
+create table if not exists public.trial_requests (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  phone text not null,
+  occupation text not null,
+  product_ids jsonb not null default '[]'::jsonb,
+  product_names jsonb not null default '[]'::jsonb,
+  status text not null default 'new' check (status in ('new', 'contacted', 'done')),
+  note text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists trial_requests_status_idx on public.trial_requests (status);
+
 -- ============ RLS — bật, KHÔNG có policy cho anon/authenticated (default-deny) ============
 -- Mọi truy cập đọc/viết đều đi qua API route của chính app, dùng
 -- SUPABASE_SERVICE_ROLE_KEY (bỏ qua RLS) sau khi server đã tự verify quyền —
@@ -147,6 +166,7 @@ alter table public.orders enable row level security;
 alter table public.checkouts enable row level security;
 alter table public.checkout_items enable row level security;
 alter table public.page_sections enable row level security;
+alter table public.trial_requests enable row level security;
 
 -- ============ SEED DATA — nội dung hiện có trên site, để trang không trống sau khi chạy schema ============
 -- An toàn để chạy lại: on conflict (slug) do nothing.
@@ -175,6 +195,10 @@ update public.products set price_amount = 440000 where slug in ('ngoc-am-kim', '
 update public.products set price_amount = 499000 where slug = 'kem-bach-nhat' and price_amount is null;
 update public.products set price_amount = 330000 where slug = 'sua-rua-mat-bach-linh' and price_amount is null;
 update public.products set price_amount = 290000 where slug = 'dung-dich-ve-sinh-bach-trau' and price_amount is null;
+
+-- Mặc định bật "có mẫu dùng thử" cho các sản phẩm đã ra mắt thật (không phải "sắp ra mắt") —
+-- admin vào từng sản phẩm trong trang quản trị để tắt/bật lại cho đúng thực tế tồn kho mẫu.
+update public.products set trial_available = true where published = true and price != 'Sắp ra mắt';
 
 insert into public.posts (slug, category, title, excerpt, content, published_at) values
 ('ra-mat-chuong-trinh-dai-ly-doi-tac', 'thong-bao', 'Ra mắt Chương trình Đại lý & Đối tác Cát Thiên Nguyên',

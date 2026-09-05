@@ -32,6 +32,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [image, setImage] = useState(product?.image ?? "");
   const [feedbackVideos, setFeedbackVideos] = useState<string[]>(product?.feedbackVideos ?? []);
   const [published, setPublished] = useState(product?.published ?? true);
+  const [trialAvailable, setTrialAvailable] = useState(product?.trialAvailable ?? false);
   const [sortOrder, setSortOrder] = useState(product?.sortOrder ?? 0);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -58,6 +59,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           image: image.trim() || undefined,
           feedbackVideos: feedbackVideos.map((v) => v.trim()).filter(Boolean),
           published,
+          trialAvailable,
           sortOrder: Number(sortOrder) || 0,
         }),
       });
@@ -255,6 +257,16 @@ export default function ProductForm({ product }: ProductFormProps) {
           className="h-4 w-4 accent-red-600"
         />
         Hiển thị công khai (bỏ chọn để ẩn tạm — dùng cho sản phẩm sắp ra mắt, chưa có hàng)
+      </label>
+
+      <label className="flex items-center gap-2 text-sm text-maroon-900">
+        <input
+          type="checkbox"
+          checked={trialAvailable}
+          onChange={(e) => setTrialAvailable(e.target.checked)}
+          className="h-4 w-4 accent-red-600"
+        />
+        Đang có mẫu dùng thử (hiện trong form &ldquo;Đăng ký dùng thử&rdquo; ở trang chủ)
       </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

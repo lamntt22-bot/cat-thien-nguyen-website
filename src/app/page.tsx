@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import TrialRegistrationSection from "@/components/TrialRegistrationSection";
 import AboutSection from "@/components/AboutSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Endorser from "@/components/Endorser";
@@ -18,6 +19,13 @@ export default async function Home() {
     console.error("[home] failed to load products", err);
   }
 
+  let trialProducts: ProductRecord[] = [];
+  try {
+    trialProducts = await listProducts({ onlyPublished: true, onlyTrialAvailable: true });
+  } catch (err) {
+    console.error("[home] failed to load trial products", err);
+  }
+
   let sections: Awaited<ReturnType<typeof getPageSections>> = {};
   try {
     sections = await getPageSections([
@@ -32,6 +40,7 @@ export default async function Home() {
   return (
     <main>
       <Hero />
+      <TrialRegistrationSection products={trialProducts} />
       <AboutSection />
       <Endorser />
       <JourneySection />

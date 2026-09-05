@@ -25,6 +25,7 @@ const productSchema = z.object({
     .max(10)
     .optional(),
   published: z.boolean().default(true),
+  trialAvailable: z.boolean().default(false),
   sortOrder: z.number().int().default(0),
 });
 

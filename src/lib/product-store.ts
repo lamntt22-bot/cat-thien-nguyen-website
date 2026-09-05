@@ -17,6 +17,7 @@ export interface ProductRecord {
   image?: string;
   feedbackVideos: string[];
   published: boolean;
+  trialAvailable: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -35,6 +36,7 @@ export interface ProductInput {
   image?: string;
   feedbackVideos?: string[];
   published?: boolean;
+  trialAvailable?: boolean;
   sortOrder?: number;
 }
 
@@ -52,6 +54,7 @@ interface ProductRow {
   image: string | null;
   feedback_videos: string[] | null;
   published: boolean;
+  trial_available: boolean;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -72,15 +75,20 @@ function toRecord(row: ProductRow): ProductRecord {
     image: row.image ?? undefined,
     feedbackVideos: row.feedback_videos ?? [],
     published: row.published,
+    trialAvailable: row.trial_available,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
 }
 
-export async function listProducts(options?: { onlyPublished?: boolean }): Promise<ProductRecord[]> {
+export async function listProducts(options?: {
+  onlyPublished?: boolean;
+  onlyTrialAvailable?: boolean;
+}): Promise<ProductRecord[]> {
   let query = getSupabase().from("products").select("*");
   if (options?.onlyPublished) query = query.eq("published", true);
+  if (options?.onlyTrialAvailable) query = query.eq("trial_available", true);
 
   const { data, error } = await query
     .order("category", { ascending: true })
@@ -136,6 +144,7 @@ export async function createProduct(input: ProductInput): Promise<ProductRecord>
       content_detail: input.contentDetail ?? null,
       feedback_videos: input.feedbackVideos ?? [],
       published: input.published ?? true,
+      trial_available: input.trialAvailable ?? false,
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
@@ -165,6 +174,7 @@ export async function updateProduct(
       content_detail: input.contentDetail ?? null,
       feedback_videos: input.feedbackVideos ?? [],
       published: input.published ?? true,
+      trial_available: input.trialAvailable ?? false,
       price: input.price,
       price_amount: input.priceAmount ?? null,
       badge: input.badge ?? null,
