@@ -3,9 +3,9 @@ import TrialRegistrationForm from "@/components/TrialRegistrationForm";
 import { listProducts, type ProductRecord } from "@/lib/product-store";
 
 export const metadata: Metadata = {
-  title: "Đăng ký dùng thử sản phẩm — Cát Thiên Nguyên",
+  title: "Đăng ký trải nghiệm Hồng Nguyệt Trà — Cát Thiên Nguyên",
   description:
-    "Đăng ký nhận mẫu dùng thử miễn phí các sản phẩm của Cát Thiên Nguyên trước khi nhập hàng, làm Đại lý hoặc Đối tác.",
+    "Dành riêng cho khách hàng mong muốn lắng nghe cơ thể và các đối tác quan tâm đến giải pháp dưỡng sinh thảo dược bền vững.",
 };
 
 const BENEFITS = [
@@ -27,14 +27,14 @@ export default async function TrialRegistrationPage() {
       <section className="border-b border-gold-500/25 bg-maroon-900 py-10 sm:py-14">
         <div className="mx-auto max-w-2xl px-5 text-center text-cream-50 sm:px-8">
           <span className="inline-flex items-center rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-gold-300">
-            Dành cho Đại lý & Đối tác
+            Dược trời ban · Đất khai phúc · Sống lành tâm
           </span>
           <h1 className="mt-4 font-display text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
-            Đăng ký nhận mẫu dùng thử miễn phí
+            Đăng ký trải nghiệm Hồng Nguyệt Trà
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-cream-100/85 sm:text-base">
-            Trước khi trở thành Đại lý hay Đối tác của Cát Thiên Nguyên, bạn có thể đăng ký dùng
-            thử trực tiếp sản phẩm để đánh giá chất lượng — hoàn toàn miễn phí.
+            Dành riêng cho khách hàng mong muốn lắng nghe cơ thể và các đối tác quan tâm đến giải
+            pháp dưỡng sinh thảo dược bền vững.
           </p>
           <ul className="mt-6 inline-block space-y-2.5 text-left">
             {BENEFITS.map((b) => (
