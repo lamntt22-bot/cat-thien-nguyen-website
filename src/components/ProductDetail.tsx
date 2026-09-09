@@ -74,12 +74,29 @@ export default function ProductDetail({
             {product.cbmp && (
               <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
             )}
-            <p className="mt-4 font-display text-2xl font-semibold text-red-600">
-              {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
-            </p>
+            <div className="mt-4 flex items-baseline gap-3">
+              {product.compareAtPriceAmount &&
+                product.priceAmount &&
+                product.compareAtPriceAmount > product.priceAmount && (
+                  <span className="text-base text-ink-700/40 line-through">
+                    {formatVnd(product.compareAtPriceAmount)}
+                  </span>
+                )}
+              <p className="font-display text-2xl font-semibold text-red-600">
+                {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
+              </p>
+            </div>
 
             <div className="mt-6">
-              {product.priceAmount ? (
+              {!product.inStock ? (
+                <button
+                  type="button"
+                  disabled
+                  className="cursor-not-allowed rounded-full bg-ink-700/10 px-6 py-3 text-sm font-bold text-ink-700/50"
+                >
+                  Hết hàng
+                </button>
+              ) : product.priceAmount ? (
                 <AddToCartButton
                   productId={product.id}
                   name={product.name}

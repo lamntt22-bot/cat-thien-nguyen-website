@@ -12,6 +12,8 @@ export interface ProductRecord {
   contentDetail?: string;
   price: string;
   priceAmount?: number;
+  compareAtPriceAmount?: number;
+  inStock: boolean;
   badge?: string;
   cbmp?: string;
   image?: string;
@@ -31,6 +33,8 @@ export interface ProductInput {
   contentDetail?: string;
   price: string;
   priceAmount?: number;
+  compareAtPriceAmount?: number;
+  inStock?: boolean;
   badge?: string;
   cbmp?: string;
   image?: string;
@@ -49,6 +53,8 @@ interface ProductRow {
   content_detail: string | null;
   price: string;
   price_amount: number | null;
+  compare_at_price_amount: number | null;
+  in_stock: boolean;
   badge: string | null;
   cbmp: string | null;
   image: string | null;
@@ -70,6 +76,8 @@ function toRecord(row: ProductRow): ProductRecord {
     contentDetail: row.content_detail ?? undefined,
     price: row.price,
     priceAmount: row.price_amount ?? undefined,
+    compareAtPriceAmount: row.compare_at_price_amount ?? undefined,
+    inStock: row.in_stock,
     badge: row.badge ?? undefined,
     cbmp: row.cbmp ?? undefined,
     image: row.image ?? undefined,
@@ -147,6 +155,8 @@ export async function createProduct(input: ProductInput): Promise<ProductRecord>
       trial_available: input.trialAvailable ?? false,
       price: input.price,
       price_amount: input.priceAmount ?? null,
+      compare_at_price_amount: input.compareAtPriceAmount ?? null,
+      in_stock: input.inStock ?? true,
       badge: input.badge ?? null,
       cbmp: input.cbmp ?? null,
       image: input.image ?? null,
@@ -177,6 +187,8 @@ export async function updateProduct(
       trial_available: input.trialAvailable ?? false,
       price: input.price,
       price_amount: input.priceAmount ?? null,
+      compare_at_price_amount: input.compareAtPriceAmount ?? null,
+      in_stock: input.inStock ?? true,
       badge: input.badge ?? null,
       cbmp: input.cbmp ?? null,
       image: input.image ?? null,

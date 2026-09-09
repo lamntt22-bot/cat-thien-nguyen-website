@@ -17,6 +17,8 @@ const productSchema = z.object({
   contentDetail: z.string().trim().max(20000).optional(),
   price: z.string().trim().min(1).max(100),
   priceAmount: z.number().nonnegative().optional(),
+  compareAtPriceAmount: z.number().nonnegative().optional(),
+  inStock: z.boolean().default(true),
   badge: z.string().trim().max(60).optional(),
   cbmp: z.string().trim().max(60).optional(),
   image: z.string().trim().max(300).optional(),

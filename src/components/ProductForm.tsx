@@ -27,6 +27,10 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [contentDetail, setContentDetail] = useState(product?.contentDetail ?? "");
   const [price, setPrice] = useState(product?.price ?? "Đang cập nhật");
   const [priceAmount, setPriceAmount] = useState(product?.priceAmount ?? 0);
+  const [compareAtPriceAmount, setCompareAtPriceAmount] = useState(
+    product?.compareAtPriceAmount ?? 0,
+  );
+  const [inStock, setInStock] = useState(product?.inStock ?? true);
   const [badge, setBadge] = useState(product?.badge ?? "");
   const [cbmp, setCbmp] = useState(product?.cbmp ?? "");
   const [image, setImage] = useState(product?.image ?? "");
@@ -54,6 +58,9 @@ export default function ProductForm({ product }: ProductFormProps) {
           contentDetail: isEmptyRichText(contentDetail) ? undefined : contentDetail,
           price: price.trim(),
           priceAmount: Number(priceAmount) > 0 ? Number(priceAmount) : undefined,
+          compareAtPriceAmount:
+            Number(compareAtPriceAmount) > 0 ? Number(compareAtPriceAmount) : undefined,
+          inStock,
           badge: badge.trim() || undefined,
           cbmp: cbmp.trim() || undefined,
           image: image.trim() || undefined,
@@ -188,6 +195,40 @@ export default function ProductForm({ product }: ProductFormProps) {
           trên web. Giá hiển thị trên trang sẽ tự động có dấu chấm ngăn cách hàng nghìn.
         </p>
       </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-maroon-900">
+          Giá gốc gạch bỏ (tuỳ chọn — điền khi đang có khuyến mãi giảm giá)
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={formatVndInput(compareAtPriceAmount)}
+            onChange={(e) => setCompareAtPriceAmount(parseVndInput(e.target.value))}
+            className="w-full rounded-xl border border-maroon-900/15 bg-white px-4 py-2.5 pr-8 text-ink-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30"
+            placeholder="560.000"
+          />
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-700/50">
+            ₫
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-ink-700/60">
+          Để trống nếu sản phẩm không đang giảm giá. Khi có, giá này sẽ hiện gạch ngang bên cạnh
+          giá bán thực ở trên.
+        </p>
+      </div>
+
+      <label className="flex items-center gap-2 text-sm text-maroon-900">
+        <input
+          type="checkbox"
+          checked={inStock}
+          onChange={(e) => setInStock(e.target.checked)}
+          className="h-4 w-4 accent-red-600"
+        />
+        Còn hàng (bỏ chọn khi hết hàng — trang công khai sẽ hiện nút &ldquo;Hết hàng&rdquo; thay
+        vì &ldquo;Thêm vào giỏ&rdquo;)
+      </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>

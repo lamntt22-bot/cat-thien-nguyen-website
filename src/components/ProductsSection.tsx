@@ -102,10 +102,27 @@ export default function ProductsSection({
                   <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
                 )}
                 <div className="mt-4 flex items-center justify-between gap-2">
-                  <span className="font-display text-base font-semibold text-red-600">
-                    {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
-                  </span>
-                  {product.priceAmount ? (
+                  <div className="flex flex-col">
+                    {product.compareAtPriceAmount &&
+                      product.priceAmount &&
+                      product.compareAtPriceAmount > product.priceAmount && (
+                        <span className="text-xs text-ink-700/40 line-through">
+                          {formatVnd(product.compareAtPriceAmount)}
+                        </span>
+                      )}
+                    <span className="font-display text-base font-semibold text-red-600">
+                      {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
+                    </span>
+                  </div>
+                  {!product.inStock ? (
+                    <button
+                      type="button"
+                      disabled
+                      className="cursor-not-allowed rounded-full bg-ink-700/10 px-4 py-2 text-xs font-bold text-ink-700/50"
+                    >
+                      Hết hàng
+                    </button>
+                  ) : product.priceAmount ? (
                     <AddToCartButton
                       productId={product.id}
                       name={product.name}
