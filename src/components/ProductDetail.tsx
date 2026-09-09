@@ -5,8 +5,8 @@ import Link from "next/link";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductPrice from "@/components/ProductPrice";
 import RichContent from "@/components/RichContent";
-import { formatVnd } from "@/lib/format";
 import { getYoutubeEmbedUrl } from "@/lib/youtube";
 import type { ProductRecord } from "@/lib/product-store";
 
@@ -64,8 +64,8 @@ export default function ProductDetail({
               {CATEGORY_LABEL[product.category] ?? product.category}
             </span>
             {product.badge && (
-              <span className="ml-2 inline-flex rounded-full bg-gold-500/15 px-3 py-1 text-xs font-semibold text-gold-600">
-                {product.badge}
+              <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-red-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+                🎁 {product.badge}
               </span>
             )}
             <h1 className="mt-2 font-display text-2xl font-semibold text-maroon-950 sm:text-3xl">
@@ -74,17 +74,8 @@ export default function ProductDetail({
             {product.cbmp && (
               <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
             )}
-            <div className="mt-4 flex items-baseline gap-3">
-              {product.compareAtPriceAmount &&
-                product.priceAmount &&
-                product.compareAtPriceAmount > product.priceAmount && (
-                  <span className="text-base text-ink-700/40 line-through">
-                    {formatVnd(product.compareAtPriceAmount)}
-                  </span>
-                )}
-              <p className="font-display text-2xl font-semibold text-red-600">
-                {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
-              </p>
+            <div className="mt-4">
+              <ProductPrice product={product} size="lg" />
             </div>
 
             <div className="mt-6">

@@ -7,7 +7,7 @@ import Reveal from "@/components/Reveal";
 import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
-import { formatVnd } from "@/lib/format";
+import ProductPrice from "@/components/ProductPrice";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const productCategories: { id: ProductCategory; label: string }[] = [
@@ -90,8 +90,8 @@ export default function ProductsSection({
                   )}
                 </div>
                 {product.badge && (
-                  <span className="mb-2 inline-flex w-fit rounded-full bg-gold-500/15 px-3 py-1 text-xs font-semibold text-gold-600">
-                    {product.badge}
+                  <span className="mb-2 inline-flex w-fit items-center gap-1 rounded-full bg-red-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+                    🎁 {product.badge}
                   </span>
                 )}
                 <h3 className="font-display text-lg font-semibold text-maroon-900">
@@ -102,18 +102,7 @@ export default function ProductsSection({
                   <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
                 )}
                 <div className="mt-4 flex items-center justify-between gap-2">
-                  <div className="flex flex-col">
-                    {product.compareAtPriceAmount &&
-                      product.priceAmount &&
-                      product.compareAtPriceAmount > product.priceAmount && (
-                        <span className="text-xs text-ink-700/40 line-through">
-                          {formatVnd(product.compareAtPriceAmount)}
-                        </span>
-                      )}
-                    <span className="font-display text-base font-semibold text-red-600">
-                      {product.priceAmount ? formatVnd(product.priceAmount) : product.price}
-                    </span>
-                  </div>
+                  <ProductPrice product={product} />
                   {!product.inStock ? (
                     <button
                       type="button"

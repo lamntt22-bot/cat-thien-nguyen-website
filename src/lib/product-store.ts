@@ -77,7 +77,7 @@ function toRecord(row: ProductRow): ProductRecord {
     price: row.price,
     priceAmount: row.price_amount ?? undefined,
     compareAtPriceAmount: row.compare_at_price_amount ?? undefined,
-    inStock: row.in_stock,
+    inStock: row.in_stock ?? true,
     badge: row.badge ?? undefined,
     cbmp: row.cbmp ?? undefined,
     image: row.image ?? undefined,
