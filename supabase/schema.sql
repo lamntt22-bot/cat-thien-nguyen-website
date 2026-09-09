@@ -54,6 +54,13 @@ alter table public.products add column if not exists published boolean not null 
 -- "Đăng ký dùng thử" ở trang chủ để đối tác chọn.
 alter table public.products add column if not exists trial_available boolean not null default false;
 
+-- Giá gốc gạch bỏ khi đang có khuyến mãi (hiển thị bên cạnh price_amount là giá đang bán) —
+-- để trống nếu sản phẩm không đang giảm giá.
+alter table public.products add column if not exists compare_at_price_amount numeric;
+
+-- Còn hàng hay không — false thì trang công khai hiện nút "Hết hàng" thay vì "Thêm vào giỏ".
+alter table public.products add column if not exists in_stock boolean not null default true;
+
 -- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
@@ -155,6 +162,11 @@ create table if not exists public.trial_requests (
 
 create index if not exists trial_requests_status_idx on public.trial_requests (status);
 
+-- Địa chỉ nhận mẫu thử + mục đích trải nghiệm (khách lẻ hay đối tác kinh doanh) —
+-- thêm sau khi form đăng ký dùng thử được mở rộng theo yêu cầu thực tế.
+alter table public.trial_requests add column if not exists address text not null default '';
+alter table public.trial_requests add column if not exists purpose text not null default 'ca-nhan' check (purpose in ('ca-nhan', 'doi-tac'));
+
 -- ============ RLS — bật, KHÔNG có policy cho anon/authenticated (default-deny) ============
 -- Mọi truy cập đọc/viết đều đi qua API route của chính app, dùng
 -- SUPABASE_SERVICE_ROLE_KEY (bỏ qua RLS) sau khi server đã tự verify quyền —
@@ -186,7 +198,8 @@ insert into public.products (slug, category, name, description, price, badge, cb
 ('ngoc-am-tho', 'ngoc-am', 'Ngọc Am Hoàng Long Thổ', 'Dầu hạnh nhân, Jojoba, Dừa, Bách, Gừng, Đàn hương, Ngải cứu, Thông — dưỡng ẩm, làm mềm da, thư giãn khi massage.', '440.000₫', null, '443/25/CBMP-PT', '/assets/products/ngọc am hoàng long thổ.png', 4),
 ('kem-bach-nhat', 'bach', 'Kem Bạch Nhật', 'Kem chống nắng / kem nền ban ngày, nâng tông, thay thế BB cream. Titanium Dioxide, Zinc Oxide, Bisabolol.', '499.000₫', null, '367/25/CBMP-PT', '/assets/products/kem bạch nhật.png', 0),
 ('sua-rua-mat-bach-linh', 'bach', 'Sữa rửa mặt Bạch Linh', 'Làm sạch da hằng ngày, giữ ẩm nhẹ. Nấm linh chi (Ganoderma Lucidum), Nhân sâm (Panax Ginseng), Panthenol.', '330.000₫', null, '366/25/CBMP-PT', '/assets/products/sữa rửa mặt bạch linh.png', 1),
-('dung-dich-ve-sinh-bach-trau', 'bach', 'Dung dịch vệ sinh Bạch Trầu', 'Vệ sinh phụ nữ dịu nhẹ, giữ thông thoáng. Lá trầu không, Cam thảo, chiết xuất Hoa hồng, Neem.', '290.000₫', null, '368/25/CBMP-PT', '/assets/products/dung dịch vệ sinh bạch trầu.png', 2)
+('dung-dich-ve-sinh-bach-trau', 'bach', 'Dung dịch vệ sinh Bạch Trầu', 'Vệ sinh phụ nữ dịu nhẹ, giữ thông thoáng. Lá trầu không, Cam thảo, chiết xuất Hoa hồng, Neem.', '290.000₫', null, '368/25/CBMP-PT', '/assets/products/dung dịch vệ sinh bạch trầu.png', 2),
+('thanh-ha-tra', 'tra-dong-y', 'Thanh Hạ Trà', 'Không còn nỗi lo về trĩ — bài trà hỗ trợ thanh nhiệt, nhuận tràng, cải thiện tình trạng trĩ. Thành phần, công dụng chi tiết và giá bán đang được hoàn thiện.', 'Đang cập nhật', null, null, null, 7)
 on conflict (slug) do nothing;
 
 -- Backfill giá dạng số cho các sản phẩm đã có giá bán thật (để tính giỏ hàng) —
@@ -199,6 +212,10 @@ update public.products set price_amount = 290000 where slug = 'dung-dich-ve-sinh
 -- Mặc định bật "có mẫu dùng thử" cho các sản phẩm đã ra mắt thật (không phải "sắp ra mắt") —
 -- admin vào từng sản phẩm trong trang quản trị để tắt/bật lại cho đúng thực tế tồn kho mẫu.
 update public.products set trial_available = true where published = true and price != 'Sắp ra mắt';
+
+-- Thanh Hạ Trà: chưa mở bán công khai (published = false) nhưng đã có mẫu để gửi dùng thử —
+-- chỉ hiện ở trang "Đăng ký dùng thử", chưa hiện ở danh sách sản phẩm chính.
+update public.products set trial_available = true where slug = 'thanh-ha-tra';
 
 insert into public.posts (slug, category, title, excerpt, content, published_at) values
 ('ra-mat-chuong-trinh-dai-ly-doi-tac', 'thong-bao', 'Ra mắt Chương trình Đại lý & Đối tác Cát Thiên Nguyên',

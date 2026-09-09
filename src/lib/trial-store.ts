@@ -2,11 +2,14 @@ import "server-only";
 import { getSupabase } from "@/lib/supabase";
 
 export type TrialRequestStatus = "new" | "contacted" | "done";
+export type TrialRequestPurpose = "ca-nhan" | "doi-tac";
 
 export interface TrialRequestRecord {
   id: string;
   name: string;
   phone: string;
+  address: string;
+  purpose: TrialRequestPurpose;
   occupation: string;
   productIds: string[];
   productNames: string[];
@@ -19,6 +22,8 @@ interface TrialRequestRow {
   id: string;
   name: string;
   phone: string;
+  address: string;
+  purpose: string;
   occupation: string;
   product_ids: string[] | null;
   product_names: string[] | null;
@@ -32,6 +37,8 @@ function toRecord(row: TrialRequestRow): TrialRequestRecord {
     id: row.id,
     name: row.name,
     phone: row.phone,
+    address: row.address,
+    purpose: row.purpose as TrialRequestPurpose,
     occupation: row.occupation,
     productIds: row.product_ids ?? [],
     productNames: row.product_names ?? [],
@@ -44,18 +51,24 @@ function toRecord(row: TrialRequestRow): TrialRequestRecord {
 export async function createTrialRequest(input: {
   name: string;
   phone: string;
+  address: string;
+  purpose: TrialRequestPurpose;
   occupation: string;
   productIds: string[];
   productNames: string[];
+  note?: string;
 }): Promise<TrialRequestRecord> {
   const { data, error } = await getSupabase()
     .from("trial_requests")
     .insert({
       name: input.name,
       phone: input.phone,
+      address: input.address,
+      purpose: input.purpose,
       occupation: input.occupation,
       product_ids: input.productIds,
       product_names: input.productNames,
+      note: input.note ?? null,
     })
     .select("*")
     .single<TrialRequestRow>();

@@ -11,14 +11,17 @@ const schema = z.object({
     .string()
     .trim()
     .regex(PHONE_RE, "Số điện thoại chưa đúng định dạng (VD: 0912345678)."),
+  address: z.string().trim().min(2, "Vui lòng nhập địa chỉ nhận mẫu thử.").max(300),
+  purpose: z.enum(["ca-nhan", "doi-tac"], { message: "Vui lòng chọn mục đích trải nghiệm." }),
   occupation: z
     .string()
     .trim()
-    .min(2, "Vui lòng nhập nghề nghiệp / công tác hiện tại.")
+    .min(2, "Vui lòng chọn hoặc nhập lĩnh vực / công việc hiện tại.")
     .max(200),
+  note: z.string().trim().max(1000).optional(),
   productIds: z
     .array(z.string().uuid())
-    .min(1, "Vui lòng chọn ít nhất một sản phẩm dùng thử."),
+    .min(1, "Vui lòng chọn ít nhất một loại trà muốn trải nghiệm."),
   // honeypot — real users never see/fill this
   website: z.string().max(200).optional(),
 });
@@ -56,7 +59,10 @@ export async function POST(request: NextRequest) {
     await createTrialRequest({
       name: parsed.data.name,
       phone: parsed.data.phone,
+      address: parsed.data.address,
+      purpose: parsed.data.purpose,
       occupation: parsed.data.occupation,
+      note: parsed.data.note,
       productIds: products.map((p) => p.id),
       productNames: products.map((p) => p.name),
     });

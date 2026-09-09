@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import TrialRegistrationForm from "@/components/TrialRegistrationForm";
-import { listProducts, type ProductRecord } from "@/lib/product-store";
+import { getProductBySlug, type ProductRecord } from "@/lib/product-store";
+
+// Chỉ 2 loại trà được mở đăng ký dùng thử ở trang này — cố định theo yêu cầu,
+// không phụ thuộc cờ trial_available chung (cờ đó vẫn dùng cho các trang/khu vực khác).
+const TRIAL_SLUGS = ["hong-nguyet-tra", "thanh-ha-tra"];
 
 export const metadata: Metadata = {
   title: "Đăng ký trải nghiệm Hồng Nguyệt Trà — Cát Thiên Nguyên",
@@ -17,7 +21,8 @@ const BENEFITS = [
 export default async function TrialRegistrationPage() {
   let products: ProductRecord[] = [];
   try {
-    products = await listProducts({ onlyPublished: true, onlyTrialAvailable: true });
+    const found = await Promise.all(TRIAL_SLUGS.map((slug) => getProductBySlug(slug)));
+    products = found.filter((p): p is ProductRecord => p !== null);
   } catch (err) {
     console.error("[dang-ky-dung-thu] failed to load products", err);
   }
