@@ -8,6 +8,8 @@ import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductPrice from "@/components/ProductPrice";
+import PromoQuantityAddToCart from "@/components/PromoQuantityAddToCart";
+import { BUY2GET1_PRODUCT_ID } from "@/lib/promo";
 import type { ProductCategory, ProductRecord } from "@/lib/product-store";
 
 const productCategories: { id: ProductCategory; label: string }[] = [
@@ -101,33 +103,45 @@ export default function ProductsSection({
                 {product.cbmp && (
                   <p className="mt-2 text-xs text-ink-700/60">Số CBMP: {product.cbmp}</p>
                 )}
-                <div className="mt-4 flex items-center justify-between gap-2">
-                  <ProductPrice product={product} />
-                  {!product.inStock ? (
-                    <button
-                      type="button"
-                      disabled
-                      className="cursor-not-allowed rounded-full bg-ink-700/10 px-4 py-2 text-xs font-bold text-ink-700/50"
-                    >
-                      Hết hàng
-                    </button>
-                  ) : product.priceAmount ? (
-                    <AddToCartButton
+                {product.id === BUY2GET1_PRODUCT_ID && product.priceAmount && product.inStock ? (
+                  <>
+                    <ProductPrice product={product} />
+                    <PromoQuantityAddToCart
                       productId={product.id}
                       name={product.name}
                       price={product.priceAmount}
                       image={product.image}
                     />
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => open({ product: product.id })}
-                      className="rounded-full bg-maroon-900 px-4 py-2 text-xs font-bold text-cream-50 transition hover:bg-maroon-800"
-                    >
-                      Quan tâm sản phẩm này
-                    </button>
-                  )}
-                </div>
+                  </>
+                ) : (
+                  <div className="mt-4 flex items-center justify-between gap-2">
+                    <ProductPrice product={product} />
+                    {!product.inStock ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="cursor-not-allowed rounded-full bg-ink-700/10 px-4 py-2 text-xs font-bold text-ink-700/50"
+                      >
+                        Hết hàng
+                      </button>
+                    ) : product.priceAmount ? (
+                      <AddToCartButton
+                        productId={product.id}
+                        name={product.name}
+                        price={product.priceAmount}
+                        image={product.image}
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => open({ product: product.id })}
+                        className="rounded-full bg-maroon-900 px-4 py-2 text-xs font-bold text-cream-50 transition hover:bg-maroon-800"
+                      >
+                        Quan tâm sản phẩm này
+                      </button>
+                    )}
+                  </div>
+                )}
                 <Link
                   href={`/san-pham/${product.slug}`}
                   className="mt-3 block rounded-full border border-maroon-900/20 px-4 py-2 text-center text-xs font-semibold text-maroon-900 transition hover:bg-maroon-900/5"

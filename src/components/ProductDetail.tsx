@@ -6,8 +6,10 @@ import { CloudMotif } from "@/components/CraneCloudMotif";
 import { useLeadCapture } from "@/components/LeadCaptureContext";
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductPrice from "@/components/ProductPrice";
+import PromoQuantityAddToCart from "@/components/PromoQuantityAddToCart";
 import RichContent from "@/components/RichContent";
 import { getYoutubeEmbedUrl } from "@/lib/youtube";
+import { BUY2GET1_PRODUCT_ID } from "@/lib/promo";
 import type { ProductRecord } from "@/lib/product-store";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -79,7 +81,14 @@ export default function ProductDetail({
             </div>
 
             <div className="mt-6">
-              {!product.inStock ? (
+              {product.id === BUY2GET1_PRODUCT_ID && product.priceAmount && product.inStock ? (
+                <PromoQuantityAddToCart
+                  productId={product.id}
+                  name={product.name}
+                  price={product.priceAmount}
+                  image={product.image}
+                />
+              ) : !product.inStock ? (
                 <button
                   type="button"
                   disabled

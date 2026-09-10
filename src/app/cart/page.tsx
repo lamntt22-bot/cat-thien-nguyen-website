@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import { formatVnd } from "@/lib/format";
+import { BUY2GET1_PRODUCT_ID, getComboInfo } from "@/lib/promo";
 
 export default function CartPage() {
   const { items, removeItem, setQuantity, totalAmount } = useCart();
@@ -38,6 +39,13 @@ export default function CartPage() {
                 <div className="flex-1">
                   <p className="font-display text-sm font-semibold text-maroon-900">{item.name}</p>
                   <p className="mt-1 text-sm text-red-600">{formatVnd(item.price)}</p>
+                  {item.productId === BUY2GET1_PRODUCT_ID &&
+                    getComboInfo(item.quantity).isCombo && (
+                      <p className="mt-1 text-xs font-semibold text-maroon-800">
+                        🎁 Mua {item.quantity} tặng {getComboInfo(item.quantity).freeBoxes} — bạn
+                        nhận {getComboInfo(item.quantity).totalBoxes} hộp
+                      </p>
+                    )}
                 </div>
                 <div className="flex items-center gap-2">
                   <button
