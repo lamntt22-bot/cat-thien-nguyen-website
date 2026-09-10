@@ -1,0 +1,73 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tách trà ấm bên lá thu, gợi không khí dưỡng sinh giao mùa hè thu">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#fdfaf3" />
+      <stop offset="70%" stop-color="#f3e9d6" />
+      <stop offset="100%" stop-color="#ecd9a8" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bgGlow)" />
+
+  <!-- table surface -->
+  <path d="M0,400 C160,382 300,394 400,392 C520,390 660,378 800,398 L800,500 L0,500 Z" fill="#ddbb72" opacity="0.55" />
+  <path d="M0,400 C160,382 300,394 400,392 C520,390 660,378 800,398" fill="none" stroke="#a9803b" stroke-width="2" opacity="0.5" />
+
+  <!-- soft paper-cut cloud accent, bottom-left, brand motif -->
+  <g opacity="0.35" transform="translate(20,360) scale(0.55)">
+    <path d="M30 100c-16 0-28-13-28-28 0-14 10-25 24-27 3-16 17-28 33-28 12 0 22 6 28 16 6-9 16-15 27-15 18 0 32 14 32 32 0 2 0 4-.3 6 13 2 23 13 23 27 0 15-12 27-27 27H42c-5 0-9-4-12-10Z" fill="#c9a24b" />
+  </g>
+
+  <!-- steam -->
+  <g fill="none" stroke="#c9a24b" stroke-linecap="round">
+    <path d="M330,270 C316,250 346,232 332,210 C320,192 344,176 334,156" stroke-width="6" opacity="0.55" />
+    <path d="M365,268 C351,246 381,230 367,206 C355,188 379,170 369,148" stroke-width="6" opacity="0.4" />
+    <path d="M400,270 C388,252 412,236 400,214 C390,198 410,182 402,162" stroke-width="6" opacity="0.3" />
+  </g>
+
+  <!-- saucer -->
+  <ellipse cx="368" cy="368" rx="150" ry="24" fill="#ecd9a8" stroke="#a9803b" stroke-width="2" />
+
+  <!-- cup body -->
+  <path d="M282,300 C282,300 284,344 296,358 C312,372 424,372 440,358 C452,344 454,300 454,300 Z" fill="#fdfaf3" stroke="#8c1420" stroke-width="3" />
+  <!-- cup rim -->
+  <ellipse cx="368" cy="300" rx="86" ry="15" fill="#ddbb72" stroke="#8c1420" stroke-width="3" />
+  <!-- tea surface -->
+  <ellipse cx="368" cy="302" rx="72" ry="10" fill="#8c1420" opacity="0.88" />
+  <!-- handle -->
+  <path d="M452,314 C486,312 488,352 454,352" fill="none" stroke="#8c1420" stroke-width="8" stroke-linecap="round" />
+
+  <!-- falling leaves -->
+  <g>
+    <g transform="translate(150,120) rotate(18)">
+      <path d="M0,-26 C13,-18 17,0 8,13 C4,22 -4,22 -8,13 C-17,0 -13,-18 0,-26 Z" fill="#c31f2b" stroke="#8c1420" stroke-width="1.5" />
+      <path d="M0,-24 L0,20" stroke="#8c1420" stroke-width="1" opacity="0.6" />
+    </g>
+    <g transform="translate(560,90) rotate(-22)">
+      <path d="M0,-30 C15,-20 20,0 10,15 C5,25 -5,25 -10,15 C-20,0 -15,-20 0,-30 Z" fill="#c9a24b" stroke="#8c1420" stroke-width="1.5" />
+      <path d="M0,-28 L0,23" stroke="#8c1420" stroke-width="1" opacity="0.6" />
+    </g>
+    <g transform="translate(620,220) rotate(32)">
+      <path d="M0,-22 C11,-15 14,0 7,11 C3,18 -3,18 -7,11 C-14,0 -11,-15 0,-22 Z" fill="#8c1420" stroke="#6e0e13" stroke-width="1.3" />
+      <path d="M0,-20 L0,17" stroke="#3a060a" stroke-width="0.8" opacity="0.6" />
+    </g>
+    <g transform="translate(110,250) rotate(-10)">
+      <path d="M0,-22 C11,-15 14,0 7,11 C3,18 -3,18 -7,11 C-14,0 -11,-15 0,-22 Z" fill="#ddbb72" stroke="#a9803b" stroke-width="1.3" />
+      <path d="M0,-20 L0,17" stroke="#a9803b" stroke-width="0.8" opacity="0.6" />
+    </g>
+    <g transform="translate(680,340) rotate(12)">
+      <path d="M0,-20 C10,-14 13,0 6,10 C3,16 -3,16 -6,10 C-13,0 -10,-14 0,-20 Z" fill="#c31f2b" stroke="#8c1420" stroke-width="1.2" />
+    </g>
+  </g>
+
+  <!-- small branch, top right -->
+  <g stroke="#6e0e13" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.75">
+    <path d="M700,40 C670,60 650,55 620,80" />
+  </g>
+  <g transform="translate(650,66) rotate(-15)">
+    <path d="M0,-16 C8,-11 10,0 5,8 C2,13 -2,13 -5,8 C-10,0 -8,-11 0,-16 Z" fill="#c9a24b" stroke="#8c1420" stroke-width="1" />
+  </g>
+  <g transform="translate(680,48) rotate(10)">
+    <path d="M0,-16 C8,-11 10,0 5,8 C2,13 -2,13 -5,8 C-10,0 -8,-11 0,-16 Z" fill="#c31f2b" stroke="#8c1420" stroke-width="1" />
+  </g>
+</svg>

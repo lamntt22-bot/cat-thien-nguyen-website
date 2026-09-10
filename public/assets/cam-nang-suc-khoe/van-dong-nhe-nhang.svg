@@ -1,0 +1,57 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vận động nhẹ nhàng buổi sáng sớm, dưỡng sinh giao mùa">
+  <defs>
+    <linearGradient id="skyGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdfaf3" />
+      <stop offset="55%" stop-color="#f3e9d6" />
+      <stop offset="100%" stop-color="#ddbb72" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#skyGlow)" />
+
+  <!-- sun -->
+  <circle cx="600" cy="300" r="70" fill="#ecd9a8" opacity="0.9" />
+  <circle cx="600" cy="300" r="52" fill="#ddbb72" />
+  <g stroke="#c9a24b" stroke-width="4" stroke-linecap="round" opacity="0.6">
+    <path d="M600,210 L600,190" />
+    <path d="M672,300 L692,300" />
+    <path d="M650,250 L664,236" />
+    <path d="M650,350 L664,364" />
+  </g>
+
+  <!-- distant birds -->
+  <g stroke="#6e0e13" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6">
+    <path d="M120,90 q10,-12 20,0 q10,-12 20,0" />
+    <path d="M190,120 q8,-10 16,0 q8,-10 16,0" />
+  </g>
+
+  <!-- horizon path -->
+  <path d="M0,360 C160,344 280,352 400,346 C540,340 660,352 800,338" fill="none" stroke="#a9803b" stroke-width="3" opacity="0.5" />
+  <path d="M0,400 C180,384 320,394 440,390 C580,386 680,378 800,392 L800,500 L0,500 Z" fill="#c9a24b" opacity="0.28" />
+
+  <!-- walking figure -->
+  <g transform="translate(300,300)">
+    <!-- head -->
+    <circle cx="0" cy="-88" r="16" fill="#6e0e13" />
+    <!-- coat / torso, flowing -->
+    <path d="M-4,-72 C-22,-60 -30,-30 -22,4 C-18,22 -2,26 6,10 C14,26 30,22 34,4 C42,-30 34,-60 16,-72 Z" fill="#8c1420" />
+    <!-- scarf accent -->
+    <path d="M-4,-72 C0,-64 8,-64 12,-72 C10,-58 0,-56 -2,-70 Z" fill="#c9a24b" />
+    <!-- back leg, mid-stride -->
+    <path d="M-4,4 C-14,26 -22,46 -34,60" stroke="#6e0e13" stroke-width="14" stroke-linecap="round" fill="none" />
+    <!-- front leg -->
+    <path d="M14,4 C22,26 20,46 26,64" stroke="#3a060a" stroke-width="14" stroke-linecap="round" fill="none" />
+    <!-- back arm -->
+    <path d="M-16,-56 C-30,-44 -34,-26 -28,-8" stroke="#6e0e13" stroke-width="10" stroke-linecap="round" fill="none" />
+    <!-- front arm, swinging forward -->
+    <path d="M22,-56 C34,-42 34,-22 24,-4" stroke="#8c1420" stroke-width="10" stroke-linecap="round" fill="none" />
+  </g>
+
+  <!-- soft foreground mist / cloud motif, paper-cut style -->
+  <g opacity="0.5" transform="translate(0,420) scale(1.1)">
+    <path d="M30 100c-16 0-28-13-28-28 0-14 10-25 24-27 3-16 17-28 33-28 12 0 22 6 28 16 6-9 16-15 27-15 18 0 32 14 32 32 0 2 0 4-.3 6 13 2 23 13 23 27 0 15-12 27-27 27H42c-5 0-9-4-12-10Z" fill="#fdfaf3" />
+  </g>
+  <g opacity="0.45" transform="translate(520,430) scale(1.3)">
+    <path d="M22 46c-11 0-19-9-19-19 0-9 7-17 16-18 2-11 11-19 22-19 8 0 15 4 19 11 4-6 11-10 18-10 12 0 22 10 22 22 0 1 0 3-.2 4 9 1 16 9 16 18 0 10-8 18-18 18H34c-4 0-7-3-9-6Z" fill="#fdfaf3" />
+  </g>
+</svg>

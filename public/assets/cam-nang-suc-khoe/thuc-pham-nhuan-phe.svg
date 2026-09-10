@@ -1,0 +1,63 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Thực phẩm nhuận Phế mùa thu theo Đông y: lê, mật ong, ngân nhĩ">
+  <defs>
+    <radialGradient id="bgGlow2" cx="50%" cy="34%" r="80%">
+      <stop offset="0%" stop-color="#fdfaf3" />
+      <stop offset="70%" stop-color="#f3e9d6" />
+      <stop offset="100%" stop-color="#ecd9a8" />
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bgGlow2)" />
+
+  <!-- accent leaves scattered to balance composition -->
+  <g transform="translate(110,110) rotate(-18)">
+    <path d="M0,-24 C12,-16 16,0 8,12 C4,20 -4,20 -8,12 C-16,0 -12,-16 0,-24 Z" fill="#c31f2b" stroke="#8c1420" stroke-width="1.3" opacity="0.85" />
+  </g>
+  <g transform="translate(680,130) rotate(16)">
+    <path d="M0,-22 C10,-15 13,0 6,10 C3,17 -3,17 -6,10 C-13,0 -10,-15 0,-22 Z" fill="#c9a24b" stroke="#8c1420" stroke-width="1.2" opacity="0.85" />
+  </g>
+  <g transform="translate(180,220) rotate(10)">
+    <path d="M0,-18 C9,-12 11,0 5,8 C2,14 -2,14 -5,8 C-11,0 -9,-12 0,-18 Z" fill="#ddbb72" stroke="#a9803b" stroke-width="1.1" opacity="0.8" />
+  </g>
+  <g transform="translate(630,230) rotate(-14)">
+    <path d="M0,-18 C9,-12 11,0 5,8 C2,14 -2,14 -5,8 C-11,0 -9,-12 0,-18 Z" fill="#8c1420" stroke="#6e0e13" stroke-width="1.1" opacity="0.8" />
+  </g>
+
+  <!-- table -->
+  <path d="M0,410 C180,392 320,404 420,400 C560,396 660,388 800,406 L800,500 L0,500 Z" fill="#ddbb72" opacity="0.5" />
+
+  <!-- plate -->
+  <ellipse cx="400" cy="372" rx="250" ry="52" fill="#fdfaf3" stroke="#a9803b" stroke-width="3" />
+  <ellipse cx="400" cy="368" rx="216" ry="40" fill="#f3e9d6" />
+
+  <!-- ngan nhi / white fungus cluster, left -->
+  <g transform="translate(232,300) scale(1.15)">
+    <path d="M0,20 C-18,10 -22,-14 -4,-24 C6,-34 26,-30 30,-14 C46,-16 56,4 42,18 C50,30 40,48 22,44 C10,58 -14,52 -14,34 C-28,36 -34,20 -20,10 Z" fill="#fdfaf3" stroke="#ddbb72" stroke-width="2.5" />
+    <path d="M0,20 C-10,6 -6,-10 8,-14 M8,-14 C22,-18 34,-6 30,8 M30,8 C40,14 38,28 24,30" fill="none" stroke="#ecd9a8" stroke-width="2" opacity="0.8" />
+  </g>
+
+  <!-- pear, centre -->
+  <g transform="translate(400,282) scale(1.18)">
+    <path d="M0,70 C-46,70 -58,32 -50,-2 C-44,-26 -20,-30 -10,-46 C-4,-56 8,-56 12,-46 C20,-30 44,-26 50,-2 C58,32 46,70 0,70 Z" fill="#ddbb72" stroke="#a9803b" stroke-width="3" />
+    <path d="M0,-46 C-4,-56 -2,-64 4,-70" fill="none" stroke="#6e0e13" stroke-width="4" stroke-linecap="round" />
+    <g transform="translate(6,-66) rotate(30)">
+      <path d="M0,-14 C8,-9 10,2 4,9 C1,14 -4,14 -6,9 C-10,2 -8,-9 0,-14 Z" fill="#c9a24b" stroke="#8c1420" stroke-width="1.2" />
+    </g>
+    <ellipse cx="-16" cy="10" rx="10" ry="16" fill="#ecd9a8" opacity="0.7" />
+  </g>
+
+  <!-- honey dipper, right -->
+  <g transform="translate(560,270) scale(1.1)">
+    <path d="M-10,-70 C-14,-40 -14,-10 -10,20 C-6,40 6,40 10,20 C14,-10 14,-40 10,-70 Z" fill="#f3e9d6" stroke="#a9803b" stroke-width="2.5" />
+    <path d="M-6,-30 C-2,-10 2,-10 6,-30" fill="none" stroke="#c9a24b" stroke-width="3" />
+    <path d="M-2,20 C-8,40 -4,58 4,60 C10,58 8,40 4,22 Z" fill="#c9a24b" stroke="#a9803b" stroke-width="2" />
+    <ellipse cx="4" cy="72" rx="6" ry="5" fill="#c9a24b" />
+    <ellipse cx="10" cy="90" rx="4" ry="3.5" fill="#c9a24b" opacity="0.85" />
+  </g>
+
+  <!-- steam wisp above plate for warmth -->
+  <g fill="none" stroke="#c9a24b" stroke-linecap="round" opacity="0.45">
+    <path d="M300,240 C288,222 308,208 298,190" stroke-width="5" />
+    <path d="M470,236 C482,218 462,204 472,186" stroke-width="5" />
+  </g>
+</svg>
