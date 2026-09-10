@@ -11,7 +11,7 @@ const postSchema = z.object({
     .min(1)
     .max(150)
     .regex(/^[a-z0-9-]+$/, "slug chỉ gồm chữ thường, số và gạch ngang"),
-  category: z.enum(["thong-bao", "tin-tuc"]),
+  category: z.enum(["thong-bao", "tin-tuc", "cam-nang-suc-khoe"]),
   title: z.string().trim().min(1, "Tiêu đề là bắt buộc").max(500, "Tiêu đề tối đa 500 ký tự"),
   excerpt: z.string().trim().min(1, "Sapo là bắt buộc").max(800, "Sapo tối đa 800 ký tự"),
   content: z.string().trim().max(20000).default(""),

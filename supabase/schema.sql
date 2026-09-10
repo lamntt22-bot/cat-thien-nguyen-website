@@ -61,11 +61,11 @@ alter table public.products add column if not exists compare_at_price_amount num
 -- Còn hàng hay không — false thì trang công khai hiện nút "Hết hàng" thay vì "Thêm vào giỏ".
 alter table public.products add column if not exists in_stock boolean not null default true;
 
--- ============ POSTS (Thông báo / Tin tức — admin đăng, trang public đọc) ============
+-- ============ POSTS (Thông báo / Tin tức / Cẩm nang sức khoẻ — admin đăng, trang public đọc) ============
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
-  category text not null check (category in ('thong-bao', 'tin-tuc')),
+  category text not null check (category in ('thong-bao', 'tin-tuc', 'cam-nang-suc-khoe')),
   title text not null,
   excerpt text not null default '',
   content text not null default '',
@@ -87,6 +87,13 @@ alter table public.posts add column if not exists image text;
 alter table public.posts add column if not exists seo_title text;
 alter table public.posts add column if not exists seo_description text;
 alter table public.posts add column if not exists seo_keywords text;
+
+-- Thêm mục "Cẩm nang sức khoẻ" (kiến thức dưỡng sinh Đông y miễn phí) — tách biệt hoàn toàn
+-- khỏi Thông báo/Tin tức. Constraint gốc ở trên không có tên (Postgres tự đặt tên
+-- posts_category_check) nên xoá/tạo lại theo đúng tên mặc định đó — an toàn để chạy lại nhiều lần.
+alter table public.posts drop constraint if exists posts_category_check;
+alter table public.posts add constraint posts_category_check
+  check (category in ('thong-bao', 'tin-tuc', 'cam-nang-suc-khoe'));
 
 -- ============ PAGE_SECTIONS (nội dung các trang tĩnh — admin sửa, không cần code lại) ============
 -- Mỗi slug ứng với 1 khối nội dung có thể chỉnh (Về chúng tôi, Người bảo chứng, Đại lý & Đối tác...).

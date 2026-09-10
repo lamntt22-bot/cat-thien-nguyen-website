@@ -93,6 +93,7 @@ export default function PostForm({ post }: PostFormProps) {
           >
             <option value="thong-bao">Thông báo</option>
             <option value="tin-tuc">Tin tức</option>
+            <option value="cam-nang-suc-khoe">Cẩm nang sức khoẻ</option>
           </select>
         </div>
       </div>

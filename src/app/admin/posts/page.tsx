@@ -4,6 +4,12 @@ import { listPosts } from "@/lib/post-store";
 import AdminNav from "@/components/AdminNav";
 import DeleteButton from "@/components/DeleteButton";
 
+const CATEGORY_LABEL: Record<string, string> = {
+  "thong-bao": "Thông báo",
+  "tin-tuc": "Tin tức",
+  "cam-nang-suc-khoe": "Cẩm nang sức khoẻ",
+};
+
 export default async function AdminPostsPage() {
   const admin = await getCurrentMember();
   if (!admin || admin.role !== "admin") redirect("/login");
@@ -17,7 +23,7 @@ export default async function AdminPostsPage() {
       <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="font-display text-xl font-semibold text-maroon-900">
-            Thông báo & Tin tức ({posts.length})
+            Bài viết ({posts.length})
           </h1>
           <a
             href="/admin/posts/new"
@@ -43,7 +49,7 @@ export default async function AdminPostsPage() {
                 <tr key={p.id} className="border-b border-gold-500/10">
                   <td className="px-4 py-3 font-medium text-maroon-900">{p.title}</td>
                   <td className="px-4 py-3 text-ink-700">
-                    {p.category === "thong-bao" ? "Thông báo" : "Tin tức"}
+                    {CATEGORY_LABEL[p.category] ?? p.category}
                   </td>
                   <td className="px-4 py-3 text-ink-700">{p.publishedAt}</td>
                   <td className="px-4 py-3">

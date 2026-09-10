@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: "/nguoi-bao-chung", label: "Người bảo chứng" },
   { href: "/san-pham", label: "Sản phẩm" },
   { href: "/dai-ly-doi-tac", label: "Đại lý & Đối tác" },
+  { href: "/cam-nang-suc-khoe", label: "Cẩm nang sức khoẻ" },
   { href: "/thong-bao", label: "Thông báo" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/lien-he", label: "Liên hệ" },

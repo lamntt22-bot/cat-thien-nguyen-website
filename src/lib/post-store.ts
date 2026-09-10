@@ -1,7 +1,7 @@
 import "server-only";
 import { getSupabase } from "@/lib/supabase";
 
-export type PostCategory = "thong-bao" | "tin-tuc";
+export type PostCategory = "thong-bao" | "tin-tuc" | "cam-nang-suc-khoe";
 export type PostMediaType = "image" | "video";
 
 export interface PostMedia {

@@ -6,9 +6,11 @@ import Endorser from "@/components/Endorser";
 import JourneySection from "@/components/JourneySection";
 import ProductsSection from "@/components/ProductsSection";
 import AgentPartnerSection from "@/components/AgentPartnerSection";
+import HealthLibrarySection from "@/components/HealthLibrarySection";
 import FaqSection from "@/components/FaqSection";
 import CtaFooterSection from "@/components/CtaFooterSection";
 import { listProducts, type ProductRecord } from "@/lib/product-store";
+import { listPosts, type PostRecord } from "@/lib/post-store";
 import { getPageSections } from "@/lib/page-content-store";
 
 export default async function Home() {
@@ -24,6 +26,15 @@ export default async function Home() {
     trialProducts = await listProducts({ onlyPublished: true, onlyTrialAvailable: true });
   } catch (err) {
     console.error("[home] failed to load trial products", err);
+  }
+
+  let healthPosts: PostRecord[] = [];
+  try {
+    healthPosts = (
+      await listPosts({ category: "cam-nang-suc-khoe", onlyPublished: true })
+    ).slice(0, 3);
+  } catch (err) {
+    console.error("[home] failed to load health posts", err);
   }
 
   let sections: Awaited<ReturnType<typeof getPageSections>> = {};
@@ -45,6 +56,7 @@ export default async function Home() {
       <Endorser />
       <JourneySection />
       <WhyChooseUs />
+      <HealthLibrarySection posts={healthPosts} />
       <ProductsSection products={products} />
       <AgentPartnerSection
         content={{

@@ -5,7 +5,7 @@ const LINKS = [
   { href: "/admin/trial-requests", label: "Đăng ký dùng thử" },
   { href: "/admin/orders", label: "Đơn hàng" },
   { href: "/admin/products", label: "Sản phẩm" },
-  { href: "/admin/posts", label: "Thông báo & Tin tức" },
+  { href: "/admin/posts", label: "Bài viết" },
   { href: "/admin/content", label: "Nội dung trang" },
 ];
 

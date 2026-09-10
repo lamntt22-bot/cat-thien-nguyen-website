@@ -6,6 +6,7 @@ import RichContent from "@/components/RichContent";
 const CATEGORY_LABEL: Record<PostCategory, string> = {
   "thong-bao": "thông báo",
   "tin-tuc": "tin tức",
+  "cam-nang-suc-khoe": "cẩm nang sức khoẻ",
 };
 
 export default async function PostDetail({
