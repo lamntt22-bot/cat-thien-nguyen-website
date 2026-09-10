@@ -3,6 +3,7 @@ import { z } from "zod";
 import { PHONE_RE } from "@/lib/leads";
 import { getProductsByIds } from "@/lib/product-store";
 import { createTrialRequest } from "@/lib/trial-store";
+import { syncTrialRequestToSheet } from "@/lib/google-sheets";
 import { isRateLimited, getClientIp } from "@/lib/rate-limit";
 
 const schema = z.object({
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Sản phẩm bạn chọn không hợp lệ." }, { status: 400 });
     }
 
-    await createTrialRequest({
+    const record = await createTrialRequest({
       name: parsed.data.name,
       phone: parsed.data.phone,
       address: parsed.data.address,
@@ -66,6 +67,11 @@ export async function POST(request: NextRequest) {
       productIds: products.map((p) => p.id),
       productNames: products.map((p) => p.name),
     });
+
+    // Await (không chỉ fire-and-forget) vì môi trường serverless có thể đóng
+    // function ngay sau khi response được trả — bản thân hàm này đã tự nuốt lỗi,
+    // không làm hỏng phản hồi cho khách nếu Google Sheet lỗi/chưa cấu hình.
+    await syncTrialRequestToSheet(record);
 
     return NextResponse.json({ ok: true });
   } catch (err) {

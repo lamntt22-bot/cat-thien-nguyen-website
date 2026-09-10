@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 import { getCurrentMember } from "@/lib/session";
 import { listTrialRequests } from "@/lib/trial-store";
+import { isSheetSyncConfigured } from "@/lib/google-sheets";
 import AdminNav from "@/components/AdminNav";
 import TrialStatusSelect from "@/components/TrialStatusSelect";
 import DeleteButton from "@/components/DeleteButton";
+import SyncSheetButton from "@/components/SyncSheetButton";
 
 const PURPOSE_LABEL: Record<string, string> = {
   "ca-nhan": "Khách hàng lẻ",
@@ -24,18 +26,46 @@ export default async function AdminTrialRequestsPage() {
     return [];
   });
 
+  const sheetConfigured = isSheetSyncConfigured();
+  const sheetUrl = process.env.GOOGLE_SHEET_ID
+    ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit`
+    : null;
+
   return (
     <div className="min-h-screen bg-cream-100">
       <AdminNav email={admin.email} />
 
       <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-        <h1 className="font-display text-xl font-semibold text-maroon-900">
-          Đăng ký dùng thử ({requests.length})
-        </h1>
-        <p className="mt-1 text-sm text-ink-700">
-          Đối tác đăng ký nhận sản phẩm dùng thử từ form ở trang chủ — dùng để chăm sóc và gửi
-          mẫu.
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="font-display text-xl font-semibold text-maroon-900">
+              Đăng ký dùng thử ({requests.length})
+            </h1>
+            <p className="mt-1 text-sm text-ink-700">
+              Đối tác đăng ký nhận sản phẩm dùng thử từ form ở trang chủ — dùng để chăm sóc và gửi
+              mẫu.
+            </p>
+          </div>
+          {sheetConfigured ? (
+            <div className="flex flex-col items-end gap-2">
+              {sheetUrl && (
+                <a
+                  href={sheetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-green-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-green-500"
+                >
+                  📄 Mở Google Sheet
+                </a>
+              )}
+              <SyncSheetButton />
+            </div>
+          ) : (
+            <p className="max-w-xs text-right text-xs text-ink-700/50">
+              Chưa kết nối Google Sheet — hỏi lập trình viên để bật đồng bộ.
+            </p>
+          )}
+        </div>
 
         {requests.length === 0 ? (
           <p className="mt-6 text-sm text-ink-700">Chưa có ai đăng ký dùng thử.</p>

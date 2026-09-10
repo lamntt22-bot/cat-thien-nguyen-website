@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminFromRequest } from "@/lib/session";
 import { deleteTrialRequest, updateTrialRequestStatus } from "@/lib/trial-store";
+import { syncTrialRequestStatusToSheet } from "@/lib/google-sheets";
 
 const statusSchema = z.object({
   status: z.enum(["new", "contacted", "done"]),
@@ -23,6 +24,7 @@ export async function PATCH(
 
   try {
     await updateTrialRequestStatus(id, parsed.data.status);
+    await syncTrialRequestStatusToSheet(id, parsed.data.status);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[admin/trial-requests] update failed", err);
