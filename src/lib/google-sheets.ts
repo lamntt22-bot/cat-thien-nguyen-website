@@ -1,20 +1,5 @@
 import "server-only";
-import { google } from "googleapis";
 import type { TrialRequestRecord, TrialRequestStatus } from "@/lib/trial-store";
-
-const SHEET_TAB = "Đăng ký dùng thử";
-const HEADER_ROW = [
-  "ID",
-  "Ngày đăng ký",
-  "Họ tên",
-  "SĐT / Zalo",
-  "Địa chỉ nhận mẫu",
-  "Mục đích",
-  "Lĩnh vực / công việc",
-  "Trà muốn dùng thử",
-  "Ghi chú",
-  "Trạng thái",
-];
 
 const PURPOSE_LABEL: Record<string, string> = {
   "ca-nhan": "Khách hàng lẻ",
@@ -27,33 +12,16 @@ const STATUS_LABEL: Record<TrialRequestStatus, string> = {
   done: "Đã gửi mẫu",
 };
 
-export function isSheetSyncConfigured() {
-  return isConfigured();
+// Đồng bộ qua 1 Google Apps Script Web App gắn trực tiếp vào Google Sheet của
+// người dùng (Extensions → Apps Script → Deploy as Web App) — không cần Google
+// Cloud Console, service account hay bật billing. URL này đóng vai trò như
+// "mật khẩu" (không công khai) nên không cần thêm xác thực khác.
+function getWebhookUrl(): string | undefined {
+  return process.env.GOOGLE_SHEET_WEBHOOK_URL;
 }
 
-function isConfigured() {
-  return Boolean(
-    process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL &&
-      process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY &&
-      process.env.GOOGLE_SHEET_ID,
-  );
-}
-
-let cachedSheets: ReturnType<typeof google.sheets> | null = null;
-
-function getSheetsClient() {
-  if (cachedSheets) return cachedSheets;
-
-  const auth = new google.auth.JWT({
-    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    // Vercel/dotenv env vars can't hold real newlines — the key is stored with
-    // literal "\n" sequences and must be unescaped before use.
-    key: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
-
-  cachedSheets = google.sheets({ version: "v4", auth });
-  return cachedSheets;
+export function isSheetSyncConfigured(): boolean {
+  return Boolean(getWebhookUrl());
 }
 
 function toRow(record: TrialRequestRecord): string[] {
@@ -71,77 +39,32 @@ function toRow(record: TrialRequestRecord): string[] {
   ];
 }
 
-async function ensureHeaderRow() {
-  const sheets = getSheetsClient();
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID!;
+async function callWebhook(payload: Record<string, unknown>): Promise<void> {
+  const url = getWebhookUrl();
+  if (!url) return;
 
-  const existing = await sheets.spreadsheets.values.get({
-    spreadsheetId,
-    range: `${SHEET_TAB}!A1:J1`,
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    redirect: "follow",
   });
 
-  if (!existing.data.values || existing.data.values.length === 0) {
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range: `${SHEET_TAB}!A1:J1`,
-      valueInputOption: "USER_ENTERED",
-      requestBody: { values: [HEADER_ROW] },
-    });
+  if (!res.ok) {
+    throw new Error(`Google Sheet webhook trả về lỗi HTTP ${res.status}`);
   }
 }
 
 /** Best-effort — không bao giờ throw ra ngoài, vì đây chỉ là đồng bộ phụ, không
  * được phép làm hỏng luồng đăng ký dùng thử chính (vẫn lưu vào Supabase trước). */
 export async function syncTrialRequestToSheet(record: TrialRequestRecord): Promise<void> {
-  if (!isConfigured()) return;
+  if (!isSheetSyncConfigured()) return;
 
   try {
-    await ensureHeaderRow();
-    const sheets = getSheetsClient();
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID!,
-      range: `${SHEET_TAB}!A:J`,
-      valueInputOption: "USER_ENTERED",
-      insertDataOption: "INSERT_ROWS",
-      requestBody: { values: [toRow(record)] },
-    });
+    await callWebhook({ action: "append", row: toRow(record) });
   } catch (err) {
     console.error("[google-sheets] append failed", err);
   }
-}
-
-/** Đồng bộ lại TOÀN BỘ danh sách — admin bấm tay 1 lần để backfill dữ liệu cũ hoặc
- * khôi phục nếu sheet bị sửa nhầm. Xoá sạch dữ liệu cũ rồi ghi lại từ đầu (an toàn để
- * bấm nhiều lần, không bị nhân đôi dòng). Ném lỗi thật ra ngoài vì đây là hành động admin
- * chủ động bấm — cần biết ngay nếu thất bại, khác với đồng bộ nền (best-effort). */
-export async function resyncAllTrialRequestsToSheet(records: TrialRequestRecord[]): Promise<void> {
-  if (!isConfigured()) {
-    throw new Error("Chưa cấu hình Google Sheet (thiếu biến môi trường).");
-  }
-
-  const sheets = getSheetsClient();
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID!;
-
-  await sheets.spreadsheets.values.clear({
-    spreadsheetId,
-    range: `${SHEET_TAB}!A2:J`,
-  });
-
-  await sheets.spreadsheets.values.update({
-    spreadsheetId,
-    range: `${SHEET_TAB}!A1:J1`,
-    valueInputOption: "USER_ENTERED",
-    requestBody: { values: [HEADER_ROW] },
-  });
-
-  if (records.length === 0) return;
-
-  await sheets.spreadsheets.values.update({
-    spreadsheetId,
-    range: `${SHEET_TAB}!A2:J${records.length + 1}`,
-    valueInputOption: "USER_ENTERED",
-    requestBody: { values: records.map(toRow) },
-  });
 }
 
 /** Cập nhật cột "Trạng thái" của đúng dòng có ID trùng khớp — best-effort, không throw. */
@@ -149,28 +72,22 @@ export async function syncTrialRequestStatusToSheet(
   id: string,
   status: TrialRequestStatus,
 ): Promise<void> {
-  if (!isConfigured()) return;
+  if (!isSheetSyncConfigured()) return;
 
   try {
-    const sheets = getSheetsClient();
-    const spreadsheetId = process.env.GOOGLE_SHEET_ID!;
-
-    const idColumn = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: `${SHEET_TAB}!A:A`,
-    });
-
-    const rows = idColumn.data.values ?? [];
-    const rowIndex = rows.findIndex((row) => row[0] === id);
-    if (rowIndex === -1) return;
-
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range: `${SHEET_TAB}!J${rowIndex + 1}`,
-      valueInputOption: "USER_ENTERED",
-      requestBody: { values: [[STATUS_LABEL[status] ?? status]] },
-    });
+    await callWebhook({ action: "updateStatus", id, status: STATUS_LABEL[status] ?? status });
   } catch (err) {
     console.error("[google-sheets] status sync failed", err);
   }
+}
+
+/** Đồng bộ lại TOÀN BỘ danh sách — admin bấm tay 1 lần để backfill dữ liệu cũ hoặc
+ * khôi phục nếu sheet bị sửa nhầm. Ném lỗi thật ra ngoài vì đây là hành động admin
+ * chủ động bấm — cần biết ngay nếu thất bại, khác với đồng bộ nền (best-effort). */
+export async function resyncAllTrialRequestsToSheet(records: TrialRequestRecord[]): Promise<void> {
+  if (!isSheetSyncConfigured()) {
+    throw new Error("Chưa cấu hình Google Sheet (thiếu GOOGLE_SHEET_WEBHOOK_URL).");
+  }
+
+  await callWebhook({ action: "resyncAll", rows: records.map(toRow) });
 }

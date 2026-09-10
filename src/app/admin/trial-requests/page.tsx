@@ -27,9 +27,7 @@ export default async function AdminTrialRequestsPage() {
   });
 
   const sheetConfigured = isSheetSyncConfigured();
-  const sheetUrl = process.env.GOOGLE_SHEET_ID
-    ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit`
-    : null;
+  const sheetUrl = process.env.GOOGLE_SHEET_SHARE_URL || null;
 
   return (
     <div className="min-h-screen bg-cream-100">
