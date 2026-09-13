@@ -9,9 +9,14 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import RegisterPopup from "@/components/RegisterPopup";
 import FloatingContactButton from "@/components/FloatingContactButton";
 import type { ProductRecord } from "@/lib/product-store";
+
+// Trang quét QR tại sự kiện — khách quét mã là phải vào thẳng form quay thưởng,
+// không để popup đăng ký ưu đãi tự bật lên che mất sau 3 giây.
+const AUTO_OPEN_DISABLED_PATHS = ["/vong-quay-may-man"];
 
 interface OpenOptions {
   product?: string;
@@ -42,6 +47,8 @@ export function LeadCaptureProvider({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<string | undefined>();
+  const pathname = usePathname();
+  const autoOpenDisabled = AUTO_OPEN_DISABLED_PATHS.includes(pathname);
 
   const open = useCallback((options?: OpenOptions) => {
     setProduct(options?.product);
@@ -63,6 +70,7 @@ export function LeadCaptureProvider({
   }, []);
 
   useEffect(() => {
+    if (autoOpenDisabled) return;
     let alreadyShown = false;
     try {
       alreadyShown = sessionStorage.getItem(SESSION_FLAG) === "1";
@@ -73,7 +81,7 @@ export function LeadCaptureProvider({
     const timer = setTimeout(() => open(), AUTO_OPEN_DELAY_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [autoOpenDisabled]);
 
   const value = useMemo(() => ({ open }), [open]);
 
