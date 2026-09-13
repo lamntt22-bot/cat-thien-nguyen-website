@@ -80,20 +80,10 @@ export default function LuckySpinWheel() {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [prizeLabel, setPrizeLabel] = useState("");
+  const [confirmationCode, setConfirmationCode] = useState("");
   const [alreadyPlayed, setAlreadyPlayed] = useState(false);
-  // Chỉ trình duyệt di động (Chrome Android, Safari iOS 16.4+...) mới hỗ trợ chia sẻ kèm file
-  // qua navigator.share — kiểm tra 1 lần bằng file ảnh giả để không phải tạo canvas thật.
-  const [canShareFiles] = useState(() => {
-    if (typeof navigator === "undefined") return false;
-    try {
-      const probe = new File([""], "probe.png", { type: "image/png" });
-      const canShare = "canShare" in navigator ? navigator.canShare({ files: [probe] }) : false;
-      return typeof navigator.share === "function" && canShare;
-    } catch {
-      return false;
-    }
-  });
-  const [sharing, setSharing] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "image" | "text" | "failed">("idle");
+  const [redirecting, setRedirecting] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -147,7 +137,13 @@ export default function LuckySpinWheel() {
 
     ctx.fillStyle = "#6e0e13";
     ctx.font = "bold 25px 'Segoe UI', Arial, sans-serif";
-    wrapText(ctx, prizeLabel, W / 2, 297, W - 240, 32);
+    wrapText(ctx, prizeLabel, W / 2, 285, W - 240, 32);
+
+    if (confirmationCode) {
+      ctx.fillStyle = "#a9803b";
+      ctx.font = "600 13px 'Segoe UI', Arial, sans-serif";
+      ctx.fillText(`Mã xác nhận: ${confirmationCode}`, W / 2, 340);
+    }
 
     ctx.fillStyle = "#5a4a3a";
     ctx.font = "13px 'Segoe UI', Arial, sans-serif";
@@ -158,7 +154,7 @@ export default function LuckySpinWheel() {
       W / 2,
       424,
     );
-  }, [step, name, phone, prizeLabel]);
+  }, [step, name, phone, prizeLabel, confirmationCode]);
 
   function handleDownloadVoucher() {
     const canvas = canvasRef.current;
@@ -169,31 +165,47 @@ export default function LuckySpinWheel() {
     link.click();
   }
 
-  async function handleShareVoucher() {
-    const canvas = canvasRef.current;
-    if (!canvas || sharing) return;
-    setSharing(true);
+  async function handleCopyCode() {
     try {
+      await navigator.clipboard.writeText(confirmationCode);
+      setCopyStatus("text");
+    } catch {
+      setCopyStatus("failed");
+    }
+  }
+
+  // Zalo không hỗ trợ soạn sẵn nội dung trong link chat (khác wa.me?text=), nên cách gần nhất
+  // để khách "chỉ cần dán rồi gửi" là: tự copy sẵn ảnh phiếu thưởng (hoặc dòng xác nhận, nếu
+  // trình duyệt không cho copy ảnh) vào clipboard, rồi mới chuyển sang đúng khung chat Zalo OA.
+  // Lưu ý: phải copy TRƯỚC khi rời trang — mở cửa sổ/điều hướng trước sẽ làm trang mất focus,
+  // khiến Clipboard API báo lỗi "Document is not focused".
+  async function handleSendToZalo() {
+    setRedirecting(true);
+    const canvas = canvasRef.current;
+    try {
+      if (!canvas || !window.ClipboardItem) throw new Error("no clipboard image support");
       const blob: Blob | null = await new Promise((resolve) =>
         canvas.toBlob((b) => resolve(b), "image/png"),
       );
-      if (!blob) return;
-      const file = new File([blob], "phieu-trung-thuong-cat-thien-nguyen.png", {
-        type: "image/png",
-      });
-      await navigator.share({
-        files: [file],
-        title: "Phiếu trúng thưởng Cát Thiên Nguyên",
-        text: `${prizeLabel} — Gửi ảnh này cho Zalo OA Cát Thiên Nguyên để nhận thưởng nhé!`,
-      });
-    } catch (err) {
-      // Người dùng bấm huỷ khung Chia sẻ (AbortError) — bỏ qua, không phải lỗi thật.
-      if (err instanceof Error && err.name !== "AbortError") {
-        console.error("[lucky-spin] share voucher failed", err);
+      if (!blob) throw new Error("canvas toBlob failed");
+      await navigator.clipboard.write([new window.ClipboardItem({ "image/png": blob })]);
+      setCopyStatus("image");
+    } catch {
+      try {
+        await navigator.clipboard.writeText(
+          `Tôi vừa quay trúng: ${prizeLabel}. Mã xác nhận: ${confirmationCode}`,
+        );
+        setCopyStatus("text");
+      } catch {
+        setCopyStatus("failed");
       }
-    } finally {
-      setSharing(false);
     }
+    // Điều hướng ngay tại tab hiện tại (không mở tab mới) — window.open sau một thao tác bất
+    // đồng bộ dễ bị Safari/trình duyệt chặn như popup, còn đổi location thì không bị chặn.
+    // Chờ một chút để khách kịp đọc dòng hướng dẫn bên dưới trước khi rời sang Zalo.
+    setTimeout(() => {
+      window.location.href = ZALO_OA_URL;
+    }, 900);
   }
 
   function validate() {
@@ -242,7 +254,9 @@ export default function LuckySpinWheel() {
       const finalRotation = extraSpins + (360 - segmentCenter + jitter);
 
       setPrizeLabel(data.prizeLabel);
+      setConfirmationCode(data.confirmationCode ?? "");
       setAlreadyPlayed(Boolean(data.alreadyPlayed));
+      setCopyStatus("idle");
 
       if (data.alreadyPlayed) {
         // Đã quay trước đó — vẫn quay bánh xe tới đúng ô đã trúng cho trực quan, rồi hiện kết quả.
@@ -415,56 +429,51 @@ export default function LuckySpinWheel() {
             className="mx-auto mt-4 w-full rounded-2xl border border-gold-500/30 shadow-lg"
           />
 
-          {canShareFiles ? (
-            <>
-              <div className="mt-5">
-                <button
-                  type="button"
-                  onClick={handleShareVoucher}
-                  disabled={sharing}
-                  className="w-full rounded-xl bg-[#0068FF] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#0068FF]/30 transition hover:bg-[#0057d6] disabled:opacity-60"
-                >
-                  {sharing ? "Đang mở..." : "📤 Gửi phiếu thưởng qua Zalo"}
-                </button>
-              </div>
-              <p className="mt-3 text-xs text-ink-700/70">
-                Ảnh phiếu thưởng sẽ được đính kèm sẵn — bạn chỉ cần chọn Zalo, chọn đúng khung chat
-                với Cát Thiên Nguyên OA rồi bấm gửi.
-              </p>
-              <a
-                href={ZALO_OA_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-block text-xs font-semibold text-maroon-900 underline underline-offset-2"
+          {confirmationCode && (
+            <div className="mx-auto mt-4 flex max-w-xs items-center justify-center gap-2 rounded-xl border border-gold-500/40 bg-gold-300/20 px-4 py-2">
+              <span className="text-xs text-ink-700">Mã xác nhận:</span>
+              <span className="font-mono text-sm font-bold tracking-wide text-maroon-900">
+                {confirmationCode}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyCode}
+                className="ml-1 text-xs font-semibold text-maroon-900 underline underline-offset-2"
               >
-                Hoặc mở khung chat Zalo OA thủ công
-              </a>
-            </>
-          ) : (
-            <>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="button"
-                  onClick={handleDownloadVoucher}
-                  className="flex-1 rounded-xl border-2 border-maroon-900 px-5 py-3 text-sm font-bold text-maroon-900 transition hover:bg-maroon-900/5"
-                >
-                  📥 Tải phiếu thưởng
-                </button>
-                <a
-                  href={ZALO_OA_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 rounded-xl bg-[#0068FF] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#0068FF]/30 transition hover:bg-[#0057d6]"
-                >
-                  💬 Nhắn Zalo OA để nhận thưởng
-                </a>
-              </div>
-              <p className="mt-4 text-xs text-ink-700/70">
-                Tải phiếu thưởng về máy, sau đó bấm nút Zalo và gửi ảnh phiếu vào khung chat để
-                được xác nhận và nhận thưởng nhé!
-              </p>
-            </>
+                Sao chép
+              </button>
+            </div>
           )}
+
+          <div className="mt-5">
+            <button
+              type="button"
+              onClick={handleSendToZalo}
+              disabled={redirecting}
+              className="w-full rounded-xl bg-[#0068FF] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#0068FF]/30 transition hover:bg-[#0057d6] disabled:opacity-70"
+            >
+              {redirecting ? "Đang chuyển sang Zalo..." : "💬 Gửi phiếu thưởng qua Zalo OA"}
+            </button>
+          </div>
+
+          <p className="mt-3 text-xs text-ink-700/70">
+            {redirecting && copyStatus === "image" &&
+              "Đã copy ảnh phiếu thưởng — dán ảnh vào khung chat Zalo rồi bấm Gửi nhé!"}
+            {redirecting && copyStatus === "text" &&
+              "Đã copy nội dung xác nhận — dán vào khung chat Zalo rồi bấm Gửi nhé!"}
+            {redirecting && copyStatus === "failed" &&
+              `Vui lòng gõ mã xác nhận ${confirmationCode || ""} hoặc gửi kèm ảnh phiếu thưởng vào khung chat Zalo nhé!`}
+            {!redirecting &&
+              "Bấm nút trên: ảnh phiếu thưởng sẽ được copy sẵn, Zalo OA mở đúng khung chat — bạn chỉ cần dán vào và bấm Gửi."}
+          </p>
+
+          <button
+            type="button"
+            onClick={handleDownloadVoucher}
+            className="mt-3 text-xs font-semibold text-maroon-900 underline underline-offset-2"
+          >
+            📥 Hoặc tải ảnh phiếu thưởng về máy
+          </button>
         </div>
       )}
     </div>

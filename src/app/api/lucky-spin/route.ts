@@ -37,7 +37,12 @@ export async function POST(request: NextRequest) {
 
   // honeypot tripped — pretend success with a harmless prize, do not persist
   if (parsed.data.website) {
-    return NextResponse.json({ prizeKey: "giam-5", prizeLabel: "Giảm giá 5%", alreadyPlayed: false });
+    return NextResponse.json({
+      prizeKey: "giam-5",
+      prizeLabel: "Giảm giá 5%",
+      confirmationCode: "CTN-000000",
+      alreadyPlayed: false,
+    });
   }
 
   try {
@@ -46,12 +51,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         prizeKey: existing.prizeKey,
         prizeLabel: existing.prizeLabel,
+        confirmationCode: existing.confirmationCode,
         alreadyPlayed: true,
       });
     }
 
     const prize = pickRandomPrize();
-    await createLuckySpin({
+    const created = await createLuckySpin({
       name: parsed.data.name,
       phone: parsed.data.phone,
       occupation: parsed.data.occupation,
@@ -59,7 +65,12 @@ export async function POST(request: NextRequest) {
       prizeLabel: prize.label,
     });
 
-    return NextResponse.json({ prizeKey: prize.key, prizeLabel: prize.label, alreadyPlayed: false });
+    return NextResponse.json({
+      prizeKey: prize.key,
+      prizeLabel: prize.label,
+      confirmationCode: created.confirmationCode,
+      alreadyPlayed: false,
+    });
   } catch (err) {
     console.error("[lucky-spin] create failed", err);
     return NextResponse.json({ error: "Đã xảy ra lỗi, vui lòng thử lại." }, { status: 500 });

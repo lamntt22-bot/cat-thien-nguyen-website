@@ -39,21 +39,22 @@ export default async function AdminLuckySpinsPage() {
               Vòng quay may mắn ({spins.length})
             </h1>
             <p className="mt-1 text-sm text-ink-700">
-              Khách quét mã QR tại sự kiện, điền thông tin và quay thưởng. Đánh dấu "Đã đổi
-              thưởng" sau khi trao quà tại sự kiện.
+              Khách quét mã QR tại sự kiện, điền thông tin và quay thưởng. Đánh dấu &quot;Đã đổi
+              thưởng&quot; sau khi trao quà tại sự kiện.
             </p>
 
             {spins.length === 0 ? (
               <p className="mt-6 text-sm text-ink-700">Chưa có ai tham gia quay thưởng.</p>
             ) : (
               <div className="mt-5 overflow-x-auto rounded-2xl border border-gold-500/20 bg-white">
-                <table className="w-full min-w-[800px] text-sm">
+                <table className="w-full min-w-[900px] text-sm">
                   <thead>
                     <tr className="border-b border-gold-500/20 text-left text-xs uppercase tracking-wide text-ink-700/60">
                       <th className="px-4 py-3">Họ tên</th>
                       <th className="px-4 py-3">SĐT</th>
                       <th className="px-4 py-3">Nghề nghiệp</th>
                       <th className="px-4 py-3">Phần thưởng</th>
+                      <th className="px-4 py-3">Mã xác nhận</th>
                       <th className="px-4 py-3">Thời gian</th>
                       <th className="px-4 py-3">Trạng thái</th>
                       <th className="px-4 py-3"></th>
@@ -66,6 +67,9 @@ export default async function AdminLuckySpinsPage() {
                         <td className="px-4 py-3 text-ink-700">{s.phone}</td>
                         <td className="px-4 py-3 text-ink-700">{s.occupation}</td>
                         <td className="px-4 py-3 font-semibold text-maroon-800">{s.prizeLabel}</td>
+                        <td className="px-4 py-3 font-mono text-xs text-ink-700">
+                          {s.confirmationCode ?? "—"}
+                        </td>
                         <td className="px-4 py-3 text-ink-700">{formatDate(s.createdAt)}</td>
                         <td className="px-4 py-3">
                           <LuckySpinRedeemedToggle id={s.id} redeemed={s.redeemed} />

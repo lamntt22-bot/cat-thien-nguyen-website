@@ -186,6 +186,11 @@ create table if not exists public.lucky_spins (
   created_at timestamptz not null default now()
 );
 
+-- Mã xác nhận ngắn (VD: CTN-A1B2C3) khách gửi kèm cho Zalo OA để nhân viên tra cứu & đối chiếu
+-- khi trao thưởng, thay cho việc phải gửi hẳn ảnh phiếu thưởng.
+alter table public.lucky_spins add column if not exists confirmation_code text;
+create unique index if not exists lucky_spins_confirmation_code_idx on public.lucky_spins (confirmation_code);
+
 create index if not exists lucky_spins_created_idx on public.lucky_spins (created_at desc);
 
 -- ============ RLS — bật, KHÔNG có policy cho anon/authenticated (default-deny) ============
