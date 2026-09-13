@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import LuckySpinFloatingButton from "@/components/LuckySpinFloatingButton";
 import TrialRegistrationSection from "@/components/TrialRegistrationSection";
 import AboutSection from "@/components/AboutSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -50,6 +51,7 @@ export default async function Home() {
 
   return (
     <main>
+      <LuckySpinFloatingButton />
       <Hero />
       <TrialRegistrationSection products={trialProducts} />
       <AboutSection />
