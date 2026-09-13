@@ -7,20 +7,20 @@ const isDev = process.env.NODE_ENV === "development";
 const supabaseOrigin =
   process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://asjnvumrzqkjjhxnshvq.supabase.co";
 
-// Static (non-nonce) CSP — fine for a static marketing page with no
-// dangerouslySetInnerHTML / third-party scripts. Revisit if that changes.
+// Widget "Quan tâm Zalo OA" (vòng quay may mắn) tải script từ sp.zalo.me và render
+// trong iframe cùng domain — CSP phải cho phép cả script-src lẫn frame-src cho domain này.
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+      `script-src 'self' 'unsafe-inline' https://sp.zalo.me https://za.zdn.vn${isDev ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
-      `img-src 'self' blob: data: ${supabaseOrigin}`,
+      `img-src 'self' blob: data: ${supabaseOrigin} https://sp.zalo.me`,
       `media-src 'self' blob: ${supabaseOrigin}`,
       "font-src 'self'",
-      `connect-src 'self' ${supabaseOrigin}`,
-      "frame-src https://www.youtube-nocookie.com",
+      `connect-src 'self' ${supabaseOrigin} https://sp.zalo.me`,
+      "frame-src https://www.youtube-nocookie.com https://sp.zalo.me https://button-follow.zalo.me",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",

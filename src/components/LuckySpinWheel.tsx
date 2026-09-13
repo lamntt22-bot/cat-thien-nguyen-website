@@ -1,10 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Script from "next/script";
 import { PHONE_RE } from "@/lib/leads";
 import { WHEEL_SEGMENTS } from "@/lib/lucky-spin-prizes";
 
-const ZALO_OA_URL = "https://zalo.me/1148983422157930792";
+declare global {
+  interface Window {
+    ZaloSocialSDK?: { reload: () => void };
+    onZaloFollowed?: () => void;
+  }
+}
+
+const ZALO_OA_ID = "1148983422157930792";
+const ZALO_OA_URL = `https://zalo.me/${ZALO_OA_ID}`;
 
 const SEGMENT_ANGLE = 360 / WHEEL_SEGMENTS.length;
 const CENTER = 150;
@@ -83,7 +92,24 @@ export default function LuckySpinWheel() {
   const [confirmationCode, setConfirmationCode] = useState("");
   const [alreadyPlayed, setAlreadyPlayed] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
+  const [zaloSdkReady, setZaloSdkReady] = useState(false);
+  const [followed, setFollowed] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    window.onZaloFollowed = () => setFollowed(true);
+    return () => {
+      delete window.onZaloFollowed;
+    };
+  }, []);
+
+  // Nút "Quan tâm" chỉ được thêm vào DOM khi tới bước result — cần gọi lại reload() để
+  // Zalo SDK quét và dựng nút, vì SDK chỉ tự quét DOM một lần lúc mới tải trang.
+  useEffect(() => {
+    if (step === "result" && zaloSdkReady) {
+      window.ZaloSocialSDK?.reload();
+    }
+  }, [step, zaloSdkReady]);
 
   useEffect(() => {
     if (step !== "result") return;
@@ -154,15 +180,6 @@ export default function LuckySpinWheel() {
       424,
     );
   }, [step, name, phone, prizeLabel, confirmationCode]);
-
-  function handleDownloadVoucher() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const link = document.createElement("a");
-    link.download = "phieu-trung-thuong-cat-thien-nguyen.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  }
 
   async function handleCopyCode() {
     try {
@@ -394,27 +411,41 @@ export default function LuckySpinWheel() {
             className="mx-auto mt-4 w-full rounded-2xl border border-gold-500/30 shadow-lg"
           />
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={handleDownloadVoucher}
-              className="flex-1 rounded-xl border-2 border-maroon-900 px-5 py-3 text-sm font-bold text-maroon-900 transition hover:bg-maroon-900/5"
-            >
-              1️⃣ Lưu ảnh trúng thưởng
-            </button>
+          <p className="mt-4 text-sm font-semibold text-maroon-900">
+            📸 Chụp màn hình phiếu thưởng này, rồi làm theo 2 bước dưới đây nhé:
+          </p>
+
+          <div className="mx-auto mt-4 flex max-w-sm flex-col gap-3">
+            <div className="rounded-xl border-2 border-[#0068FF]/30 bg-[#0068FF]/5 px-4 py-3">
+              <p className="mb-2 text-xs font-bold text-maroon-900">
+                1️⃣ Quan tâm Zalo OA {followed && <span className="text-green-600">— Đã quan tâm ✓</span>}
+              </p>
+              <div className="flex justify-center">
+                <div className="zalo-follow-only-button" data-oaid={ZALO_OA_ID} data-callback="onZaloFollowed" />
+              </div>
+            </div>
+
             <a
               href={ZALO_OA_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 rounded-xl bg-[#0068FF] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#0068FF]/30 transition hover:bg-[#0057d6]"
+              className="rounded-xl bg-[#0068FF] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#0068FF]/30 transition hover:bg-[#0057d6]"
             >
-              2️⃣ Mở Zalo OA để gửi ảnh
+              2️⃣ Mở khung chat và gửi ảnh cho Zalo OA
             </a>
           </div>
+
           <p className="mt-4 text-xs text-ink-700/70">
-            Bấm <strong>Lưu ảnh</strong> trước, sau đó bấm <strong>Mở Zalo OA</strong> và gửi ảnh
-            vừa lưu vào khung chat để được xác nhận và nhận thưởng nhé!
+            Bấm <strong>Quan tâm</strong> để nhận thông báo ưu đãi sau này, sau đó bấm{" "}
+            <strong>Mở khung chat</strong> và gửi ảnh chụp màn hình phiếu thưởng vào đó để được xác
+            nhận và nhận thưởng nhé!
           </p>
+
+          <Script
+            src="https://sp.zalo.me/plugins/sdk.js"
+            strategy="afterInteractive"
+            onLoad={() => setZaloSdkReady(true)}
+          />
 
           {confirmationCode && (
             <div className="mx-auto mt-4 flex max-w-xs items-center justify-center gap-2 rounded-xl border border-gold-500/40 bg-gold-300/20 px-4 py-2">
