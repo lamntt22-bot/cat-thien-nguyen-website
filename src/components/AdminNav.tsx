@@ -3,6 +3,7 @@ import LogoutButton from "@/components/LogoutButton";
 const LINKS = [
   { href: "/admin", label: "Khách hàng đăng ký" },
   { href: "/admin/trial-requests", label: "Đăng ký dùng thử" },
+  { href: "/admin/lucky-spins", label: "Vòng quay may mắn" },
   { href: "/admin/orders", label: "Đơn hàng" },
   { href: "/admin/products", label: "Sản phẩm" },
   { href: "/admin/posts", label: "Bài viết" },

@@ -174,6 +174,20 @@ create index if not exists trial_requests_status_idx on public.trial_requests (s
 alter table public.trial_requests add column if not exists address text not null default '';
 alter table public.trial_requests add column if not exists purpose text not null default 'ca-nhan' check (purpose in ('ca-nhan', 'doi-tac'));
 
+-- ============ LUCKY_SPINS (vòng quay may mắn tại sự kiện — quét QR, điền thông tin để quay) ============
+create table if not exists public.lucky_spins (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  phone text not null unique,
+  occupation text not null,
+  prize_key text not null,
+  prize_label text not null,
+  redeemed boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists lucky_spins_created_idx on public.lucky_spins (created_at desc);
+
 -- ============ RLS — bật, KHÔNG có policy cho anon/authenticated (default-deny) ============
 -- Mọi truy cập đọc/viết đều đi qua API route của chính app, dùng
 -- SUPABASE_SERVICE_ROLE_KEY (bỏ qua RLS) sau khi server đã tự verify quyền —
@@ -184,6 +198,7 @@ alter table public.posts enable row level security;
 alter table public.orders enable row level security;
 alter table public.checkouts enable row level security;
 alter table public.checkout_items enable row level security;
+alter table public.lucky_spins enable row level security;
 alter table public.page_sections enable row level security;
 alter table public.trial_requests enable row level security;
 
