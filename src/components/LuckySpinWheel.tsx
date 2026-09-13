@@ -1,12 +1,56 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { PHONE_RE } from "@/lib/leads";
 import { WHEEL_SEGMENTS } from "@/lib/lucky-spin-prizes";
+
+const ZALO_OA_URL = "https://zalo.me/1148983422157930792";
 
 const SEGMENT_ANGLE = 360 / WHEEL_SEGMENTS.length;
 const CENTER = 150;
 const RADIUS = 140;
+
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  cx: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+) {
+  const words = text.split(" ");
+  let line = "";
+  const lines: string[] = [];
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  const startY = y - ((lines.length - 1) * lineHeight) / 2;
+  lines.forEach((l, i) => ctx.fillText(l, cx, startY + i * lineHeight));
+}
 
 function polarToCartesian(angleDeg: number, radius: number) {
   const rad = (angleDeg * Math.PI) / 180;
@@ -37,6 +81,80 @@ export default function LuckySpinWheel() {
   const [spinning, setSpinning] = useState(false);
   const [prizeLabel, setPrizeLabel] = useState("");
   const [alreadyPlayed, setAlreadyPlayed] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (step !== "result") return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const W = 800;
+    const H = 480;
+    canvas.width = W;
+    canvas.height = H;
+
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, "#fdfaf3");
+    grad.addColorStop(1, "#f3e9d6");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = "#c9a24b";
+    ctx.lineWidth = 6;
+    ctx.strokeRect(16, 16, W - 32, H - 32);
+    ctx.strokeStyle = "#6e0e13";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(28, 28, W - 56, H - 56);
+
+    ctx.textAlign = "center";
+
+    ctx.fillStyle = "#6e0e13";
+    ctx.font = "bold 24px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText("CÁT THIÊN NGUYÊN", W / 2, 78);
+
+    ctx.fillStyle = "#a9803b";
+    ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText("VÒNG QUAY MAY MẮN", W / 2, 104);
+
+    ctx.fillStyle = "#c31f2b";
+    ctx.font = "bold 30px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText("🎉 PHIẾU TRÚNG THƯỞNG", W / 2, 160);
+
+    ctx.fillStyle = "#171012";
+    ctx.font = "500 17px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText(`Khách hàng: ${name}   •   SĐT: ${phone}`, W / 2, 200);
+
+    roundRect(ctx, 80, 230, W - 160, 130, 18);
+    ctx.fillStyle = "#ecd9a8";
+    ctx.fill();
+    ctx.strokeStyle = "#c9a24b";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#6e0e13";
+    ctx.font = "bold 25px 'Segoe UI', Arial, sans-serif";
+    wrapText(ctx, prizeLabel, W / 2, 297, W - 240, 32);
+
+    ctx.fillStyle = "#5a4a3a";
+    ctx.font = "13px 'Segoe UI', Arial, sans-serif";
+    const dateStr = new Date().toLocaleDateString("vi-VN");
+    ctx.fillText(`Ngày quay: ${dateStr}`, W / 2, 400);
+    ctx.fillText(
+      "Gửi ảnh phiếu này cho Zalo OA hoặc xuất trình tại sự kiện để nhận thưởng.",
+      W / 2,
+      424,
+    );
+  }, [step, name, phone, prizeLabel]);
+
+  function handleDownloadVoucher() {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = "phieu-trung-thuong-cat-thien-nguyen.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
 
   function validate() {
     const next: Record<string, string> = {};
@@ -242,21 +360,41 @@ export default function LuckySpinWheel() {
       )}
 
       {step === "result" && (
-        <div className="w-full max-w-md text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-maroon-900 text-2xl text-gold-400">
-            🎁
-          </div>
-          <h3 className="mt-3 text-xl font-bold text-maroon-900">
+        <div className="w-full max-w-lg text-center">
+          <h3 className="text-xl font-bold text-maroon-900">
             {alreadyPlayed ? "Bạn đã tham gia rồi!" : "Chúc mừng bạn!"}
           </h3>
-          <p className="mt-2 text-ink-700">
-            {alreadyPlayed ? "Số điện thoại này đã quay trước đó. Phần thưởng của bạn là:" : "Bạn đã trúng:"}
+          <p className="mt-1 text-sm text-ink-700">
+            {alreadyPlayed
+              ? "Số điện thoại này đã quay trước đó. Đây là phiếu thưởng của bạn:"
+              : "Đây là phiếu trúng thưởng của bạn:"}
           </p>
-          <p className="mt-3 rounded-xl bg-gold-500/15 px-4 py-3 text-lg font-bold text-maroon-900">
-            {prizeLabel}
-          </p>
-          <p className="mt-4 text-sm text-ink-700">
-            Vui lòng đưa màn hình này cho nhân viên Cát Thiên Nguyên tại sự kiện để nhận thưởng.
+
+          <canvas
+            ref={canvasRef}
+            className="mx-auto mt-4 w-full rounded-2xl border border-gold-500/30 shadow-lg"
+          />
+
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={handleDownloadVoucher}
+              className="flex-1 rounded-xl border-2 border-maroon-900 px-5 py-3 text-sm font-bold text-maroon-900 transition hover:bg-maroon-900/5"
+            >
+              📥 Tải phiếu thưởng
+            </button>
+            <a
+              href={ZALO_OA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 rounded-xl bg-[#0068FF] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#0068FF]/30 transition hover:bg-[#0057d6]"
+            >
+              💬 Nhắn Zalo OA để nhận thưởng
+            </a>
+          </div>
+          <p className="mt-4 text-xs text-ink-700/70">
+            Tải phiếu thưởng về máy, sau đó bấm nút Zalo và gửi ảnh phiếu vào khung chat để được
+            xác nhận và nhận thưởng nhé!
           </p>
         </div>
       )}
