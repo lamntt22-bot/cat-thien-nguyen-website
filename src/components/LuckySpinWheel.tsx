@@ -2,9 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { PHONE_RE } from "@/lib/leads";
-import { LUCKY_PRIZES } from "@/lib/lucky-spin-prizes";
+import { WHEEL_SEGMENTS } from "@/lib/lucky-spin-prizes";
 
-const SEGMENT_ANGLE = 360 / LUCKY_PRIZES.length;
+const SEGMENT_ANGLE = 360 / WHEEL_SEGMENTS.length;
 const CENTER = 150;
 const RADIUS = 140;
 
@@ -70,8 +70,14 @@ export default function LuckySpinWheel() {
         return;
       }
 
-      const index = LUCKY_PRIZES.findIndex((p) => p.key === data.prizeKey);
-      const targetIndex = index === -1 ? 0 : index;
+      const matchingIndexes = WHEEL_SEGMENTS.reduce<number[]>((acc, p, i) => {
+        if (p.key === data.prizeKey) acc.push(i);
+        return acc;
+      }, []);
+      const targetIndex =
+        matchingIndexes.length > 0
+          ? matchingIndexes[Math.floor(Math.random() * matchingIndexes.length)]
+          : 0;
       const segmentCenter = targetIndex * SEGMENT_ANGLE + SEGMENT_ANGLE / 2;
       const jitter = (Math.random() - 0.5) * (SEGMENT_ANGLE * 0.6);
       const extraSpins = 5 * 360;
@@ -126,23 +132,32 @@ export default function LuckySpinWheel() {
           }}
         >
           <circle cx={CENTER} cy={CENTER} r={RADIUS + 4} fill="#fdfaf3" stroke="#c9a24b" strokeWidth={4} />
-          {LUCKY_PRIZES.map((prize, i) => {
+          {WHEEL_SEGMENTS.map((prize, i) => {
             const mid = i * SEGMENT_ANGLE + SEGMENT_ANGLE / 2;
-            const labelPos = polarToCartesian(mid, RADIUS * 0.62);
+            const labelPos = polarToCartesian(mid, RADIUS * 0.66);
+            const words = prize.shortLabel.split(" ");
+            const lines =
+              words.length > 2
+                ? [words.slice(0, -1).join(" "), words[words.length - 1]]
+                : [prize.shortLabel];
             return (
-              <g key={prize.key}>
+              <g key={`${prize.key}-${i}`}>
                 <path d={segmentPath(i)} fill={prize.color} stroke="#fdfaf3" strokeWidth={2} />
                 <text
                   x={labelPos.x}
                   y={labelPos.y}
                   fill="#fdfaf3"
-                  fontSize={12}
+                  fontSize={8.5}
                   fontWeight={700}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   transform={`rotate(${mid}, ${labelPos.x}, ${labelPos.y})`}
                 >
-                  {prize.shortLabel}
+                  {lines.map((line, li) => (
+                    <tspan key={li} x={labelPos.x} dy={li === 0 ? 0 : 10}>
+                      {line}
+                    </tspan>
+                  ))}
                 </text>
               </g>
             );
